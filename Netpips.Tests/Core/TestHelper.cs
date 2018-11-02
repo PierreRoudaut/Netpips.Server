@@ -116,6 +116,10 @@ namespace Netpips.Tests.Core
         public static DirectDownloadSettings CreateDirectDownloadSettings()
         {
             var settings = GetTestConfiguration().GetSectionSettings<DirectDownloadSettings>();
+            if (!settings.Filehosters.Any())
+            {
+                throw new ApplicationException("No filehosters were registered");
+            }
             return settings;
         }
 
@@ -128,6 +132,20 @@ namespace Netpips.Tests.Core
                 JwtExpireMinutes = 30,
                 GoogleClientId = "123456789-someurl.apps.googleusercontent.com"
             };
+            return settings;
+        }
+
+        public static ShowRssSettings CreateShowRssSettings()
+        {
+            var settings = GetTestConfiguration().GetSectionSettings<ShowRssSettings>();
+            if (string.IsNullOrEmpty(settings.Username))
+            {
+                throw new ApplicationException("ShowRss.Username is not set");
+            }
+            if (string.IsNullOrEmpty(settings.Password))
+            {
+                throw new ApplicationException("ShowRss.Password is not set");
+            }
             return settings;
         }
 
@@ -167,12 +185,5 @@ namespace Netpips.Tests.Core
 
             return ressourcePath;
         }
-
-        public static ShowRssSettings CreateShowRssSettings()
-        {
-            var settings = GetTestConfiguration().GetSectionSettings<ShowRssSettings>();
-            return settings;
-        }
-
     }
 }
