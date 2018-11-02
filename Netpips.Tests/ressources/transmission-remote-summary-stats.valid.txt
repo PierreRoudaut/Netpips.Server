@@ -1,0 +1,42 @@
+﻿NAME
+  Id: 4
+  Name: Game.of.Thrones.S07E07.The.Dragon.and.the.Wolf.1080p.AMZN.WEBRip.DDP5.1.x264-GoT[rarbg]
+  Hash: 9c7251f8a225eeeeeac80a9822c2d8b70cbd5394
+  Magnet: magnet:?xt=urn:btih:9c7251f8a225eeeeeac80a9822c2d8b70cbd5394&dn=Game.of.Thrones.S07E07.The.Dragon.and.the.Wolf.1080p.AMZN.WEBRip.DDP5.1.x264-GoT%5Brarbg%5D&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce
+
+TRANSFER
+  State: Stopped
+  Location: /root/downloads
+  Percent Done: 0.0%
+  ETA: 0 seconds (0 seconds)
+  Download Speed: 0 kB/s
+  Upload Speed: 0 kB/s
+  Have: 4.46 MB (2.27 MB verified)
+  Availability: 0.0%
+  Total size: 5.10 GB (5.10 GB wanted)
+  Downloaded: 4.56 MB
+  Uploaded: None
+  Ratio: 0.0
+  Corrupt DL: None
+  Error: Permission denied (/root/downloads/Game.of.Thrones.S07E07.The.Dragon.and.the.Wolf.1080p.AMZN.WEBRip.DDP5.1.x264-GoT[rarbg]/Game
+  Peers: connected to 0, uploading to 0, downloading from 0
+
+HISTORY
+  Date added:       Tue Jan 30 10:55:00 2018
+  Date started:     Tue Jan 30 10:55:10 2018
+  Latest activity:  Tue Jan 30 10:55:25 2018
+  Downloading Time: 25 seconds (25 seconds)
+
+ORIGINS
+  Public torrent: Yes
+  Piece Count: 9722
+  Piece Size: 512.0 KiB
+
+LIMITS & BANDWIDTH
+  Download Limit: Unlimited
+  Upload Limit: Unlimited
+  Ratio Limit: Default
+  Honors Session Limits: Yes
+  Peer limit: 50
+  Bandwidth Priority: Normal
+

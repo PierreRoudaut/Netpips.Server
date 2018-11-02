@@ -1,0 +1,9 @@
+language: csharp
+mono: none
+dotnet: 2.1
+script:
+ - export APP_PROJECT_NAME=Netpips
+ - export TEST_PROJECT_NAME=Netpips.Tests
+ - dotnet restore
+ - dotnet build
+ - dotnet test $TEST_PROJECT_NAME --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"

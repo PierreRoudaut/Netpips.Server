@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="showRSS is an internet tool that lets you keep track of your favorite TV shows.">
+<title>showRSS</title>
+<link rel="stylesheet" href="https://showrss.info/asset/bootstrap/css/flatly.min.css">
+<link rel="stylesheet" href="https://showrss.info/asset/chosen.min.css">
+<link rel="stylesheet" href="https://showrss.info/asset/chosen.bootstrap.css">
+<link rel="stylesheet" href="https://showrss.info/asset/custom.css?2">
+
+<!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+<link rel="icon" href="https://showrss.info/asset/favicon.png">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="https://showrss.info/asset/chosen.jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+<div class="navbar navbar-default" role="navigation" style="margin-top: 20px">
+<div class="container-fluid">
+<div class="navbar-header">
+<a class="pull-left logo" href="https://showrss.info"><img src="https://showrss.info/asset/logo.png"></a>
+<a class="navbar-brand" href="https://showrss.info">showRSS</a>
+</div>
+<div class="navbar-collapse">
+<ul class="nav navbar-nav">
+<li>
+<a href="https://showrss.info/timeline"><span class="glyphicon glyphicon-film"></span> My shows</a>
+</li>
+<li>
+<a href="https://showrss.info/schedule"><span class="glyphicon glyphicon-calendar"></span> My schedule</a>
+</li>
+<li>
+<a href="https://showrss.info/feeds"><span class="glyphicon glyphicon-refresh"></span> My feed</a>
+</li>
+<li>
+<a href="https://showrss.info/browse"><span class="glyphicon glyphicon-book"></span> Browse shows</a>
+</li>
+<li>
+<a href="https://showrss.info/help"><span class="glyphicon glyphicon-question-sign"></span> Help</a>
+</li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+<span class="glyphicon glyphicon-user"></span>
+<strong>netpips</strong>
+<span class="caret"></span>
+</a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="https://showrss.info/request">
+<span class="glyphicon glyphicon-comment"></span> Request a show
+</a></li>
+<li><a href="https://showrss.info/edit">
+<span class="glyphicon glyphicon-wrench"></span> Change settings
+</a></li>
+<li><a href="https://showrss.info/logout">
+<span class="glyphicon glyphicon-remove"></span> Log out
+</a></li>
+</ul>
+</li>
+<li>
+<a href="https://showrss.info/donate"><span class="glyphicon glyphicon-usd"></span> Donate</a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-3 col-sm-12 showpill">
+<strong>Pick a show from the list</strong>
+</div>
+<div class="col-md-7 col-sm-12 form-inline">
+<form action="https://showrss.info/show/add" method="post" class="form-horizontal" role="form">
+<input type="hidden" name="_token" value="Xe8AdkOS5vo11JjQSXVRbZ48e3I7bPGw6daYrEQy">
+<select name="show" id="showselector" class="form-control" data-placeholder="Select a show…" style="max-width: 320px">
+<option value=""></option>
+<option value="478">11.22.63</option>
+<option value="796">13 Reasons Why</option>
+<option value="625">19-2</option>
+<option value="250">2 Broke Girls</option>
+<option value="755">24: Legacy</option>
+<option value="614">60 Days In</option>
+<option value="443">60 Minutes (US)</option>
+<option value="416">8 Out Of 10 Cats</option>
+<option value="454">8 out of 10 Cats Does Countdown</option>
+<option value="939">9-1-1</option>
+<option value="903">9JKL</option>
+<option value="235">A Season With Notre Dame Football</option>
+<option value="738">A Series of Unfortunate Events</option>
+<option value="956">A.P. Bio</option>
+<option value="894">Absentia</option>
+<option value="599">Adam Ruins Everything</option>
+<option value="202">Adventure Time</option>
+<option value="218">After Hours (UK)</option>
+<option value="553">After the Thrones</option>
+<option value="959">After Trek</option>
+<option value="644">Aftermath</option>
+<option value="210">Agent X (US)</option>
+<option value="206">Alaska: The Last Frontier</option>
+<option value="248">Alaskan Bush People</option>
+<option value="985">Alex, Inc.</option>
+<option value="916">Alias Grace</option>
+<option value="424">Allegiance</option>
+<option value="477">Almost Royal</option>
+<option value="566">Alone</option>
+<option value="962">Alone Together</option>
+<option value="951">Altered Carbon</option>
+<option value="89">America&#039;s Next Top Model</option>
+<option value="819">America&#039;s Test Kitchen</option>
+<option value="401">American Crime</option>
+<option value="469">American Crime Story</option>
+<option value="271">American Dad!</option>
+<option value="810">American Gods</option>
+<option value="574">American Gothic</option>
+<option value="116">American Horror Story</option>
+<option value="671">American Housewife</option>
+<option value="319">American Idol</option>
+<option value="475">American Ninja Warrior</option>
+<option value="224">American Pickers</option>
+<option value="113">Ancient Aliens</option>
+<option value="402">And Then There Were None</option>
+<option value="432">Angel From Hell</option>
+<option value="449">Angie Tribeca</option>
+<option value="568">Animal Kingdom</option>
+<option value="485">Animals</option>
+<option value="806">Anne</option>
+<option value="571">Another Period</option>
+<option value="325">Anthony Bourdain: Parts Unknown</option>
+<option value="683">Any Given Wednesday with Bill Simmons</option>
+<option value="757">APB</option>
+<option value="357">Aquarius (US)</option>
+<option value="270">Archer (2009)</option>
+<option value="346">Arrested Development</option>
+<option value="117">Arrow</option>
+<option value="180">Ash vs. Evil Dead</option>
+<option value="818">Ask This Old House</option>
+<option value="595">At Midnight</option>
+<option value="597">Atlanta</option>
+<option value="353">Attack on Titan</option>
+<option value="347">Avengers Assemble (2013)</option>
+<option value="122">Awkward</option>
+<option value="374">Ax Men</option>
+<option value="336">Baby Daddy</option>
+<option value="957">Babylon Berlin</option>
+<option value="604">Bachelor in Paradise</option>
+<option value="909">Back</option>
+<option value="310">Ballers</option>
+<option value="288">Banshee</option>
+<option value="169">Bar Rescue</option>
+<option value="981">Barry</option>
+<option value="451">Baskets</option>
+<option value="300">Bates Motel</option>
+<option value="579">BattleBots</option>
+<option value="317">Beauty and the Beast (2012)</option>
+<option value="232">Being Mary Jane</option>
+<option value="780">Believer with Reza Aslan</option>
+<option value="782">Bellevue</option>
+<option value="373">Benders</option>
+<option value="403">Beowulf: Return To The Shieldlands</option>
+<option value="532">Bering Sea Gold</option>
+<option value="667">Berlin Station</option>
+<option value="173">Best Time Ever with Neil Patrick Harris</option>
+<option value="266">Better Call Saul</option>
+<option value="950">Better Late Than Never</option>
+<option value="611">Better Things</option>
+<option value="585">Between</option>
+<option value="729">Beyond</option>
+<option value="455">Beyond the Tank</option>
+<option value="582">Big Brother</option>
+<option value="933">Big Hero 6: The Series</option>
+<option value="768">Big Little Lies</option>
+<option value="850">Bill Nye Saves the World</option>
+<option value="410">Billions</option>
+<option value="329">Bitten</option>
+<option value="236">Black Jesus</option>
+<option value="943">Black Lightning</option>
+<option value="297">Black Mirror</option>
+<option value="290">Black Sails</option>
+<option value="76">Black-ish</option>
+<option value="50">Blindspot</option>
+<option value="51">Blood and Oil</option>
+<option value="830">Blood Drive</option>
+<option value="554">Bloodline</option>
+<option value="32">Blue Bloods</option>
+<option value="914">Blue Planet II</option>
+<option value="34">Blunt Talk</option>
+<option value="214">Bob&#039;s Burgers</option>
+<option value="101">BoJack Horseman</option>
+<option value="77">Bones</option>
+<option value="174">Booze Traveler</option>
+<option value="427">Bordertown</option>
+<option value="356">Bosch</option>
+<option value="576">Botched</option>
+<option value="567">BrainDead</option>
+<option value="261">Breakthrough</option>
+<option value="545">Britain&#039;s Got Talent</option>
+<option value="949">Britannia</option>
+<option value="328">Broad City</option>
+<option value="311">Broadchurch</option>
+<option value="804">Brockmire</option>
+<option value="58">Brooklyn Nine-Nine</option>
+<option value="633">Bull</option>
+<option value="406">Call The Midwife</option>
+<option value="376">Capital</option>
+<option value="759">Cardinal</option>
+<option value="53">Castle (2009)</option>
+<option value="838">Castlevania</option>
+<option value="573">Casual</option>
+<option value="228">Casualty</option>
+<option value="142">Catastrophe (2015)</option>
+<option value="361">Catfish: The TV Show</option>
+<option value="47">Cedar Cove</option>
+<option value="26">Celebrity Big Brother</option>
+<option value="22">Celebrity Big Brother&#039;s Bit On The Side</option>
+<option value="1008">Champions</option>
+<option value="670">Chance</option>
+<option value="663">Channel Zero</option>
+<option value="859">Chelsea</option>
+<option value="853">Chesapeake Shores</option>
+<option value="147">Chicago Fire</option>
+<option value="776">Chicago Justice</option>
+<option value="258">Chicago Med</option>
+<option value="114">Chicago P.D.</option>
+<option value="388">Childhood&#039;s End</option>
+<option value="462">Childrens Hospital</option>
+<option value="920">Chopped</option>
+<option value="363">Chrisley Knows Best</option>
+<option value="184">Citizen Khan</option>
+<option value="684">Class</option>
+<option value="833">Claws</option>
+<option value="555">Cleverman</option>
+<option value="996">Cobra Kai</option>
+<option value="84">Code Black</option>
+<option value="971">Collateral</option>
+<option value="394">Colony</option>
+<option value="590">Comedians in Cars Getting Coffee</option>
+<option value="156">Comedy Bang! Bang!</option>
+<option value="182">Comic Book Men</option>
+<option value="735">Con Man</option>
+<option value="11">Conan</option>
+<option value="1005">Condor</option>
+<option value="523">Containment</option>
+<option value="27">Continuum</option>
+<option value="654">Conviction</option>
+<option value="420">Cooper Barrett&#039;s Guide to Surviving Life</option>
+<option value="359">Cops</option>
+<option value="954">Corporate</option>
+<option value="935">Counterpart</option>
+<option value="629">Counting Cars</option>
+<option value="472">Crashing (UK)</option>
+<option value="788">Crashing (US)</option>
+<option value="131">Crazy Ex-Girlfriend</option>
+<option value="706">Crazyhead</option>
+<option value="104">Criminal Minds</option>
+<option value="495">Criminal Minds: Beyond Borders</option>
+<option value="92">Crossing Lines</option>
+<option value="500">Crowded</option>
+<option value="106">CSI: Cyber</option>
+<option value="514">Cuckoo</option>
+<option value="217">Cuffs</option>
+<option value="893">Curb Your Enthusiasm</option>
+<option value="718">Cyberwar</option>
+<option value="135">Da Vinci&#039;s Demons</option>
+<option value="489">Damien</option>
+<option value="924">Damnation</option>
+<option value="465">Dance Moms</option>
+<option value="31">Dancing With The Stars (US)</option>
+<option value="932">Dark</option>
+<option value="296">Dark Matter</option>
+<option value="456">Dark Net</option>
+<option value="626">Dating Naked</option>
+<option value="430">Dawn of the Croods</option>
+<option value="835">Daytime Divas</option>
+<option value="448">DC&#039;s Legends of Tomorrow</option>
+<option value="587">Dead of Summer</option>
+<option value="316">Deadliest Catch</option>
+<option value="826">Dear White People</option>
+<option value="435">Death in Paradise</option>
+<option value="969">Deception</option>
+<option value="993">Deep State</option>
+<option value="635">Designated Survivor</option>
+<option value="185">Detectorists</option>
+<option value="773">Detroiters</option>
+<option value="326">Devious Maids</option>
+<option value="869">Dice</option>
+<option value="400">Dickensian</option>
+<option value="603">Difficult People</option>
+ <option value="199">Digimon Fusion</option>
+<option value="814">Dimension 404</option>
+<option value="864">Diners, Drive-Ins and Dives</option>
+<option value="685">Dirk Gently&#039;s Holistic Detective Agency</option>
+<option value="973">Disney Mickey Mouse</option>
+<option value="662">Divorce</option>
+<option value="178">Doc Martin</option>
+<option value="753">Doc McStuffins</option>
+<option value="911">Doctor Foster</option>
+<option value="30">Doctor Who (2005)</option>
+<option value="648">Documentary Now</option>
+<option value="7">Dominion</option>
+<option value="368">Donny! (2015)</option>
+<option value="770">Doubt</option>
+<option value="38">Downton Abbey</option>
+<option value="824">Downward Dog</option>
+<option value="100">Dr. Ken</option>
+<option value="386">Dragon&#039;s Den (CA)</option>
+<option value="785">Dragons&#039; Den (UK)</option>
+<option value="425">DreamWorks Dragons</option>
+<option value="234">Drifters</option>
+<option value="94">Drunk History</option>
+<option value="512">Drunk History (UK)</option>
+<option value="594">Dual Survival</option>
+<option value="350">Duck Dynasty</option>
+<option value="860">DuckTales</option>
+<option value="915">Dynasty</option>
+<option value="109">Edge of Alaska</option>
+<option value="207">Elementary</option>
+<option value="793">Elena of Avalor</option>
+<option value="733">Emerald City</option>
+<option value="119">Empire (2015)</option>
+<option value="419">Endeavour</option>
+<option value="301">Episodes</option>
+<option value="852">Escaping Polygamy</option>
+<option value="784">Expedition Unknown</option>
+<option value="906">Extinct</option>
+<option value="689">Eyewitness</option>
+ <option value="413">F is for Family</option>
+<option value="112">Face Off</option>
+<option value="61">Faking It (2014)</option>
+<option value="649">Falling Water</option>
+<option value="57">Family Guy</option>
+<option value="1002">Famous in Love</option>
+<option value="126">Fargo</option>
+<option value="397">Fast N&#039; Loud</option>
+<option value="447">Father Brown (2013)</option>
+<option value="41">Fear The Walking Dead</option>
+<option value="552">Fear the Walking Dead: Flight 462</option>
+<option value="857">Fearless</option>
+<option value="562">Feed the Beast</option>
+<option value="781">Feud</option>
+<option value="335">Fifth Gear</option>
+<option value="965">Final Space</option>
+<option value="168">Finding Carter</option>
+<option value="775">Fixer Upper</option>
+<option value="829">Flaked</option>
+<option value="624">Fleabag</option>
+<option value="245">Flesh and Bone</option>
+<option value="415">Flip or Flop</option>
+<option value="446">Food Porn</option>
+<option value="975">For the People</option>
+<option value="304">Forever (US)</option>
+<option value="746">Forged in Fire</option>
+<option value="358">Fortitude</option>
+<option value="659">Frequency</option>
+<option value="488">Fresh Meat</option>
+<option value="160">Fresh Off the Boat</option>
+<option value="616">Friday Night Dinner</option>
+<option value="848">Friends from College</option>
+<option value="3">Friends of the People</option>
+<option value="73">From Dusk till Dawn</option>
+<option value="709">Frontier</option>
+<option value="748">Frontline</option>
+<option value="480">Full Frontal with Samantha Bee</option>
+<option value="487">Fuller House</option>
+ <option value="749">Funny or Die&#039;s Billy on the Street</option>
+<option value="919">Future Man</option>
+<option value="352">Galavant</option>
+<option value="524">Game of Silence</option>
+<option value="765">Gaycation</option>
+<option value="812">Genius</option>
+<option value="874">Get Shorty</option>
+<option value="237">Getting On (US)</option>
+<option value="175">Ghost Adventures</option>
+<option value="172">Ghost Hunters</option>
+<option value="908">Ghost Wars</option>
+<option value="882">Ghosted</option>
+<option value="715">Gilmore Girls: A Year in the Life</option>
+<option value="577">Girl Meets World</option>
+<option value="825">Girlboss</option>
+<option value="385">Girlfriends&#039; Guide to Divorce</option>
+<option value="292">Girls</option>
+<option value="896">Glitch</option>
+<option value="834">GLOW</option>
+<option value="928">Godless</option>
+<option value="192">Gold Rush</option>
+<option value="666">Goliath</option>
+<option value="705">Good Behavior</option>
+<option value="967">Good Girls</option>
+<option value="372">Good Girls Revolt</option>
+<option value="537">Good Witch</option>
+<option value="54">Gotham</option>
+<option value="550">Grace and Frankie</option>
+<option value="899">Grand Designs</option>
+<option value="85">Grandfathered</option>
+<option value="498">Grantchester</option>
+<option value="688">Graves</option>
+<option value="158">Gravity Falls</option>
+<option value="817">Great News</option>
+<option value="621">Greenleaf</option>
+<option value="9">Grey&#039;s Anatomy</option>
+<option value="177">Grimm</option>
+<option value="944">grown-ish</option>
+<option value="155">Guardians of the Galaxy</option>
+<option value="816">Guerrilla</option>
+<option value="578">Guilt</option>
+<option value="910">Gunpowder</option>
+<option value="1011">Gypsy</option>
+<option value="713">Hack My Life</option>
+<option value="299">Halt and Catch Fire</option>
+<option value="99">Hand Of God</option>
+<option value="491">Hap and Leonard</option>
+<option value="482">Happy Valley</option>
+<option value="931">Happy!</option>
+<option value="948">Hard Sun</option>
+<option value="803">Harlots</option>
+<option value="883">HarmonQuest</option>
+<option value="995">Harrow</option>
+<option value="712">Have I Got News For You</option>
+<option value="118">Haven</option>
+<option value="25">Hawaii Five-0 (2010)</option>
+<option value="503">Heartbeat (2016)</option>
+<option value="138">Heartland (CA)</option>
+<option value="302">Hell on Wheels</option>
+<option value="307">Hell&#039;s Kitchen (US)</option>
+<option value="152">Hemlock Grove</option>
+<option value="966">Here and Now 2018</option>
+<option value="12">Heroes Reborn</option>
+<option value="643">High Maintenance</option>
+<option value="620">Hit the Floor</option>
+<option value="241">Holby City</option>
+<option value="463">Hollywood Game Night</option>
+<option value="107">Homeland</option>
+<option value="658">Hooten and The Lady</option>
+<option value="470">Horace and Pete</option>
+<option value="408">Horizon (UK)</option>
+<option value="561">Hotel Hell</option>
+<option value="870">Hotel Transylvania: The Series</option>
+<option value="502">Houdini and Doyle</option>
+<option value="274">House of Cards (2013)</option>
+<option value="294">House of Lies</option>
+<option value="1">How It&#039;s Made</option>
+<option value="445">How It&#039;s Made: Dream Cars</option>
+<option value="8">How to Get Away with Murder</option>
+<option value="298">Humans</option>
+<option value="90">Hunted (2015)</option>
+<option value="763">Hunted (US)</option>
+<option value="515">Hunters</option>
+<option value="750">Hunting Hitler</option>
+<option value="535">I Am Cait</option>
+<option value="827">I&#039;m Dying Up Here</option>
+<option value="851">I&#039;m Sorry</option>
+<option value="619">Ice Road Truckers</option>
+<option value="428">Idiotsitter</option>
+<option value="226">If Loving You is Wrong</option>
+<option value="798">Imaginary Mary</option>
+<option value="655">Impastor</option>
+<option value="645">Impossible Engineering</option>
+<option value="764">Imposters</option>
+<option value="2">Impractical Jokers</option>
+<option value="1006">Impulse</option>
+<option value="708">Incorporated</option>
+<option value="530">Indian Summers</option>
+<option value="499">Ink Master</option>
+<option value="665">Insecure</option>
+<option value="332">Inside Amy Schumer</option>
+<option value="787">Inside No. 9</option>
+<option value="976">Instinct</option>
+<option value="256">Into The Badlands</option>
+<option value="277">It&#039;s Always Sunny in Philadelphia</option>
+<option value="130">iZombie</option>
+<option value="19">James Corden</option>
+<option value="722">James May: The Reassembler</option>
+<option value="459">James May&#039;s Cars of the People</option>
+<option value="821">Jamestown</option>
+<option value="154">Jane the Virgin</option>
+<option value="612">Jean-Claude Van Johnson</option>
+<option value="797">Jeff &amp; Some Aliens</option>
+<option value="163">Jekyll &amp; Hyde</option>
+ <option value="433">Jericho (2016)</option>
+<option value="365">Jessica Jones</option>
+<option value="28">Jimmy Fallon</option>
+<option value="15">Jimmy Kimmel</option>
+<option value="513">Join or Die with Craig Ferguson</option>
+<option value="405">Josh</option>
+<option value="740">Judge Judy</option>
+<option value="720">Justice League Action</option>
+<option value="613">K. C. Undercover</option>
+<option value="379">Kebab Kings</option>
+<option value="364">Keeping Up with the Kardashians</option>
+<option value="124">Kendra On Top</option>
+<option value="900">Kevin (Probably) Saves the World</option>
+<option value="631">Kevin Can Wait</option>
+<option value="78">Kevin From Work</option>
+<option value="991">Killing Eve</option>
+<option value="313">Killjoys</option>
+<option value="701">Kim&#039;s Convenience</option>
+<option value="383">Kingdom (2014)</option>
+<option value="930">Knightfall</option>
+<option value="977">Krypton</option>
+<option value="940">LA to Vegas</option>
+<option value="37">Last Man Standing (US)</option>
+<option value="45">Last Week Tonight With John Oliver</option>
+<option value="103">Law &amp; Order: Special Victims Unit</option>
+<option value="895">Law &amp; Order: True Crime</option>
+<option value="716">Leah Remini: Scientology and the Aftermath</option>
+<option value="153">Legends (2014)</option>
+<option value="761">Legion</option>
+<option value="602">LEGO Star Wars: The Freemaker Adventures</option>
+<option value="636">Lethal Weapon</option>
+<option value="179">Lewis</option>
+<option value="891">Liar</option>
+<option value="375">Life Below Zero</option>
+<option value="62">Life in Pieces</option>
+<option value="972">Life Sentence</option>
+<option value="72">Limitless</option>
+ <option value="525">Line of Duty</option>
+<option value="367">Lip Sync Battle</option>
+<option value="457">Lip Sync Battle UK</option>
+<option value="159">Liv and Maddie</option>
+<option value="998">Live PD</option>
+<option value="999">Living Biblically</option>
+<option value="246">London Spy</option>
+<option value="324">Longmire</option>
+<option value="110">Lost Girl</option>
+<option value="992">Lost in Space</option>
+<option value="286">Louie (2010)</option>
+<option value="484">Love</option>
+<option value="453">Lucifer</option>
+<option value="389">Luther</option>
+<option value="638">MacGyver</option>
+<option value="458">Mad Dogs (US)</option>
+<option value="98">Madam Secretary</option>
+<option value="201">Major Crimes</option>
+<option value="398">Making a Murderer</option>
+<option value="779">Making History</option>
+<option value="426">Man Seeking Woman</option>
+<option value="687">Man with a Plan</option>
+<option value="128">Manhattan</option>
+<option value="858">Manhunt: Unabomber</option>
+<option value="528">Marcella</option>
+<option value="404">Marco Polo (2014)</option>
+<option value="1014">Marlon</option>
+<option value="540">Maron</option>
+<option value="17">Married</option>
+<option value="711">Married at First Sight</option>
+<option value="699">MARS</option>
+<option value="929">Martha &amp; Snoop&#039;s Potluck Dinner Party</option>
+<option value="280">Marvel&#039;s Agent Carter</option>
+<option value="71">Marvel&#039;s Agents of S.H.I.E.L.D.</option>
+<option value="1003">Marvel&#039;s Cloak and Dagger</option>
+<option value="285">Marvel&#039;s Daredevil</option>
+<option value="889">Marvel&#039;s Inhumans</option>
+<option value="789">Marvel&#039;s Iron Fist</option>
+<option value="639">Marvel&#039;s Luke Cage</option>
+<option value="808">Marvel&#039;s Rocket and Groot</option>
+<option value="923">Marvel&#039;s Runaways</option>
+<option value="873">Marvel&#039;s Spider Man</option>
+<option value="865">Marvel&#039;s The Defenders</option>
+<option value="921">Marvel&#039;s The Punisher</option>
+<option value="676">Mary + Jane</option>
+<option value="766">Mary Kills People</option>
+<option value="212">Master of None</option>
+<option value="536">MasterChef (AU)</option>
+<option value="66">MasterChef (NZ)</option>
+<option value="323">MasterChef (US)</option>
+<option value="238">MasterChef Junior</option>
+<option value="252">MasterChef: The Professionals (UK)</option>
+<option value="39">Masters of Sex</option>
+<option value="941">McMafia</option>
+<option value="886">Me, Myself &amp; I</option>
+<option value="464">Mercy Street</option>
+<option value="926">Mickey and the Roadster Racers</option>
+<option value="842">Midnight, Texas</option>
+<option value="434">Midsomer Murders</option>
+<option value="315">Mike &amp; Molly</option>
+<option value="442">Mike Tyson Mysteries</option>
+<option value="901">Mindhunter</option>
+<option value="59">Minority Report</option>
+<option value="349">Mistresses (US)</option>
+<option value="75">Modern Family</option>
+<option value="208">Mom</option>
+<option value="187">Moonbeam City</option>
+<option value="362">Moonshiners</option>
+<option value="961">Mosaic</option>
+<option value="508">Motive</option>
+<option value="166">Mount Pleasant</option>
+<option value="6">Mountain Men</option>
+<option value="411">Mozart in the Jungle</option>
+<option value="345">Mr Selfridge</option>
+<option value="724">Mr. D</option>
+<option value="862">Mr. Mercedes</option>
+<option value="565">Mr. Pickles</option>
+<option value="273">Mr. Robot</option>
+<option value="739">Mrs. Brown&#039;s Boys</option>
+<option value="354">Murder in the First</option>
+<option value="203">Murdoch Mysteries</option>
+<option value="221">My Kitchen Rules (NZ)</option>
+<option value="509">My Little Pony: Friendship is Magic</option>
+<option value="955">My Next Guest Needs No Introduction</option>
+<option value="681">Mysteries at the Museum</option>
+<option value="815">Mystery Science Theater 3000: The Return</option>
+<option value="276">MythBusters</option>
+<option value="193">Naked and Afraid</option>
+<option value="601">Naked and Afraid XL</option>
+<option value="382">Narcos</option>
+<option value="678">NASA&#039;s Unexplained Files</option>
+<option value="105">Nashville (2012)</option>
+<option value="890">Nathan for You</option>
+<option value="407">National Geographic Explorer</option>
+<option value="69">NCIS</option>
+<option value="49">NCIS: Los Angeles</option>
+<option value="70">NCIS: New Orleans</option>
+<option value="575">New Blood</option>
+<option value="265">New Girl</option>
+<option value="772">No Offence</option>
+<option value="660">No Tomorrow</option>
+<option value="511">Not Safe with Nikki Glaser</option>
+<option value="640">Notorious</option>
+<option value="837">NOVA</option>
+<option value="799">Oasis</option>
+<option value="607">Odd Mom Out</option>
+<option value="493">Of Kings and Prophets</option>
+<option value="371">On The Rails of the Double Headed Eagle</option>
+<option value="33">Once Upon a Time</option>
+<option value="278">Orange Is the New Black</option>
+<option value="281">Orphan Black</option>
+<option value="963">Our Cartoon President</option>
+<option value="646">Our Girl</option>
+<option value="549">Outcast</option>
+<option value="303">Outlander</option>
+<option value="461">Outsiders</option>
+<option value="843">Ozark</option>
+<option value="795">Panorama</option>
+<option value="677">Paranoid</option>
+<option value="1000">Patrick Melrose</option>
+<option value="777">Patriot</option>
+<option value="702">PAW Patrol</option>
+<option value="167">Pawn Stars</option>
+<option value="339">Peaky Blinders</option>
+<option value="247">Peep Show</option>
+<option value="88">Penn &amp; Teller: Fool Us</option>
+<option value="289">Penny Dreadful</option>
+<option value="692">People of Earth</option>
+<option value="268">Person of Interest</option>
+<option value="876">Philip K. Dick&#039;s Electric Dreams</option>
+<option value="642">Pitch</option>
+<option value="1010">PJ Masks</option>
+<option value="695">Planet Earth II</option>
+<option value="223">Player Attack</option>
+<option value="726">Please Like Me</option>
+<option value="520">Plebs</option>
+<option value="176">Pokémon</option>
+<option value="609">Poldark</option>
+<option value="312">Portlandia</option>
+<option value="1013">Pose</option>
+<option value="343">Power</option>
+<option value="754">Powerless</option>
+<option value="348">Powers (US)</option>
+<option value="548">Preacher</option>
+<option value="293">Pretty Little Liars</option>
+<option value="387">Prey (UK)</option>
+<option value="801">Prison Break</option>
+<option value="563">Private Eyes</option>
+<option value="123">Project Greenlight</option>
+<option value="661">Project Runway</option>
+ <option value="146">Public Morals (2015)</option>
+<option value="747">Pure</option>
+<option value="690">Pure Genius</option>
+<option value="183">QI</option>
+<option value="211">QI XL</option>
+<option value="46">Quantico</option>
+<option value="618">Quarry</option>
+<option value="581">Queen of the South</option>
+<option value="650">Queen Sugar</option>
+<option value="730">Ransom</option>
+<option value="102">Ray Donovan</option>
+<option value="467">Real Husbands of Hollywood</option>
+<option value="29">Real Time With Bill Maher</option>
+<option value="23">Rectify</option>
+<option value="437">Red Band Society</option>
+<option value="337">Red Dwarf</option>
+<option value="586">Regular Show</option>
+<option value="165">Reign</option>
+<option value="885">Rellik</option>
+<option value="1001">Reverie</option>
+<option value="802">Review</option>
+<option value="44">Rick and Morty</option>
+<option value="227">Ridiculousness</option>
+<option value="16">Ring of Honor</option>
+<option value="340">Ripper Street</option>
+<option value="978">Rise</option>
+<option value="220">River</option>
+<option value="546">River Monsters</option>
+<option value="751">Riverdale</option>
+<option value="836">Riviera</option>
+<option value="308">Rizzoli &amp; Isles</option>
+<option value="570">Roadies</option>
+<option value="186">Robot Chicken</option>
+<option value="593">Robot Wars</option>
+<option value="539">Rogue</option>
+<option value="845">Room 104</option>
+<option value="982">Roseanne</option>
+<option value="82">Rosewood</option>
+<option value="306">Royal Pains</option>
+<option value="414">Running Wild with Bear Grylls</option>
+<option value="990">RuPaul&#039;s Drag Race</option>
+<option value="958">RuPaul&#039;s Drag Race: All Stars</option>
+<option value="507">Rush Hour</option>
+<option value="912">S.W.A.T.</option>
+<option value="1009">Safe</option>
+<option value="327">Salem</option>
+<option value="839">Salvation</option>
+<option value="790">Samurai Jack</option>
+<option value="758">Santa Clarita Diet</option>
+<option value="134">Satisfaction (US)</option>
+<option value="145">Saturday Night Live</option>
+<option value="866">Saturday Night Live: Weekend Update</option>
+<option value="18">Saving Hope</option>
+<option value="13">Scandal (US)</option>
+<option value="439">Schitt&#039;s Creek</option>
+<option value="52">Scorpion</option>
+<option value="68">Scream Queens (2015)</option>
+<option value="558">Scream: The TV Series</option>
+<option value="887">SEAL Team</option>
+<option value="717">Search Party</option>
+<option value="399">Second Chance (2016)</option>
+<option value="652">Secrets and Lies (US)</option>
+<option value="309">Sense8</option>
+<option value="605">Sesame Street</option>
+<option value="20">Seth Meyers</option>
+<option value="592">Sex and Drugs and Rock and Roll</option>
+<option value="429">Shades of Blue</option>
+<option value="438">Shadowhunters</option>
+<option value="282">Shameless (US)</option>
+<option value="35">Shark Tank</option>
+<option value="669">Shaun the Sheep</option>
+<option value="269">Sherlock</option>
+<option value="476">Shetland</option>
+<option value="725">Shoot the Messenger</option>
+<option value="704">Shooter</option>
+<option value="794">Shots Fired</option>
+<option value="731">Shut Eye</option>
+ <option value="937">Sick Note</option>
+<option value="431">Silent Witness</option>
+<option value="275">Silicon Valley</option>
+<option value="1007">Siren</option>
+<option value="988">Siren (2018)</option>
+<option value="741">SIX</option>
+<option value="497">Slasher</option>
+<option value="91">Sleepy Hollow</option>
+<option value="917">SMILF</option>
+<option value="742">Sneaky Pete</option>
+<option value="840">Snowfall</option>
+<option value="331">So You Think You Can Dance</option>
+<option value="786">Sofia the First</option>
+<option value="855">Somewhere Between</option>
+<option value="623">Son of Zorn</option>
+<option value="377">South of Hell</option>
+<option value="83">South Park</option>
+<option value="637">Speechless</option>
+<option value="989">Splitting Up Together</option>
+<option value="632">SpongeBob SquarePants</option>
+<option value="771">SS-GB</option>
+<option value="693">Stan Against Evil</option>
+<option value="450">Stan Lee&#039;s Lucky Man</option>
+<option value="734">Star</option>
+<option value="879">Star Trek: Discovery</option>
+<option value="674">Star vs. the Forces of Evil</option>
+<option value="129">Star Wars Rebels</option>
+<option value="960">Stargate Origins</option>
+<option value="723">StarTalk</option>
+<option value="979">Station 19</option>
+<option value="4">Stephen Colbert</option>
+<option value="589">Steven Universe</option>
+<option value="856">Still Star-Crossed</option>
+<option value="133">Stitchers</option>
+<option value="213">Storage Wars</option>
+<option value="229">Storage Wars: Miami</option>
+<option value="583">Stranger Things</option>
+<option value="974">Street Outlaws</option>
+<option value="391">Strictly Come Dancing</option>
+<option value="970">Strike</option>
+<option value="878">Strike (UK)</option>
+<option value="913">Strike Back</option>
+<option value="800">Submission</option>
+<option value="1004">Succession</option>
+<option value="263">Suits</option>
+<option value="140">Supergirl</option>
+<option value="760">Superior Donuts</option>
+<option value="144">Supernatural</option>
+<option value="936">Superstition</option>
+<option value="380">Superstore</option>
+<option value="148">Survivor</option>
+<option value="65">Survivor&#039;s Remorse</option>
+<option value="244">Survivorman</option>
+<option value="412">Suspects</option>
+<option value="544">Swamp People</option>
+<option value="727">Sweet Vicious</option>
+<option value="1012">Sweetbitter</option>
+<option value="63">Switched at Birth</option>
+<option value="752">Taboo</option>
+<option value="737">Taboo (UK)</option>
+<option value="1016">Take Two</option>
+<option value="774">Taken</option>
+<option value="96">Talking Dead</option>
+<option value="486">Talking Saul</option>
+<option value="809">Tangled: The Series</option>
+<option value="736">Tanked</option>
+<option value="927">Taskmaster</option>
+<option value="396">Teachers (2016)</option>
+<option value="964">Teen Mom 2</option>
+<option value="628">Teen Mom OG</option>
+<option value="622">Teen Titans Go!</option>
+<option value="305">Teen Wolf</option>
+<option value="195">Teenage Mutant Ninja Turtles</option>
+<option value="384">Telenovela</option>
+<option value="905">Ten Days in the Valley</option>
+<option value="279">The 100</option>
+<option value="5">The Affair</option>
+ <option value="946">The Alienist</option>
+<option value="494">The Aliens</option>
+<option value="67">The Amazing Race</option>
+<option value="608">The Amazing Race Canada</option>
+<option value="672">The Amazing World of Gumball</option>
+<option value="283">The Americans (2013)</option>
+<option value="137">The Apprentice (UK)</option>
+<option value="351">The Apprentice US</option>
+<option value="792">The Arrangement</option>
+<option value="366">The Art of More</option>
+<option value="188">The Awesomes</option>
+<option value="440">The Bachelor</option>
+<option value="560">The Bachelorette</option>
+<option value="111">The Bastard Executioner</option>
+<option value="219">The Beautiful Lie</option>
+<option value="48">The Big Bang Theory</option>
+<option value="473">The Biggest Loser</option>
+<option value="81">The Blacklist</option>
+<option value="769">The Blacklist: Redemption</option>
+<option value="849">The Bold Type</option>
+<option value="884">The Brave</option>
+<option value="441">The Brink</option>
+<option value="762">The Carbonaro Effect</option>
+<option value="521">The Carmichael Show</option>
+<option value="501">The Catch (US)</option>
+<option value="945">The Chi</option>
+<option value="260">The Coroner</option>
+<option value="983">The Crossing</option>
+<option value="694">The Crown</option>
+<option value="249">The Curse of Oak Island</option>
+<option value="60">The Daily Show</option>
+<option value="209">The Demon Files</option>
+<option value="518">The Detour</option>
+<option value="871">The Deuce</option>
+<option value="828">The Durrells</option>
+<option value="121">The Ellen DeGeneres Show</option>
+<option value="942">The End of the F***ing World</option>
+<option value="606">The Eric Andre Show</option>
+<option value="641">The Exorcist</option>
+<option value="370">The Expanse</option>
+<option value="841">The F Word</option>
+<option value="321">The Fall</option>
+<option value="490">The Family</option>
+<option value="867">The First 48</option>
+<option value="534">The Five (UK)</option>
+<option value="115">The Flash (2014)</option>
+<option value="460">The Fosters (2013)</option>
+<option value="257">The Frankenstein Chronicles</option>
+<option value="807">The Get Down</option>
+<option value="892">The Gifted</option>
+<option value="517">The Girlfriend Experience</option>
+<option value="161">The Goldbergs</option>
+<option value="880">The Good Doctor</option>
+<option value="767">The Good Fight</option>
+<option value="630">The Good Place</option>
+<option value="97">The Good Wife</option>
+<option value="21">The Graham Norton Show</option>
+<option value="707">The Grand Tour</option>
+<option value="877">The Great British Bake Off</option>
+<option value="691">The Great Indoors</option>
+<option value="80">The Grinder</option>
+<option value="861">The Guest Book</option>
+<option value="744">The Halcyon</option>
+<option value="811">The Handmaid&#039;s Tale</option>
+<option value="436">The Increasingly Poor Decisions of Todd Margaret</option>
+<option value="572">The Jim Gaffigan Show</option>
+<option value="831">The Jim Jefferies Show</option>
+<option value="233">The Job Lot</option>
+<option value="986">The Joel McHale Show with Joel McHale</option>
+<option value="225">The Kennedys (UK)</option>
+<option value="157">The Knick</option>
+<option value="164">The Last Kingdom</option>
+<option value="56">The Last Man On Earth</option>
+<option value="994">The Last O.G.</option>
+<option value="423">The Last Panthers</option>
+<option value="287">The Last Ship</option>
+<option value="95">The League</option>
+<option value="108">The Leftovers</option>
+<option value="698">The Level</option>
+<option value="197">The Librarians (US)</option>
+<option value="468">The Lion Guard</option>
+<option value="591">The Living and the Dead</option>
+<option value="847">The Loch</option>
+<option value="938">The Long Road Home</option>
+<option value="968">The Looming Tower</option>
+<option value="392">The Magicians</option>
+<option value="254">The Man in the High Castle</option>
+<option value="934">The Marvelous Mrs. Maisel</option>
+<option value="918">The Mayor</option>
+<option value="898">The Mayor (2017)</option>
+<option value="728">The Mick</option>
+<option value="10">The Middle</option>
+<option value="87">The Mindy Project</option>
+<option value="673">The Missing</option>
+<option value="832">The Mist</option>
+<option value="64">The Muppets</option>
+<option value="322">The Musketeers</option>
+<option value="120">The Mysteries of Laura</option>
+<option value="481">The Night Manager</option>
+<option value="580">The Night Of</option>
+<option value="559">The Night Shift</option>
+<option value="474">The Nightmare Worlds of H.G. Wells</option>
+<option value="719">The OA</option>
+<option value="516">The Odd Couple</option>
+<option value="904">The Opposition with Jordan Klepper</option>
+<option value="149">The Originals</option>
+<option value="872">The Orville</option>
+<option value="504">The Path</option>
+<option value="24">The Player (2015)</option>
+<option value="531">The Powerpuff Girls</option>
+<option value="854">The President Show</option>
+<option value="682">The Profit</option>
+ <option value="664">The Ranch</option>
+<option value="418">The Real Housewives of Beverly Hills</option>
+<option value="714">The Real Housewives of New Jersey</option>
+<option value="610">The Real Housewives of New York City</option>
+<option value="240">The Real Housewives of Orange County</option>
+<option value="492">The Real O&#039;Neals</option>
+<option value="947">The Resident</option>
+<option value="251">The Returned (US)</option>
+<option value="222">The Romeo Section</option>
+<option value="253">The Royals</option>
+<option value="422">The Shannara Chronicles</option>
+<option value="43">The Simpsons</option>
+<option value="846">The Sinner</option>
+<option value="805">The Son</option>
+<option value="40">The Soup</option>
+<option value="42">The Strain</option>
+<option value="980">The Terror</option>
+<option value="598">The Tick</option>
+<option value="529">The Tunnel</option>
+<option value="14">The Ultimate Fighter</option>
+<option value="150">The Vampire Diaries</option>
+<option value="320">The Venture Bros.</option>
+<option value="471">The Voice (UK)</option>
+<option value="330">The Voice (US)</option>
+<option value="127">The Walking Dead</option>
+<option value="813">The White Princess</option>
+<option value="139">The X Factor (UK)</option>
+<option value="409">The X Files</option>
+<option value="686">The Young Pope</option>
+<option value="519">Thirteen</option>
+<option value="634">This is Us</option>
+<option value="239">This Life (CA)</option>
+<option value="703">Those Who Can&#039;t</option>
+<option value="627">Through the Wormhole</option>
+<option value="198">Thunderbirds Are Go</option>
+<option value="778">Time After Time</option>
+<option value="653">Timeless</option>
+ <option value="875">Tin Star</option>
+<option value="615">Tiny House Nation</option>
+<option value="259">Toast of London</option>
+<option value="231">Together</option>
+<option value="483">Togetherness</option>
+<option value="314">Top Chef</option>
+<option value="267">Top Gear</option>
+<option value="360">Top Gear (US)</option>
+<option value="868">Top Gear America</option>
+<option value="556">Top Gear: Extra Gear</option>
+<option value="863">Top of the Lake</option>
+<option value="194">Tosh.0</option>
+<option value="542">Total Divas</option>
+<option value="823">Trailer Park Boys</option>
+<option value="756">Training Day</option>
+<option value="355">Transparent</option>
+<option value="333">Transporter</option>
+<option value="668">Travelers</option>
+<option value="647">Treehouse Masters</option>
+<option value="791">Trial &amp; Error</option>
+<option value="390">Tripped</option>
+<option value="243">TripTank</option>
+<option value="216">Trollied</option>
+<option value="984">Troy: Fall Of A City</option>
+<option value="264">True Detective</option>
+<option value="987">Trust</option>
+<option value="136">Truth Be Told</option>
+<option value="338">Turn</option>
+<option value="697">Tutankhamun</option>
+<option value="820">Twin Peaks</option>
+<option value="318">Tyrant</option>
+<option value="170">Ultimate Spider-Man</option>
+<option value="522">Unbreakable Kimmy Schmidt</option>
+<option value="125">Undateable</option>
+<option value="543">Undercover (UK)</option>
+<option value="342">Undercover Boss</option>
+<option value="496">Underground</option>
+<option value="334">Unforgettable</option>
+<option value="205">Unforgotten</option>
+<option value="557">UnREAL</option>
+<option value="200">Utopia (AU)</option>
+<option value="902">Valor</option>
+<option value="588">Van Helsing</option>
+<option value="378">Vanderpump Rules</option>
+<option value="295">Veep</option>
+<option value="230">Vegas Rat Rods</option>
+<option value="55">VICE</option>
+<option value="907">VICE News Tonight</option>
+<option value="584">Vice Principals</option>
+<option value="600">Victoria</option>
+<option value="272">Vikings</option>
+<option value="479">Vinyl</option>
+<option value="743">Voltron: Legendary Defender</option>
+<option value="255">W/ Bob and David</option>
+<option value="171">Wabbit</option>
+<option value="952">Waco</option>
+<option value="617">Wahlburgers</option>
+<option value="551">Wallander</option>
+<option value="369">Wander Over Yonder</option>
+<option value="417">War And Peace</option>
+<option value="547">Wayward Pines</option>
+<option value="538">We Bare Bears</option>
+<option value="162">Wentworth</option>
+<option value="651">Westworld</option>
+<option value="381">What Could Possibly Go Wrong?</option>
+ <option value="533">When Calls the Heart</option>
+<option value="922">White Famous</option>
+<option value="721">White Rabbit Project</option>
+<option value="93">Whose Line is it Anyway? (US)</option>
+<option value="141">Wicked City</option>
+<option value="844">Will</option>
+<option value="888">Will &amp; Grace</option>
+<option value="897">Wisdom of the Crowd</option>
+<option value="291">Workaholics</option>
+<option value="675">Worst Cooks in America</option>
+<option value="569">Wrecked</option>
+<option value="191">WWE Breaking Ground</option>
+<option value="196">WWE NXT</option>
+<option value="190">WWE Raw</option>
+<option value="204">WWE Smackdown</option>
+<option value="215">WWE Superstars</option>
+<option value="506">Wynonna Earp</option>
+<option value="466">X Company</option>
+<option value="710">Years of Living Dangerously</option>
+<option value="1015">Yellowstone (2018)</option>
+<option value="732">Yonderland</option>
+<option value="783">You Me Her</option>
+<option value="151">You, Me and the Apocalypse</option>
+<option value="74">You&#039;re the Worst</option>
+<option value="79">Young and Hungry</option>
+<option value="881">Young Sheldon</option>
+<option value="444">Younger</option>
+<option value="564">Yukon Gold</option>
+<option value="242">Yukon Men</option>
+<option value="36">Z Nation</option>
+<option value="696">Zapped</option>
+<option value="344">Zoo</option>
+</select>
+<button type="submit" class="btn btn-primary selectpill">Add to my list</button>
+</form>
+</div>
+<div class="col-md-2 col-sm-12 filterpill text-md-right">
+<a class="btn btn-default" href="https://showrss.info/toggle">
+Use my filters
+</a>
+</div>
+</div>
+<br>
+<div class="row">
+<div class="col-md-3">
+<ul class="user-selections">
+<li>
+<span class="del glyphicon glyphicon-remove" data-id="284" title="Delete show"></span>
+<span class="qtag q-hd">hd</span>
+<a class="set" href="https://showrss.info/show/edit/284"><span class="glyphicon glyphicon-cog" title="Edit show"></span></a>
+<a class="sh" href="https://showrss.info/browse/284" title="12 Monkeys">
+12 Monkeys
+</a>
+</li>
+<li>
+<span class="del glyphicon glyphicon-remove" data-id="822" title="Delete show"></span>
+<span class="qtag q-hd">hd</span>
+<a class="set" href="https://showrss.info/show/edit/822"><span class="glyphicon glyphicon-cog" title="Edit show"></span></a>
+<a class="sh" href="https://showrss.info/browse/822" title="30 for 30">
+30 for 30
+</a>
+</li>
+<li>
+<span class="del glyphicon glyphicon-remove" data-id="341" title="Delete show"></span>
+<span class="qtag q-hd">hd</span>
+<a class="set" href="https://showrss.info/show/edit/341"><span class="glyphicon glyphicon-cog" title="Edit show"></span></a>
+<a class="sh" href="https://showrss.info/browse/341" title="America&#039;s Got Talent">
+America&#039;s Got Talent
+</a>
+</li>
+<li>
+<span class="del glyphicon glyphicon-remove" data-id="262" title="Delete show"></span>
+<span class="qtag q-hd">hd</span>
+<a class="set" href="https://showrss.info/show/edit/262"><span class="glyphicon glyphicon-cog" title="Edit show"></span></a>
+<a class="sh" href="https://showrss.info/browse/262" title="Game of Thrones">
+Game of Thrones
+</a>
+</li>
+</ul>
+</div>
+<div class="col-md-9">
+<strong>06/30/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:1E1FB33EF2DC5ABB78CE3DF075606B65C86151B7&dn=12+Monkeys+S04E08+Demons+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E08 Demons 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;08 Demons 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:F741A1C4D7CB332F974052FD3508BBE47E0C2664&dn=12+Monkeys+S04E09+One+Minute+More+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E09 One Minute More 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;09 One Minute More 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:2435B8B60FEE450CF353E31EE6037524EC8A296A&dn=12+Monkeys+S04E07+Daughters+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E07 Daughters 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;07 Daughters 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:D16B55B93C5DA6769C3C147286911267FC71FFFA&dn=12+Monkeys+S04E09+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E09 HDTV x264 KILLERS">
+ <strong>12 Monkeys</strong> 4&times;09 One Minute More
+</a></li>
+<li><a href="magnet:?xt=urn:btih:AB1A789FEE00529E2AA8A317DCB94B3709FFBA33&dn=12+Monkeys+S04E09+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E09 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;09 One Minute More 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:50F4FB5D2EC7632E2E1D6D5E8D5D8907A3FC1234&dn=12+Monkeys+S04E08+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E08 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;08 Demons
+</a></li>
+<li><a href="magnet:?xt=urn:btih:DE1914167940830D76EE2FA2CBAC7DF28983111F&dn=12+Monkeys+S04E08+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E08 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;08 Demons 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:63DB46334894D7BA4C56542EE0731CD08000C4AD&dn=12+Monkeys+S04E07+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E07 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;07 Daughters 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:B0F2A17D995667E3D92B9B219A869D3BCDCCE8B9&dn=12+Monkeys+S04E07+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E07 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;07 Daughters
+</a></li>
+</ul>
+<strong>06/27/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:918CD82AF87C71FAF0E2DF4B1409C5C3DB996C07&dn=Americas+Got+Talent+S13E05+1080p+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="Americas Got Talent S13E05 1080p WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;05 Auditions 5 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:4C25C746B7DCB1696DD2EF64DC08CC80197DC8F0&dn=Americas+Got+Talent+S13E05+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="Americas Got Talent S13E05 WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;05 Auditions 5
+</a></li>
+<li><a href="magnet:?xt=urn:btih:B13DB3C151B7956F231F5A15B0D9110BBE3B2B4D&dn=Americas+Got+Talent+S13E05+720p+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="Americas Got Talent S13E05 720p WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;05 Auditions 5 720p
+</a></li>
+</ul>
+<strong>06/23/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:8D2ADCC41C65605D657146A81D900A5D551C70B2&dn=12+Monkeys+S04E06+WEBRip+x264+ION10&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E06 WEBRip x264 ION10">
+<strong>12 Monkeys</strong> 4&times;06 Die Glocke
+</a></li>
+<li><a href="magnet:?xt=urn:btih:5F75793CCF4A0B0C0719554CE1B4C5C534C5874B&dn=12+Monkeys+S04E04+Legacy+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E04 Legacy 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;04 Legacy 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:F845CE7F9AFF82FFFE3B360B6B2E8F7402DD2FA9&dn=12+Monkeys+S04E05+After+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E05 After 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;05 After 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:3339F9109F16F3F931EBA2503F9CBC65BCCF4097&dn=12+Monkeys+S04E06+Die+Glocke+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E06 Die Glocke 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;06 Die Glocke 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:119AE26E8CBF6D85CC26CF840F89AB92F0B88EA4&dn=12+Monkeys+S04E06+Die+Glocke+720p+AMZN+WEB+DL+DDP5+1+H+264+NT&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E06 Die Glocke 720p AMZN WEB DL DDP5 1 H 264 NT">
+<strong>12 Monkeys</strong> 4&times;06 Die Glocke 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:26012581F9A0C25800FC878FE97BC61B60AE679C&dn=12+Monkeys+S04E05+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E05 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;05 After
+</a></li>
+<li><a href="magnet:?xt=urn:btih:7E30CF22578F3A12634B2E8A877620A47082F108&dn=12+Monkeys+S04E05+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E05 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;05 After 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:98ABCCB37E0CB14E7ADC557E9EFB2E4CE984D204&dn=12+Monkeys+S04E04+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E04 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;04 Legacy
+</a></li>
+<li><a href="magnet:?xt=urn:btih:1F9D088CEF6E47AEE3D1A89E229DE1FD4D988DF5&dn=12+Monkeys+S04E04+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E04 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;04 Legacy 720p
+</a></li>
+</ul>
+<strong>06/22/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:F12F96617BE37BE2F0C96B5166EF84A79E3EB7C7&dn=Americas+Got+Talent+S18E04+WEBRip+x264+ION10&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="Americas Got Talent S18E04 WEBRip x264 ION10">
+<strong>America's Got Talent</strong> 18&times;04 Auditions 4
+</a></li>
+<li><a href="magnet:?xt=urn:btih:483F129EFA7B27B4CA7BCE55528F370F887A1FC4&dn=Americas+Got+Talent+S18E04+1080p+NF+WEBRip+DD5+1+x264+NTb&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="Americas Got Talent S18E04 1080p NF WEBRip DD5 1 x264 NTb">
+<strong>America's Got Talent</strong> 18&times;04 Auditions 4 1080p
+</a></li>
+</ul>
+<strong>06/20/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:735182C0BC75CB0F5152EB92C113C5981FA5AD96&dn=Americas+Got+Talent+S13E04+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="Americas Got Talent S13E04 WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;04 Auditions 4
+</a></li>
+<li><a href="magnet:?xt=urn:btih:CEF44AF57D314ABF1FC77417DA50D5B28995C20E&dn=Americas+Got+Talent+S13E04+720p+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="Americas Got Talent S13E04 720p WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;04 Auditions 4 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:5751B405A4E6978FD6C0D4A3C1856677F7D875F1&dn=Americas+Got+Talent+S13E04+1080p+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="Americas Got Talent S13E04 1080p WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;04 Auditions 4 1080p
+</a></li>
+</ul>
+<strong>06/16/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:8EB9FFE8CAB3CE58698D910FC0B9AA3DA8D8E2F0&dn=12+Monkeys+S04E01+The+End+1080p+AMZN+WEBRip+DDP5+1+x264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E01 The End 1080p AMZN WEBRip DDP5 1 x264 NTG">
+<strong>12 Monkeys</strong> 4&times;01 The End 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:B66BEF53EC18EDAD0CCCF77473FFA3A3424674F7&dn=12+Monkeys+S04E03+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E03 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;03 45 RPM 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:418077009862E9547B366DA3CD068B448FEDFE11&dn=12+Monkeys+S04E03+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E03 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;03 45 RPM
+</a></li>
+<li><a href="magnet:?xt=urn:btih:371D563837CEDD932D3B73FAD6F86673B3DD9057&dn=12+Monkeys+S04E02+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E02 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;02 Ouroboros 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:A98F5B57CE90F26E86C10F2A49859C66CE8258BF&dn=12+Monkeys+S04E02+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E02 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;02 Ouroboros
+</a></li>
+<li><a href="magnet:?xt=urn:btih:11E3CB191024278070621EB169910EB26076D8B0&dn=12+Monkeys+S04E03+45+RPM+1080p+AMZN+WEB+DL+DDP5+1+H+264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E03 45 RPM 1080p AMZN WEB DL DDP5 1 H 264 NTG">
+<strong>12 Monkeys</strong> 4&times;03 45 RPM 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:B6925D023B7FB558D27F1E4BF3E44EEF0B2825C5&dn=12+Monkeys+S04E02+Ouroboros+1080p+AMZN+WEB+DL+DDP5+1+H+264+NTG&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="12 Monkeys S04E02 Ouroboros 1080p AMZN WEB DL DDP5 1 H 264 NTG">
+<strong>12 Monkeys</strong> 4&times;02 Ouroboros 1080p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:36FE4FE88979B7AFC8CDA9B01903BF9D5E694B04&dn=12+Monkeys+S04E01+720p+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="12 Monkeys S04E01 720p HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;01 The End 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:64AD9F47BE5BC5FD38C85FA4E78675D27CAED223&dn=12+Monkeys+S04E01+HDTV+x264+KILLERS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="12 Monkeys S04E01 HDTV x264 KILLERS">
+<strong>12 Monkeys</strong> 4&times;01 The End
+</a></li>
+</ul>
+<strong>06/13/2018</strong>
+<ul class="user-timeline">
+<li><a href="magnet:?xt=urn:btih:382408F3133AEA99453146EA5F729C3C3B3F28AA&dn=Americas+Got+Talent+S13E03+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="sd" title="Americas Got Talent S13E03 WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;03 Auditions 3
+</a></li>
+<li><a href="magnet:?xt=urn:btih:449AE2F84A677CDC443C80F6B777DC964928FA1C&dn=Americas+Got+Talent+S13E03+720p+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="hd" title="Americas Got Talent S13E03 720p WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;03 Auditions 3 720p
+</a></li>
+<li><a href="magnet:?xt=urn:btih:B24786042F91D95F8260B458ED89974042AE8DF2&dn=Americas+Got+Talent+S13E03+1080p+WEB+x264+TBS&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce" class="fhd" title="Americas Got Talent S13E03 1080p WEB x264 TBS">
+<strong>America's Got Talent</strong> 13&times;03 Auditions 3 1080p
+</a></li>
+</ul> </div>
+</div>
+<form action="https://showrss.info/show/delete" method="POST" id="deleteShowForm">
+<input type="hidden" name="_token" value="Xe8AdkOS5vo11JjQSXVRbZ48e3I7bPGw6daYrEQy">
+<input type="hidden" name="show" value="" id="deleteShowId">
+</form>
+<script>
+$(".del").click(function() {
+    document.getElementById('deleteShowId').value = $(this).data("id");
+    document.getElementById('deleteShowForm').submit();
+});
+
+$("#showselector").chosen();
+</script>
+<footer>
+<div class="row">
+<div class="col-md-6 col-xs-12">
+showRSS is a free tool supported exclusively by donations
+</div>
+<div class="col-md-6 col-xs-12 text-md-right">
+<a href="https://showrss.info/help">help</a> | <a href="https://twitter.com/showrss">@showrss on twitter</a> | <a href="https://showrss.info/donate">make a donation</a>
+</div>
+</div>
+</footer>
+<br /> </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+﻿
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Download completed notification</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width">
+    <style>
+        body {
+            font-family: 'Robotto', sans-serif;
+        }
+
+        span.info {
+            font-weight: bold;
+        }
+
+        th {
+            padding: 5px;
+            text-align: left;
+        }
+
+        td, th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        ul {
+            list-style: square;
+            padding-left: 20px;
+        }
+
+        li {
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body style="background-color: white;">
+    <ul>
+        <li>
+            <div>
+                Downloaded in 
+                <span class="info">{downloadedIn}</span>
+                at <span class="info">{avgSpeed}</span>
+            </div>
+        </li>
+        <li>
+            <div>
+                Processed in 
+                <span class="info">{processedIn}</span>
+            </div>
+        </li>
+    </ul>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th class="info">Filename</th>
+                    <th class="info">Size</th>
+                </tr>
+            </thead>
+            <tbody>
+                {movedFiles}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>
+

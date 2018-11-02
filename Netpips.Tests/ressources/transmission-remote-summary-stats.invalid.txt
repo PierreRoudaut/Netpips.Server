@@ -1,0 +1,41 @@
+﻿NAME
+  Id: 5
+  Name: Shameless+US+S07E10+720p+HDTV+X264+DIMENSION
+  Hash: ec153815f6190ea698e095291e334b5360645f7b
+  Magnet: magnet:?xt=urn:btih:ec153815f6190ea698e095291e334b5360645f7b&dn=Shameless%2BUS%2BS07E10%2B720p%2BHDTV%2BX264%2BDIMENSION&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=http%3A%2F%2Ftracker.trackerfix.com%3A80%2Fannounce
+
+TRANSFER
+  State: Stopped
+  Location: /home/netpips/Downloads
+  Percent Done: nan%
+  ETA: 0 seconds (0 seconds)
+  Download Speed: 0 kB/s
+  Upload Speed: 0 kB/s
+  Have: None (None verified)
+  Availability: None
+  Availability: nan%
+  Total size: None (None wanted)
+  Downloaded: None
+  Uploaded: None
+  Ratio: None
+  Corrupt DL: None
+  Peers: connected to 0, uploading to 0, downloading from 0
+
+HISTORY
+  Date added:       Tue Jan 30 23:59:36 2018
+  Date started:     Tue Jan 30 23:59:36 2018
+  Downloading Time: 5 seconds (5 seconds)
+
+ORIGINS
+  Public torrent: Yes
+  Piece Count: 0
+  Piece Size: None
+
+LIMITS & BANDWIDTH
+  Download Limit: Unlimited
+  Upload Limit: Unlimited
+  Ratio Limit: Default
+  Honors Session Limits: Yes
+  Peer limit: 50
+  Bandwidth Priority: Normal
+
