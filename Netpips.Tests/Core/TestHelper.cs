@@ -96,10 +96,10 @@ namespace Netpips.Tests.Core
             NetpipsSettings.MediaFolders.ToList().ForEach(elem => mediaLibrary.CreateSubdirectory(elem));
 
             // netpips/downloads
-            var downloads = netpips.CreateSubdirectory("downloads");
+            netpips.CreateSubdirectory("downloads");
 
             // netpips/logs
-            var logs = netpips.CreateSubdirectory("logs");
+            netpips.CreateSubdirectory("logs");
 
             // netpips/.torrent_done.sh
             var torrentDonePath = Path.Combine(netpips.FullName, ".torrent_done.sh");
