@@ -7,9 +7,7 @@ Manage downloads, media files and libraries for Plex Media Server through a REST
 Netpips is a companion server app for Plex Media Server. It's main focus is to manage and automate the download of TV Shows, Movies, downloads on your server. Once download are completed, the target files will be automatically "smartly" renamed and moved to their according media folder and subtitles will be fetched
 
 For example, a file title _The.Big.Bang.Theory.S11E23.HDTV.x264-SVA[eztv].mkv_
-will be renamed and moved to: 
-
-__TV Shows / Suits / Season 07 / Suits - S07E16 - GoodBye.mkv__
+will be renamed and moved to:  _TV Shows / Suits / Season 07 / Suits - S07E16 - GoodBye.mkv_
 
 
 ## Features
