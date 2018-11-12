@@ -4,12 +4,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using BencodeNET.Parsing;
 using BencodeNET.Torrents;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Netpips.Core;
+using Netpips.Core.Extensions;
 using Netpips.Core.Settings;
 using Netpips.Download.Exception;
 using Netpips.Download.Model;
@@ -177,9 +179,28 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
             new Regex(@".*.torrent")
         };
 
+        private bool PointsToTorrentUrl(string url)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Head, url);
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", OsHelper.UserAgent);
+                HttpResponseMessage response;
+                try
+                {
+                    response = client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead).Result;
+                }
+                catch
+                {
+                    return false;
+                }
+                return response.Content.Headers?.ContentDisposition?.FileName.EndsWith(".torrent") ?? false;
+            }
+        }
+
         public bool CanHandle(string fileUrl)
         {
-            var res = SupportedUrls.Any(x => x.IsMatch(fileUrl));
+            var res = SupportedUrls.Any(x => x.IsMatch(fileUrl)) || PointsToTorrentUrl(fileUrl);
             return res;
         }
 
