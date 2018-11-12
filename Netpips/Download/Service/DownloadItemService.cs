@@ -31,6 +31,27 @@ namespace Netpips.Download.Service
             this.logger = logger;
         }
 
+        public UrlValidationResult ValidateUrl(string fileUrl)
+        {
+            var downloadMethod = ResolveDownloadMethod(fileUrl);
+            var result = new UrlValidationResult();
+            if (downloadMethod == null)
+            {
+                logger.LogWarning("URL not supported: " + fileUrl);
+                result.IsSupported = false;
+                result.Message = "URL not supported";
+            }
+            else
+            {
+                result.IsSupported = true;
+            }
+
+            return result;
+          
+        }
+
+        public IDownloadMethod ResolveDownloadMethod(string fileUrl) => serviceProvider.GetServices<IDownloadMethod>().FirstOrDefault(x => x.CanHandle(fileUrl));
+
         /// <inheritdoc />
         /// <summary>
         /// Starts a download
@@ -42,7 +63,7 @@ namespace Netpips.Download.Service
         {
             error = DownloadItemActionError.DownloadabilityFailure;
 
-            var downloadMethod = serviceProvider.GetServices<IDownloadMethod>().FirstOrDefault(x => x.CanHandle(item.FileUrl));
+            var downloadMethod = ResolveDownloadMethod(item.FileUrl);
             if (downloadMethod == null)
             {
                 logger.LogWarning("URL not handled: " + item.FileUrl);

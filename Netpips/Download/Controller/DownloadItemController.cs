@@ -87,6 +87,18 @@ namespace Netpips.Download.Controller
         }
 
 
+        [HttpPost("isUrlSupported", Name = "IsUrlSupported")]
+        [ProducesResponseType(typeof(DownloadItem), 201)]
+        [ProducesResponseType(typeof(string), 404)]
+        [ProducesResponseType(typeof(string), 400)]
+        [ProducesResponseType(typeof(string), 500)]
+        public ObjectResult IsUrlSupported([FromBody] string fileUrl)
+        {
+            var result = this.service.ValidateUrl(fileUrl);
+            return Ok(result);
+        }
+
+
         [HttpPost("cancel", Name = "Cancel")]
         [ProducesResponseType(typeof(string), 404)]
         [ProducesResponseType(typeof(string), 400)]
