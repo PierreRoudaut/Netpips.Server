@@ -2,6 +2,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using Moq.AutoMock;
 using Netpips.Core.Settings;
 using Netpips.Download.DownloadMethod.PeerToPeer;
 using Netpips.Download.Exception;
@@ -121,6 +122,20 @@ namespace Netpips.Tests.Download.DownloadMethod
             Assert.AreEqual("The.Big.Bang.Theory.S11E14.HDTV.x264-SVA[rarbg]", item.Name);
             Assert.AreEqual(140940255, item.TotalSize);
             Assert.AreEqual("25c8f093021fd9d97087f9444c160d9bb3d70e35", item.Hash);
+        }
+
+        [TestCase("https://yts.am/torrent/download/0F90513AC34C36775E8C1F0352510CB6266DC87E", true)]
+        [TestCase("magnet:?1234", true)]
+        [TestCase("http://some-torrent-forum.com/file.torrent", true)]
+        [TestCase("https://wikipedia.org", false)]
+        [TestCase("https://en.wikipedia.org/404", false)]
+        [TestCase("http://test-debit.free.fr/1024.rnd", false)]
+        [TestCase("http://invalid-forum.com/1234", false)]
+        public void CanHandle(string url, bool expectedResult)
+        {
+            var autoMocker = new AutoMocker();
+            var method = autoMocker.CreateInstance<P2PDownloadMethod>();
+            Assert.AreEqual(expectedResult, method.CanHandle(url));
         }
     }
 }
