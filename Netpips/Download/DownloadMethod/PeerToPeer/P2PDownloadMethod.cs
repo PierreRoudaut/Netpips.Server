@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using BencodeNET.Parsing;
 using BencodeNET.Torrents;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Netpips.Core;
@@ -200,8 +201,10 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
 
         public bool CanHandle(string fileUrl)
         {
-            var res = SupportedUrls.Any(x => x.IsMatch(fileUrl)) || PointsToTorrentUrl(fileUrl);
-            return res;
+            var res = SupportedUrls.Any(x => x.IsMatch(fileUrl));
+            if (res) return true;
+            if (Uri.IsWellFormedUriString(fileUrl, UriKind.Absolute)) PointsToTorrentUrl(fileUrl);
+            return false;
         }
 
         public bool CanHandle(DownloadType type)
