@@ -2,6 +2,11 @@ language: csharp
 dist: xenial
 mono: none
 dotnet: 2.1
+addons:
+  sonarcloud:
+    organization: "pierreroudaut-github"
+    token:
+      secure: $SONAR_TOKEN
 script:
  - export APP_PROJECT_NAME=Netpips
  - export TEST_PROJECT_NAME=Netpips.Tests
