@@ -12,6 +12,7 @@ using Netpips.Identity.Model;
 using Netpips.Subscriptions.Model;
 using Netpips.Subscriptions.Service;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace Netpips.Subscriptions.Controller
 {
@@ -151,13 +152,13 @@ namespace Netpips.Subscriptions.Controller
         [HttpGet("{showRssId}")]
         public ObjectResult ShowDetails(int showRssId)
         {
-            var TvShowRssShow = $"[tv-show-rss-{showRssId}]";
-            if (!memoryCache.TryGetValue(TvShowRssShow, out string json))
+            var tvShowRssShowCacheKey = $"[tv-show-rss-{showRssId}]";
+            if (!memoryCache.TryGetValue(tvShowRssShowCacheKey, out string json))
             {
                 try
                 {
                     json = GetShowDetail(showRssId);
-                    this.memoryCache.Set(TvShowRssShow, json);
+                    this.memoryCache.Set(tvShowRssShowCacheKey, json);
                     if (string.IsNullOrEmpty(json))
                     {
                         throw new ApplicationException("No json retrieved");
@@ -165,6 +166,7 @@ namespace Netpips.Subscriptions.Controller
                 }
                 catch (Exception ex)
                 {
+                    this.memoryCache.Remove(tvShowRssShowCacheKey);
                     this.logger.LogError("Failed to fetch info for showRssId: " + showRssId);
                     this.logger.LogError(ex.Message);
                     return this.BadRequest(false);
@@ -185,6 +187,7 @@ namespace Netpips.Subscriptions.Controller
             var rootElement = XElement.Load(showRssUrl);
             XNamespace np = rootElement.Attributes().First(a => a.Value.Contains("showrss")).Value;
             var tvMazeIdContent = rootElement.Descendants(np + "external_id").FirstOrDefault()?.Value;
+            Log.Information("tvMazeIdContent: " + tvMazeIdContent);
             if (string.IsNullOrEmpty(tvMazeIdContent) || !int.TryParse(tvMazeIdContent, out var tvMazeId))
             {
                 return null;
