@@ -116,9 +116,13 @@ namespace Netpips.Tests.Core
         public static DirectDownloadSettings CreateDirectDownloadSettings()
         {
             var settings = GetTestConfiguration().GetSectionSettings<DirectDownloadSettings>();
-            if (!settings.Filehosters.Any())
+            if (settings == null)
             {
-                throw new ApplicationException("No filehosters were registered");
+                throw new ApplicationException("Failed to load FilehosterSettings with test configuration");
+            }
+            if (settings.Filehosters == null || settings.Filehosters.Count == 0)
+            {
+                throw new ApplicationException("No filehosters were registered. Test will fail");
             }
             return settings;
         }
@@ -138,6 +142,10 @@ namespace Netpips.Tests.Core
         public static ShowRssSettings CreateShowRssSettings()
         {
             var settings = GetTestConfiguration().GetSectionSettings<ShowRssSettings>();
+            if (settings == null)
+            {
+                throw new ApplicationException("Failed to load ShowRssSettings with test configuration");
+            }
             if (string.IsNullOrEmpty(settings.Username))
             {
                 throw new ApplicationException("ShowRss.Username is not set");
