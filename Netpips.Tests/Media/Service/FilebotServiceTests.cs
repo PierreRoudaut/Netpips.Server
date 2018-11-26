@@ -108,7 +108,7 @@ namespace Netpips.Tests.Media.Service
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsTrue(filebot.GetSubtitles(path, out var srtPath, "fra", nonStrict: true));
+            Assert.IsTrue(filebot.GetSubtitles(path, out var srtPath, "eng", nonStrict: true));
             Assert.IsTrue(File.Exists(srtPath), ".srt not found");
         }
     }
