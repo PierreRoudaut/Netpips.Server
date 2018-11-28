@@ -63,11 +63,12 @@ namespace Netpips.Subscriptions.Model
         /// <inheritdoc />
         public List<DownloadItem> FindCompletedItems(int timeWindow)
         {
+            var threshold = DateTime.Now.AddDays(-timeWindow);
             var items = this.dbContext
                 .ShowRssItems
                 .Include(x => x.DownloadItem)
                 .Where(s => s.DownloadItem != null && s.DownloadItem.State == DownloadState.Completed &&
-                            s.DownloadItem.CompletedAt.AddDays(timeWindow) > DateTime.Now)
+                            s.DownloadItem.CompletedAt >= threshold)
                 .Select(s => s.DownloadItem)
                 .ToList();
             return items;
