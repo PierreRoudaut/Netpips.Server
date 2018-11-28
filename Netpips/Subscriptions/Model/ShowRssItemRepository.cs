@@ -61,7 +61,7 @@ namespace Netpips.Subscriptions.Model
         }
 
         /// <inheritdoc />
-        public List<DownloadItem> FindCompletedItems(int timeWindow)
+        public List<DownloadItem> FindRecentCompletedItems(int timeWindow)
         {
             var threshold = DateTime.Now.AddDays(-timeWindow);
             var items = this.dbContext

@@ -28,23 +28,17 @@ namespace Netpips.Tests.Subscriptions.Job
             this.options = new Mock<IOptions<ShowRssSettings>>();
             this.options
                 .SetupGet(x => x.Value)
-                .Returns(
-                    new ShowRssSettings
-                    {
-                        Password = "P1p5n3t<3",
-                        Username = "netpips.test",
-                        Feed = "http://showrss.info/user/179998.rss?magnets=true&namespaces=true&name=null&quality=hd&re=null"
-                    });
+                .Returns(TestHelper.CreateShowRssSettings);
         }
 
         [Test]
-        public void FetchItemsTest()
+        public void FetchRssItemsFromFeedTest()
         {
             var service = new ShowRssFeedSyncJob(this.logger.Object, this.options.Object, this.repository.Object);
 
             var xml = TestHelper.GetRessourceContent("show_rss_polling_feed.xml");
 
-            var items = service.FetchItems();
+            var items = service.FetchRssItemsFromFeed();
             Assert.Greater(items.Count, 0);
         }
 

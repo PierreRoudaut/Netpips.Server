@@ -19,6 +19,6 @@ namespace Netpips.Subscriptions.Model
         /// </summary>
         /// <param name="timeWindow">The number of past days to consider</param>
         /// <returns></returns>
-        List<DownloadItem> FindCompletedItems(int timeWindow);
+        List<DownloadItem> FindRecentCompletedItems(int timeWindow);
     }
 }

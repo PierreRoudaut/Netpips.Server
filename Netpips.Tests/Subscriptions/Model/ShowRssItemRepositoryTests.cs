@@ -118,7 +118,7 @@ namespace Netpips.Tests.Subscriptions.Model
             this.dbContext.SetupGet(c => c.ShowRssItems).Returns(mockSet.Object);
 
             var repo = new ShowRssItemRepository(this.logger.Object, this.dbContext.Object);
-            var items = repo.FindCompletedItems(timeWindow);
+            var items = repo.FindRecentCompletedItems(timeWindow);
             Assert.AreEqual(expectedNbItems, items.Count);
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Coravel.Invocable;
@@ -27,7 +25,7 @@ namespace Netpips.Subscriptions.Job
 
         public Task Invoke()
         {
-            var items = repository.FindCompletedItems(4);
+            var items = repository.FindRecentCompletedItems(4);
             Log.Information($"[GetSubtitlesJob]: Found {items.Count} items needing subtitles");
             if (items.Count == 0) return Task.CompletedTask;
 
@@ -46,8 +44,8 @@ namespace Netpips.Subscriptions.Job
                 var subs = fileInfo.Directory.EnumerateFiles("*.srt").ToList();
                 if (subs.Count == 0)
                 {
-                    filebot.GetSubtitles(videoFullPath, out _, "en");
-                    filebot.GetSubtitles(videoFullPath, out _, "fr");
+                    filebot.GetSubtitles(videoFullPath, out _, "eng");
+                    filebot.GetSubtitles(videoFullPath, out _, "fra");
                 }
             }
             return Task.CompletedTask;

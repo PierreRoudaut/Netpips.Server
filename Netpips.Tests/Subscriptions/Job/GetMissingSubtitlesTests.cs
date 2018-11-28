@@ -1,0 +1,80 @@
+﻿using Microsoft.Extensions.Options;
+using Moq;
+using Moq.AutoMock;
+using Netpips.Core.Settings;
+using Netpips.Download.Model;
+using Netpips.Media.Model;
+using Netpips.Media.Service;
+using Netpips.Subscriptions.Job;
+using Netpips.Subscriptions.Model;
+using Netpips.Tests.Core;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.IO;
+
+namespace Netpips.Tests.Subscriptions.Job
+{
+    [TestFixture]
+    public class GetMissingSubtitlesTests
+    {
+        private Mock<IOptions<NetpipsSettings>> options;
+        private Mock<IFilebotService> filebot;
+
+        private Mock<IShowRssItemRepository> repository;
+
+        private AutoMocker autoMocker;
+
+        [SetUp]
+        public void Setup()
+        {
+            this.autoMocker = new AutoMocker();
+            this.filebot = new Mock<IFilebotService>();
+            this.options = new Mock<IOptions<NetpipsSettings>>();
+            options.SetupGet(x => x.Value).Returns(TestHelper.CreateNetpipsAppSettings);
+            autoMocker.Use(options.Object);
+            this.repository = new Mock<IShowRssItemRepository>();
+        }
+
+        [Test]
+        public void InvokeTest()
+        {
+            // finish implementation
+
+            //var movedItem = new DownloadItem
+            //{
+            //    MovedFiles = new List<MediaItem>
+            //    {
+            //        new MediaItem
+            //        {
+            //            Path = "TV Shows/Suits/Season 01/Suits S01E01 Episode Name.mkv"
+            //        }
+            //    }
+            //};
+
+            //var path = Path.Combine(options.Object.Value.MediaLibraryPath,
+            //    "TV Shows" ,"Game Of Thrones", "Season 01", "Game Of Thrones S01E01 Episode Name.mkv");
+            //TestHelper.CreateFile(path);
+            //var pmi = new PlainMediaItem(new FileInfo(path), options.Object.Value.MediaLibraryPath);
+
+            //var missingSubItem = new DownloadItem
+            //{
+            //    MovedFiles = new List<MediaItem>
+            //    {
+            //        new MediaItem
+            //        {
+            //            Path = pmi.Path
+            //        }
+            //    }
+            //};
+
+            //var items = new List<DownloadItem> {movedItem, missingSubItem};
+            //repository.Setup(x => x.FindRecentCompletedItems(It.IsAny<int>())).Returns(items);
+            //autoMocker.Use(repository.Object);
+
+            //var job = autoMocker.CreateInstance<GetMissingSubtitlesJob>();
+            //job.Invoke();
+            //var outSrtPath = "";
+            //filebot.Verify(x => x.GetSubtitles(It.IsAny<string>(), out outSrtPath, It.IsAny<string>(), false), Times.Exactly(2));
+        }
+    }
+}
