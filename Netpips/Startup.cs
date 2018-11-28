@@ -313,6 +313,12 @@ namespace Netpips
                                 .Schedule<ArchiveDownloadItemsJob>()
                                 .DailyAt(16, 0)
                                 .PreventOverlapping(nameof(ArchiveDownloadItemsJob));
+
+                            // Download missing subtitles for subscription items
+                            scheduler
+                                .Schedule<GetMissingSubtitlesJob>()
+                                .Hourly()
+                                .PreventOverlapping(nameof(GetMissingSubtitlesJob));
                         }
 
                     });

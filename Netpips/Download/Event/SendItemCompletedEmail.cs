@@ -78,6 +78,10 @@ namespace Netpips.Download.Event
             var tvShowsUri = new Uri(settings.Domain, "tv-shows");
             var html = "<div>";
             html += $"<div>{ item.MainFilename } is available on <a href='{settings.PlexDomain}'>{settings.PlexDomain.Host}</a></div>";
+            if (!item.MovedFiles.Any(f => f.Path.EndsWith(".srt")))
+            {
+                html += "<div style='color:grey'>Subtitles are not available yet but will be downloaded shortly.</div>";
+            }
             html += $"<div>To update your list of shows: <a href='{tvShowsUri}'>{tvShowsUri.Host}</a></div>";
             html += "</div>";
             return html;
