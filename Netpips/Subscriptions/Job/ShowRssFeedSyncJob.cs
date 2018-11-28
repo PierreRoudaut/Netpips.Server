@@ -26,7 +26,7 @@ namespace Netpips.Subscriptions.Job
             this.repository = repository;
         }
 
-        public List<ShowRssItem> FetchItems()
+        public List<ShowRssItem> FetchRssItemsFromFeed()
         {
             //todo, make XElement load xml as Stream and bypass "unexpected token" error
             var feed = XElement.Load(this.settings.Feed);
@@ -56,7 +56,7 @@ namespace Netpips.Subscriptions.Job
             List<ShowRssItem> items;
             try
             {
-                items = this.FetchItems();
+                items = this.FetchRssItemsFromFeed();
                 this.logger.LogInformation($"[FeedSyncJob] fetched {items.Count} items in feed");
             }
             catch (Exception ex)
