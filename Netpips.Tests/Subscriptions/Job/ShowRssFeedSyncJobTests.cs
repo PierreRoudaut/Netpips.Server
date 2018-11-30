@@ -16,6 +16,7 @@ namespace Netpips.Tests.Subscriptions.Job
         private Mock<ILogger<ShowRssFeedSyncJob>> logger;
 
         private Mock<IOptions<ShowRssSettings>> options;
+        private ShowRssSettings settings;
 
         private Mock<IShowRssItemRepository> repository;
 
@@ -23,12 +24,13 @@ namespace Netpips.Tests.Subscriptions.Job
         [SetUp]
         public void Setup()
         {
+            this.settings = TestHelper.CreateShowRssSettings();
             this.logger = new Mock<ILogger<ShowRssFeedSyncJob>>();
             this.repository = new Mock<IShowRssItemRepository>();
             this.options = new Mock<IOptions<ShowRssSettings>>();
             this.options
                 .SetupGet(x => x.Value)
-                .Returns(TestHelper.CreateShowRssSettings);
+                .Returns(this.settings);
         }
 
         [Test]
