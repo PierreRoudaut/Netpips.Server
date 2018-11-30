@@ -147,7 +147,7 @@ namespace Netpips.Tests.Core
             ShowRssPropertyInfos.ForEach(p =>
             {
                 var value = p.GetValue(settings);
-                if (string.IsNullOrEmpty(value.ToString()))
+                if (string.IsNullOrEmpty(value?.ToString()))
                 {
                     throw new ApplicationException($"ShowRss.{p.Name} value is null or empty");
                 }
