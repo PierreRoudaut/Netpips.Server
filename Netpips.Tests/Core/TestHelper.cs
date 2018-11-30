@@ -154,6 +154,11 @@ namespace Netpips.Tests.Core
             {
                 throw new ApplicationException("ShowRss.Password is not set");
             }
+
+            if (string.IsNullOrEmpty(settings.Feed))
+            {
+                throw new ApplicationException("ShowRss.Feed is not set");
+            }
             return settings;
         }
 
