@@ -27,8 +27,6 @@ namespace Netpips.Subscriptions.Job
         {
             var items = repository.FindRecentCompletedItems(4);
             Log.Information($"[GetSubtitlesJob]: Found {items.Count} items needing subtitles");
-            if (items.Count == 0) return Task.CompletedTask;
-
             foreach (var item in items)
             {
                 var videoFileRelPath = item.MovedFiles.OrderByDescending(x => x.Size).FirstOrDefault()?.Path;
@@ -42,10 +40,13 @@ namespace Netpips.Subscriptions.Job
                 }
 
                 var subs = fileInfo.Directory.EnumerateFiles("*.srt").ToList();
+                Log.Information($"[GetSubtitlesJob] found " + string.Join(", ", subs.Select(c => $"[{c}]")));
                 if (subs.Count == 0)
                 {
-                    filebot.GetSubtitles(videoFullPath, out _, "eng");
-                    filebot.GetSubtitles(videoFullPath, out _, "fra");
+                    var resEngSub = filebot.GetSubtitles(videoFullPath, out _, "eng");
+                    Log.Information($"[eng] subtites: { (resEngSub ? "OK" : "KO") }");
+                    var resFraSub = filebot.GetSubtitles(videoFullPath, out _, "fra");
+                    Log.Information($"[fra] subtites: { (resFraSub ? "OK" : "KO") }");
                 }
             }
             return Task.CompletedTask;

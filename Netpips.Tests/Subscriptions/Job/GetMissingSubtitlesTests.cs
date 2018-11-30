@@ -18,6 +18,7 @@ namespace Netpips.Tests.Subscriptions.Job
     public class GetMissingSubtitlesTests
     {
         private Mock<IOptions<NetpipsSettings>> options;
+        private NetpipsSettings settings;
         private Mock<IFilebotService> filebot;
 
         private Mock<IShowRssItemRepository> repository;
@@ -30,8 +31,10 @@ namespace Netpips.Tests.Subscriptions.Job
             this.autoMocker = new AutoMocker();
             this.filebot = new Mock<IFilebotService>();
             this.options = new Mock<IOptions<NetpipsSettings>>();
-            options.SetupGet(x => x.Value).Returns(TestHelper.CreateNetpipsAppSettings);
+            this.settings = TestHelper.CreateNetpipsAppSettings();
+            options.SetupGet(x => x.Value).Returns(this.settings);
             autoMocker.Use(options.Object);
+            autoMocker.Use(filebot.Object);
             this.repository = new Mock<IShowRssItemRepository>();
         }
 
@@ -40,41 +43,41 @@ namespace Netpips.Tests.Subscriptions.Job
         {
             // finish implementation
 
-            //var movedItem = new DownloadItem
-            //{
-            //    MovedFiles = new List<MediaItem>
-            //    {
-            //        new MediaItem
-            //        {
-            //            Path = "TV Shows/Suits/Season 01/Suits S01E01 Episode Name.mkv"
-            //        }
-            //    }
-            //};
+            var movedItem = new DownloadItem
+            {
+                MovedFiles = new List<MediaItem>
+                {
+                    new MediaItem
+                    {
+                        Path = "TV Shows/Suits/Season 01/Suits S01E01 Episode Name.mkv"
+                    }
+                }
+            };
 
-            //var path = Path.Combine(options.Object.Value.MediaLibraryPath,
-            //    "TV Shows" ,"Game Of Thrones", "Season 01", "Game Of Thrones S01E01 Episode Name.mkv");
-            //TestHelper.CreateFile(path);
-            //var pmi = new PlainMediaItem(new FileInfo(path), options.Object.Value.MediaLibraryPath);
+            var path = Path.Combine(options.Object.Value.MediaLibraryPath,
+                "TV Shows", "Game Of Thrones", "Season 01", "Game Of Thrones S01E01 Episode Name.mkv");
+            TestHelper.CreateFile(path);
+            var pmi = new PlainMediaItem(new FileInfo(path), options.Object.Value.MediaLibraryPath);
 
-            //var missingSubItem = new DownloadItem
-            //{
-            //    MovedFiles = new List<MediaItem>
-            //    {
-            //        new MediaItem
-            //        {
-            //            Path = pmi.Path
-            //        }
-            //    }
-            //};
+            var missingSubItem = new DownloadItem
+            {
+                MovedFiles = new List<MediaItem>
+                {
+                    new MediaItem
+                    {
+                        Path = pmi.Path
+                    }
+                }
+            };
 
-            //var items = new List<DownloadItem> {movedItem, missingSubItem};
-            //repository.Setup(x => x.FindRecentCompletedItems(It.IsAny<int>())).Returns(items);
-            //autoMocker.Use(repository.Object);
+            var items = new List<DownloadItem> { movedItem, missingSubItem };
+            repository.Setup(x => x.FindRecentCompletedItems(It.IsAny<int>())).Returns(items);
+            autoMocker.Use(repository.Object);
 
-            //var job = autoMocker.CreateInstance<GetMissingSubtitlesJob>();
-            //job.Invoke();
-            //var outSrtPath = "";
-            //filebot.Verify(x => x.GetSubtitles(It.IsAny<string>(), out outSrtPath, It.IsAny<string>(), false), Times.Exactly(2));
+            var job = autoMocker.CreateInstance<GetMissingSubtitlesJob>();
+            job.Invoke();
+            var outSrtPath = It.IsAny<string>();
+            filebot.Verify(x => x.GetSubtitles(It.IsAny<string>(), out outSrtPath, It.IsAny<string>(), false), Times.Exactly(2));
         }
     }
 }
