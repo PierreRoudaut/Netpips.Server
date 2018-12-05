@@ -59,6 +59,7 @@ namespace Netpips.Download.Model
 
 
         [JsonIgnore]
+        [NotMapped]
         public string MainFilename
         {
             get

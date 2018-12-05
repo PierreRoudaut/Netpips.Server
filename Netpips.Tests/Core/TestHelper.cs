@@ -139,21 +139,19 @@ namespace Netpips.Tests.Core
             return settings;
         }
 
+        private static readonly List<PropertyInfo> ShowRssPropertyInfos = typeof(ShowRssSettings).GetProperties().ToList();
+
         public static ShowRssSettings CreateShowRssSettings()
         {
             var settings = GetTestConfiguration().GetSectionSettings<ShowRssSettings>();
-            if (settings == null)
+            ShowRssPropertyInfos.ForEach(p =>
             {
-                throw new ApplicationException("Failed to load ShowRssSettings with test configuration");
-            }
-            if (string.IsNullOrEmpty(settings.Username))
-            {
-                throw new ApplicationException("ShowRss.Username is not set");
-            }
-            if (string.IsNullOrEmpty(settings.Password))
-            {
-                throw new ApplicationException("ShowRss.Password is not set");
-            }
+                var value = p.GetValue(settings);
+                if (string.IsNullOrEmpty(value?.ToString()))
+                {
+                    throw new ApplicationException($"ShowRss.{p.Name} value is null or empty");
+                }
+            });
             return settings;
         }
 

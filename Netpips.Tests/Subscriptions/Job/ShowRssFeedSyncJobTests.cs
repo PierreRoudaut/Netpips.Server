@@ -16,6 +16,7 @@ namespace Netpips.Tests.Subscriptions.Job
         private Mock<ILogger<ShowRssFeedSyncJob>> logger;
 
         private Mock<IOptions<ShowRssSettings>> options;
+        private ShowRssSettings settings;
 
         private Mock<IShowRssItemRepository> repository;
 
@@ -23,28 +24,24 @@ namespace Netpips.Tests.Subscriptions.Job
         [SetUp]
         public void Setup()
         {
+            this.settings = TestHelper.CreateShowRssSettings();
             this.logger = new Mock<ILogger<ShowRssFeedSyncJob>>();
             this.repository = new Mock<IShowRssItemRepository>();
             this.options = new Mock<IOptions<ShowRssSettings>>();
             this.options
                 .SetupGet(x => x.Value)
-                .Returns(
-                    new ShowRssSettings
-                    {
-                        Password = "P1p5n3t<3",
-                        Username = "netpips.test",
-                        Feed = "http://showrss.info/user/179998.rss?magnets=true&namespaces=true&name=null&quality=hd&re=null"
-                    });
+                .Returns(this.settings);
         }
 
         [Test]
-        public void FetchItemsTest()
+        public void FetchRssItemsFromFeedTest()
         {
             var service = new ShowRssFeedSyncJob(this.logger.Object, this.options.Object, this.repository.Object);
 
+            //todo, make XElement load xml as Stream and bypass "unexpected token" error
             var xml = TestHelper.GetRessourceContent("show_rss_polling_feed.xml");
 
-            var items = service.FetchItems();
+            var items = service.FetchRssItemsFromFeed();
             Assert.GreaterOrEqual(items.Count, 0);
         }
 

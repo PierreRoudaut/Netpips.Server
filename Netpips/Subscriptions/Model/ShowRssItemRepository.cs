@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Netpips.Core.Model;
+using Netpips.Download.Model;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Netpips.Subscriptions.Model
 {
@@ -18,6 +19,8 @@ namespace Netpips.Subscriptions.Model
             this.dbContext = dbContext;
         }
 
+
+        /// <inheritdoc />
         public void SyncFeedItems(List<ShowRssItem> items)
         {
             var missingItems = items.Except(this.dbContext.ShowRssItems.ToList(), new ShowRssItem()).ToList();
@@ -55,6 +58,20 @@ namespace Netpips.Subscriptions.Model
         {
             dbContext.Entry(item).State = EntityState.Modified;
             dbContext.SaveChanges();
+        }
+
+        /// <inheritdoc />
+        public List<DownloadItem> FindRecentCompletedItems(int timeWindow)
+        {
+            var threshold = DateTime.Now.AddDays(-timeWindow);
+            var items = this.dbContext
+                .ShowRssItems
+                .Include(x => x.DownloadItem)
+                .Where(s => s.DownloadItem != null && s.DownloadItem.State == DownloadState.Completed &&
+                            s.DownloadItem.CompletedAt >= threshold)
+                .Select(s => s.DownloadItem)
+                .ToList();
+            return items;
         }
     }
 }

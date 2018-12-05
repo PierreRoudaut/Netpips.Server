@@ -17,15 +17,17 @@ namespace Netpips.Tests.Subscriptions.Service
         private Mock<ILogger<ShowRssGlobalSubscriptionService>> logger;
 
         private Mock<IOptions<ShowRssSettings>> options;
+        private ShowRssSettings settings;
 
         [SetUp]
         public void Setup()
         {
+            this.settings = TestHelper.CreateShowRssSettings();
             this.logger = new Mock<ILogger<ShowRssGlobalSubscriptionService>>();
             this.options = new Mock<IOptions<ShowRssSettings>>();
             this.options
                 .SetupGet(x => x.Value)
-                .Returns(TestHelper.CreateShowRssSettings());
+                .Returns(settings);
         }
 
         [Test]
