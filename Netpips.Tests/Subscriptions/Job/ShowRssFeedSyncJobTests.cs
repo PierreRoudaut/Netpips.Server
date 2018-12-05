@@ -39,9 +39,8 @@ namespace Netpips.Tests.Subscriptions.Job
             var service = new ShowRssFeedSyncJob(this.logger.Object, this.options.Object, this.repository.Object);
 
             var xml = TestHelper.GetRessourceContent("show_rss_polling_feed.xml");
-
-            var items = service.FetchRssItemsFromFeed();
-            Assert.Greater(items.Count, 0);
+            var items = service.FetchItems();
+            Assert.GreaterOrEqual(items.Count, 0);
         }
 
         [Test]

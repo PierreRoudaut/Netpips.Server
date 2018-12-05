@@ -10,11 +10,14 @@ Netpips is a companion server app for Plex Media Server. It's main goal is to en
 
 Netpips is Web API project running on ASP.NET Core 2.1.
 1. Clone the repo
-2. `cd Netpips/`
-3. `dotnet restore`
-3. `dotnet build`
-4. `dotnet run`
-5. Head to http://localhost:5000/api/swagger for the full API documentation
+2. Execute the following commands
+```bash
+cd Netpips
+dotnet restore
+dotnet build
+dotnet run
+```
+3. Head to http://localhost:5000/api/swagger for the full API documentation
 
 ## Download Workflow
 
