@@ -1,12 +1,44 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+
+executors:
+  dotnet-env:
     docker:
       - image: microsoft/dotnet:2.1-sdk
+
+jobs:
+  quick-build:
+    executor: dotnet-env
     steps:
       - checkout
-      - run: export APP_PROJECT_NAME=Netpips
-      - run: export TEST_PROJECT_NAME=Netpips.Tests
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test --no-build $TEST_PROJECT_NAME --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
+      - run:
+          name: Restore
+          command: dotnet restore
+      - run: 
+          name: Build
+          command: dotnet build
+      - run:
+          name: Test
+          command: dotnet test --no-build Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
+  say-hello:
+    executor: dotnet-env
+    steps:
+      - run:
+          name: Say Hello
+          command: echo Hello
+
+workflows:
+  version: 2
+  default-workflow:
+    jobs:
+      - quick-build:
+          filters:
+            branches:
+              ignore:
+                - staging
+                - production
+  staging-workflow:
+    jobs:
+      - say-hello:
+          filters:
+            branches:
+              only: staging
