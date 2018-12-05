@@ -10,21 +10,35 @@ jobs:
     executor: dotnet-env
     steps:
       - checkout
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
+
+  complete-build:
+    executor: dotnet-env
+    steps:
+      - checkout
       - run:
-          name: Restore
-          command: dotnet restore
-      - run: 
-          name: Build
-          command: dotnet build
-      - run:
-          name: Test
-          command: dotnet test --no-build Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
+          name: Installing Filebot
+          command: |
+            apt-get install -y openjdk-8-jre 
+            wget -O filebot.deb 'https://app.filebot.net/download.php?type=deb&arch=amd64'
+            dpkg -i filebot.deb
+            filebot -v
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build Netpips.Tests
+
   say-hello:
     executor: dotnet-env
     steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "89:20:1d:8d:12:f1:8b:a3:4b:5f:21:6d:99:84:7a:8a"
       - run:
           name: Say Hello
-          command: echo Hello
+          command: |
+            ssh $SSH_USER@$SSH_HOST "touch file_create_by_ssh"
 
 workflows:
   version: 2
@@ -36,6 +50,7 @@ workflows:
               ignore:
                 - staging
                 - production
+
   staging-workflow:
     jobs:
       - say-hello:
