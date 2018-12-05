@@ -45,7 +45,7 @@ namespace Netpips.Tests.Subscriptions.Job
             var xml = TestHelper.GetRessourceContent("show_rss_polling_feed.xml");
 
             var items = service.FetchItems();
-            Assert.Greater(items.Count, 0);
+            Assert.GreaterOrEqual(items.Count, 0);
         }
 
         [Test]
