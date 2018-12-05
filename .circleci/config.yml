@@ -1,0 +1,12 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: microsoft/dotnet:2.1-sdk
+    steps:
+      - checkout
+      - run: export APP_PROJECT_NAME=Netpips
+      - run: export TEST_PROJECT_NAME=Netpips.Tests
+      - run: dotnet restore
+      - run: dotnet build
+      - run: dotnet test --no-build $TEST_PROJECT_NAME --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
