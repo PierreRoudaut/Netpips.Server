@@ -38,7 +38,7 @@ jobs:
       - run:
           name: Say Hello
           command: |
-            ssh $SSH_STAGING_USER@$SSH_STAGING_HOST "touch file_created_by_ssh.txt"
+            ssh -o StrictHostKeyChecking=no $SSH_STAGING_USER@$SSH_STAGING_HOST "touch file_created_by_ssh.txt"
 
 workflows:
   version: 2
