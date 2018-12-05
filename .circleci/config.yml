@@ -1,8 +1,13 @@
-version: 2
-jobs:
-  quick-build:
+version: 2.1
+
+executors:
+  dotnet-env:
     docker:
       - image: microsoft/dotnet:2.1-sdk
+
+jobs:
+  quick-build:
+    executor: dotnet-env
     steps:
       - checkout
       - run:
@@ -15,6 +20,7 @@ jobs:
           name: Test
           command: dotnet test --no-build Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
   say-hello:
+    executor: dotnet-env
     steps:
       - run:
           name: Say Hello
