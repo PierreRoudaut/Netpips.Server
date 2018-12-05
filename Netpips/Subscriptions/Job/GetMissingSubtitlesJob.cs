@@ -40,13 +40,13 @@ namespace Netpips.Subscriptions.Job
                 }
 
                 var subs = fileInfo.Directory.EnumerateFiles("*.srt").ToList();
-                Log.Information($"[GetSubtitlesJob] found " + string.Join(", ", subs.Select(c => $"[{c}]")));
+                Log.Information($"[GetSubtitlesJob] {subs.Count} found " + string.Join(", ", subs.Select(c => $"[{c}]")));
                 if (subs.Count == 0)
                 {
                     var resEngSub = filebot.GetSubtitles(videoFullPath, out _, "eng");
-                    Log.Information($"[eng] subtites: { (resEngSub ? "OK" : "KO") }");
+                    Log.Information($"[GetSubtitlesJob] [eng] subtites: { (resEngSub ? "OK" : "KO") }");
                     var resFraSub = filebot.GetSubtitles(videoFullPath, out _, "fra");
-                    Log.Information($"[fra] subtites: { (resFraSub ? "OK" : "KO") }");
+                    Log.Information($"[GetSubtitlesJob] [fra] subtites: { (resFraSub ? "OK" : "KO") }");
                 }
             }
             return Task.CompletedTask;
