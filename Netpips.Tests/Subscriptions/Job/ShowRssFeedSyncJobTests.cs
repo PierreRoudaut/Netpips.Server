@@ -38,8 +38,10 @@ namespace Netpips.Tests.Subscriptions.Job
         {
             var service = new ShowRssFeedSyncJob(this.logger.Object, this.options.Object, this.repository.Object);
 
+            //todo, make XElement load xml as Stream and bypass "unexpected token" error
             var xml = TestHelper.GetRessourceContent("show_rss_polling_feed.xml");
-            var items = service.FetchItems();
+
+            var items = service.FetchRssItemsFromFeed();
             Assert.GreaterOrEqual(items.Count, 0);
         }
 
