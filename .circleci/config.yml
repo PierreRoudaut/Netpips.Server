@@ -21,7 +21,8 @@ jobs:
       - run:
           name: Installing Filebot
           command: |
-            apt-get install -y openjdk-8-jre 
+            sudo apt-get update -y
+            sudo apt-get install -y openjdk-8-jre 
             wget -O filebot.deb 'https://app.filebot.net/download.php?type=deb&arch=amd64'
             dpkg -i filebot.deb
             filebot -version
