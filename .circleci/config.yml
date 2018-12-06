@@ -34,7 +34,7 @@ jobs:
       - run: dotnet build
       - run: dotnet test --no-build Netpips.Tests
 
-  say-hello:
+  remote-script:
     executor: dotnet-env
     steps:
       - add_ssh_keys:
@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Say Hello
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_STAGING_USER@$SSH_STAGING_HOST "true"
+            ssh -o StrictHostKeyChecking=no $SSH_STAGING_USER@$SSH_STAGING_HOST "./script.sh"
 
 workflows:
   version: 2
@@ -58,7 +58,7 @@ workflows:
 
   staging-workflow:
     jobs:
-      - complete-build:
+      - remote-script:
           filters:
             branches:
               only: staging
