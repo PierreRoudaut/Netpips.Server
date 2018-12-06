@@ -19,13 +19,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Installing Filebot
+          name: filebot
           command: |
             apt-get update -y
             apt-get install -y openjdk-8-jre 
             wget -O filebot.deb 'https://app.filebot.net/download.php?type=deb&arch=amd64'
             dpkg -i filebot.deb
             filebot -version
+            echo -e "$FILEBOT_LOGIN\n$FILEBOT_PASSWORD" | filebot -script fn:configure
       - run: apt-get install -y transmission-cli transmission-common transmission-daemon
       - run: apt-get install -y mediainfo
       - run: apt-get install -y aria2
