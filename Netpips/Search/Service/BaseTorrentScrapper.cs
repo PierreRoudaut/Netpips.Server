@@ -40,7 +40,7 @@ namespace Netpips.Search.Service
                 HttpResponseMessage response;
                 try
                 {
-                    response = await client.SendAsync(request);
+                    response = client.SendAsync(request).Result;
                 }
                 catch (Exception e)
                 {
