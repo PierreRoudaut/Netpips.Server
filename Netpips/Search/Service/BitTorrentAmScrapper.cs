@@ -11,11 +11,11 @@ namespace Netpips.Search.Service
 {
     public class BitTorrentAmScrapper : BaseTorrentScrapper, ITorrentDetailScrapper, ITorrentSearchScrapper
     {
-        public static Uri BaseUri = new Uri("https://bittorrent.am");
+        public static Uri BaseUri = new Uri("http://bittorrent.am");
 
         public static Uri TorrentDetailPrefixUri = new Uri(BaseUri, "download-torrent");
 
-        protected override string SearchEndpointFormat => "https://bittorrent.am/search.php?kwds={0}";
+        protected override string SearchEndpointFormat => "http://bittorrent.am/search.php?kwds={0}";
 
         public BitTorrentAmScrapper(ILogger<BaseTorrentScrapper> logger)
             : base(logger)

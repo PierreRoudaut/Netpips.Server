@@ -33,7 +33,7 @@ namespace Netpips.Tests.Search.Service
         [Test]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
-            const string ScrapeUrl = "https://bittorrent.am/download-torrent/8068638/100//Armageddon-(1998)-1080p-BrRip-x264-2.00GB-YIFY.html";
+            const string ScrapeUrl = "http://bittorrent.am/download-torrent/8068638/100//Armageddon-(1998)-1080p-BrRip-x264-2.00GB-YIFY.html";
             var service = new BitTorrentAmScrapper(this.Logger.Object);
 
             var torrentUrl = await service.ScrapeTorrentUrlAsync(ScrapeUrl);
