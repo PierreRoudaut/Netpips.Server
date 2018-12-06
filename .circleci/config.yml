@@ -53,7 +53,7 @@ workflows:
 
   staging-workflow:
     jobs:
-      - say-hello:
+      - complete-build:
           filters:
             branches:
               only: staging
