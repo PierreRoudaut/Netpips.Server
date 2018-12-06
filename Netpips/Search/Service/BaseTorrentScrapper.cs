@@ -32,7 +32,6 @@ namespace Netpips.Search.Service
         protected async Task<string> DoGet(string url)
         {
             this.Logger.LogInformation("GET " + url);
-            Console.WriteLine("BaseTorrentScrapper.DoGet => " + url);
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("User-Agent", OsHelper.UserAgent);
@@ -44,12 +43,10 @@ namespace Netpips.Search.Service
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("BaseTorrentScrapper.DoGet => Exception caught " + e.Message);
                     Logger.LogWarning(url + " request failed");
                     Logger.LogWarning(e.Message);
                     return null;
                 }
-                Console.WriteLine("BaseTorrentScrapper.DoGet => status code: " + response.StatusCode);
                 this.Logger.LogInformation("GET " + url + " HttpStatusCode " + response.StatusCode);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -57,7 +54,6 @@ namespace Netpips.Search.Service
                     return null;
                 }
                 var html = await response.Content.ReadAsStringAsync();
-                Console.WriteLine("BaseTorrentScrapper.DoGet => html: " + html.Length + "B");
                 if (string.IsNullOrEmpty(html))
                 {
                     this.Logger.LogWarning("GET " + url + " empty response");
