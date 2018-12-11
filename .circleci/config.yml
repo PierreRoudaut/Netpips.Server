@@ -6,15 +6,13 @@ executors:
       - image: microsoft/dotnet:2.1-sdk
 
 jobs:
-  quick-build:
+  build.simple:
     executor: dotnet-env
     steps:
       - checkout
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test --no-build Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
+      - run: dotnet test Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
 
-  complete-build:
+  build.complete:
     executor: dotnet-env
     steps:
       - checkout
@@ -30,26 +28,25 @@ jobs:
       - run: apt-get install -y transmission-cli transmission-common transmission-daemon
       - run: apt-get install -y mediainfo
       - run: apt-get install -y aria2
-      - run: dotnet restore
-      - run: dotnet build
-      - run: dotnet test --no-build Netpips.Tests
+      - run: dotnet test Netpips.Tests
 
-  deploy-staging:
-    executor: dotnet-env
+  deploy:
+    executor: machine
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "89:20:1d:8d:12:f1:8b:a3:4b:5f:21:6d:99:84:7a:8a"
+            - $SSH_KEY_FINGERPRINT
       - run:
-          name: Say Hello
+          name: Trigger remote deploy script
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_STAGING_USER@$SSH_STAGING_HOST "./deploy.sh $CIRCLE_BRANCH $CIRCLE_SHA1"
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "./deploy.sh $CIRCLE_BRANCH"
 
 workflows:
   version: 2
-  default-workflow:
+  
+  dev-workflow:
     jobs:
-      - quick-build:
+      - build.simple:
           filters:
             branches:
               ignore:
@@ -58,7 +55,10 @@ workflows:
 
   staging-workflow:
     jobs:
-      - quick-build:
+      - build.complete:
           filters:
             branches:
               only: staging
+      - deploy:
+          requires: build.complete
+          context: staging-ctx
