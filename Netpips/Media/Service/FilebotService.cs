@@ -28,6 +28,7 @@ namespace Netpips.Media.Service
                 args += " -non-strict ";
             }
             this.logger.LogInformation("filebot " + args);
+            Console.WriteLine("filebot " + args);
             var code = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
             var msg = $"code: {code}, output: {output}, error: {error}";
             this.logger.LogInformation(msg);
