@@ -53,12 +53,7 @@ workflows:
                 - production
   staging-workflow:
     jobs:
-      - build-complete:
-          context: staging-ctx
-          filters:
-            branches:
-              only:
-                - staging
+      - build-complete
       - deploy-ssh:
           context: staging-ctx
           requires: build-complete
