@@ -43,7 +43,6 @@ jobs:
 
 workflows:
   version: 2
-  
   dev-workflow:
     jobs:
       - build-simple:
@@ -52,8 +51,7 @@ workflows:
               ignore:
                 - staging
                 - production
-
-  staging-workflow:
+staging-workflow:
     jobs:
       - build-complete:
           context: staging-ctx
