@@ -37,12 +37,14 @@ namespace Netpips.Media.Service
             /* -get-subtitles option always returns 0 regardless of failure */
             if (error.Contains("No matching subtitles found:"))
             {
+                Console.WriteLine("Error contains 'No matching subtitles found'");
                 this.logger.LogWarning("filebot GetSubtitles FAILED output: " + error);
                 return false;
             }
             var p = new Regex(@"Writing \[.*\] to \[(?<srt>.*)\]").Match(output);
             if (!p.Success || !p.Groups["srt"].Success)
             {
+                Console.WriteLine("filebot GetSubtitles FAILED to capture destPath with Regex in output: " + output);
                 this.logger.LogWarning("filebot GetSubtitles FAILED to capture destPath with Regex in output: " + output);
                 return false;
             }
