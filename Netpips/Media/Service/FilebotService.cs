@@ -39,6 +39,7 @@ namespace Netpips.Media.Service
             this.logger.LogInformation(msg);
             if (!File.Exists(expectedSrtPath))
             {
+                Console.WriteLine(expectedSrtPath + " does not exists");
                 return false;
             }
 
