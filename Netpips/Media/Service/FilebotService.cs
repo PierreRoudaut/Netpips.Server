@@ -29,7 +29,9 @@ namespace Netpips.Media.Service
             }
             this.logger.LogInformation("filebot " + args);
             var code = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
-            this.logger.LogInformation($"code: {code}, output: {output}, error: {error}");
+            var msg = $"code: {code}, output: {output}, error: {error}";
+            this.logger.LogInformation(msg);
+            Console.WriteLine(msg);
 
             /* -get-subtitles option always returns 0 regardless of failure */
             if (error.Contains("No matching subtitles found:"))
