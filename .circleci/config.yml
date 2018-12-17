@@ -31,7 +31,7 @@ jobs:
       - run: dotnet test Netpips.Tests
 
   deploy-ssh:
-    executor: machine
+    machine: true
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -53,10 +53,15 @@ workflows:
                 - production
   staging-workflow:
     jobs:
-      - build-complete
+      - build-complete:
+          filters:
+            branches:
+              only:
+                - staging      
       - deploy-ssh:
           context: staging-ctx
-          requires: build-complete
+          requires:
+            - build-complete
           filters:
             branches:
               only:
