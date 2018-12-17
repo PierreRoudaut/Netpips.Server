@@ -6,13 +6,13 @@ executors:
       - image: microsoft/dotnet:2.1-sdk
 
 jobs:
-  build.simple:
+  build-simple:
     executor: dotnet-env
     steps:
       - checkout
       - run: dotnet test Netpips.Tests --filter "TestCategory!=Filebot&TestCategory!=ThirdParty"
 
-  build.complete:
+  build-complete:
     executor: dotnet-env
     steps:
       - checkout
@@ -30,7 +30,7 @@ jobs:
       - run: apt-get install -y aria2
       - run: dotnet test Netpips.Tests
 
-  deploy.ssh:
+  deploy-ssh:
     executor: machine
     steps:
       - add_ssh_keys:
@@ -46,7 +46,7 @@ workflows:
   
   dev-workflow:
     jobs:
-      - build.simple:
+      - build-simple:
           filters:
             branches:
               ignore:
@@ -55,20 +55,20 @@ workflows:
 
   staging-workflow:
     jobs:
-      - build.complete:
+      - build-complete:
           filters:
             branches:
               only: staging
-      - deploy.ssh:
-          requires: build.complete
+      - deploy-ssh:
+          requires: build-complete
           context: staging-ctx
 
   production-workflow:
     jobs:
-      - build.complete:
+      - build-complete:
           filters:
             branches:
               only: production
-      - deploy.ssh:
-          requires: build.complete
+      - deploy-ssh:
+          requires: build-complete
           context: production-ctx
