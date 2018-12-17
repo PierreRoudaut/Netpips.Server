@@ -83,8 +83,8 @@ namespace Netpips
 
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", reloadOnChange: true, optional: false)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", reloadOnChange: true, optional: false)
+                .AddJsonFile("appsettings.json", reloadOnChange: true, optional: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", reloadOnChange: true, optional: true)
                 .AddEnvironmentVariables("NETPIPS_");
             Configuration = builder.Build();
 

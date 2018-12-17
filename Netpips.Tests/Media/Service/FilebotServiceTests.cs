@@ -74,7 +74,7 @@ namespace Netpips.Tests.Media.Service
         }
 
         [Test]
-        public void GetSubtitlesTest_Case_StrictOff()
+        public void GetSubtitlesTest_Case_NonStrict()
         {
             var itemDir = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid());
             Directory.CreateDirectory(itemDir);
@@ -82,7 +82,7 @@ namespace Netpips.Tests.Media.Service
             TestHelper.CreateFile(itemPath);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsTrue(filebot.GetSubtitles(itemPath, out var srtPath, nonStrict: true));
+            Assert.IsTrue(filebot.GetSubtitles(itemPath, out var srtPath, nonStrict: true), "filebot -get-subtitles failed");
             Assert.IsTrue(File.Exists(srtPath), ".srt not found");
         }
 
@@ -100,7 +100,7 @@ namespace Netpips.Tests.Media.Service
         }
 
         [Test]
-        public void GetSubtitlesTestWithLangStrictOff()
+        public void GetSubtitlesTest_Case_WithLang_NonStrict()
         {
             var itemDir = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid());
             Directory.CreateDirectory(itemDir);
@@ -108,7 +108,7 @@ namespace Netpips.Tests.Media.Service
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsTrue(filebot.GetSubtitles(path, out var srtPath, "eng", nonStrict: true));
+            Assert.IsTrue(filebot.GetSubtitles(path, out var srtPath, "eng", nonStrict: true), "filebot -get-subtitles failed");
             Assert.IsTrue(File.Exists(srtPath), ".srt not found");
         }
     }

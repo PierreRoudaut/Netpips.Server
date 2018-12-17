@@ -53,7 +53,7 @@ namespace Netpips.Search.Service
                     this.Logger.LogWarning("GET " + url + " request failed");
                     return null;
                 }
-                var html = response.Content.ReadAsStringAsync().Result;
+                var html = await response.Content.ReadAsStringAsync();
                 if (string.IsNullOrEmpty(html))
                 {
                     this.Logger.LogWarning("GET " + url + " empty response");
