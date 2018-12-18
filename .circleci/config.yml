@@ -17,7 +17,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: filebot
+          name: filebot install
           command: |
             apt-get update -y
             apt-get install -y openjdk-8-jre 
@@ -37,7 +37,7 @@ jobs:
           fingerprints:
             - $SSH_KEY_FINGERPRINT
       - run:
-          name: Trigger remote deploy script
+          name: ssh deploy
           command: |
             ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "./Netpips.CI/deploy/deploy_server.sh $CIRCLE_BRANCH"
 
