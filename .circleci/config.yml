@@ -54,6 +54,7 @@ workflows:
   staging-workflow:
     jobs:
       - build-simple:
+          context: staging-ctx
           filters:
             branches:
               only:
