@@ -70,10 +70,14 @@ workflows:
           #   branches:
           #     only:
           #       - staging
+      - hold:
+          type: approval
+          requires:
+            - wait
       - display:
           context: staging-ctx
           requires:
-            - wait
+            - hold
           # filters:
           #   branches:
           #     only:
