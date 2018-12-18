@@ -6,6 +6,17 @@ executors:
       - image: microsoft/dotnet:2.1-sdk
 
 jobs:
+
+  wait:
+    machine: true
+    steps:
+      - run: sleep 10
+
+  display:
+    machine: true
+    steps:
+      - run: ls -la
+
   build-simple:
     executor: dotnet-env
     steps:
@@ -53,17 +64,33 @@ workflows:
                 - production
   staging-workflow:
     jobs:
-      - build-simple:
+      - wait:
           context: staging-ctx
           filters:
             branches:
               only:
                 - staging
-      - deploy-ssh:
+      - display:
           context: staging-ctx
           requires:
-            - build-simple
+            - wait
           filters:
             branches:
               only:
                 - staging
+  # staging-workflow:
+  #   jobs:
+  #     - build-simple:
+  #         context: staging-ctx
+  #         filters:
+  #           branches:
+  #             only:
+  #               - staging
+  #     - deploy-ssh:
+  #         context: staging-ctx
+  #         requires:
+  #           - build-simple
+  #         filters:
+  #           branches:
+  #             only:
+  #               - staging
