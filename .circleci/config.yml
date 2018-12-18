@@ -7,16 +7,6 @@ executors:
 
 jobs:
 
-  wait:
-    machine: true
-    steps:
-      - run: sleep 10
-
-  display:
-    machine: true
-    steps:
-      - run: ls -la
-
   build-simple:
     executor: dotnet-env
     steps:
@@ -54,47 +44,26 @@ jobs:
 
 workflows:
   version: 2
-  # dev-workflow:
-  #   jobs:
-  #     - build-simple:
-  #         filters:
-  #           branches:
-  #             ignore:
-  #               - staging
-  #               - production
+  dev-workflow:
+    jobs:
+      - build-simple:
+          filters:
+            branches:
+              ignore:
+                - staging
+                - production
   staging-workflow:
     jobs:
-      - wait:
-          context: staging-ctx
-          # filters:
-          #   branches:
-          #     only:
-          #       - staging
+      - build-simple:
+          filters:
+            branches:
+              only:
+                - staging
       - hold:
           type: approval
           requires:
-            - wait
-      - display:
+            - build-simple
+      - deploy-ssh:
           context: staging-ctx
           requires:
             - hold
-          # filters:
-          #   branches:
-          #     only:
-          #       - staging
-  # staging-workflow:
-  #   jobs:
-  #     - build-simple:
-  #         context: staging-ctx
-  #         filters:
-  #           branches:
-  #             only:
-  #               - staging
-  #     - deploy-ssh:
-  #         context: staging-ctx
-  #         requires:
-  #           - build-simple
-  #         filters:
-  #           branches:
-  #             only:
-  #               - staging
