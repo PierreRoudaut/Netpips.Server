@@ -62,7 +62,15 @@ workflows:
           type: approval
           requires:
             - build-simple
+          filters:
+            branches:
+              only:
+                - staging
       - deploy-ssh:
           context: staging-ctx
           requires:
             - hold
+          filters:
+            branches:
+              only:
+                - staging
