@@ -54,30 +54,30 @@ jobs:
 
 workflows:
   version: 2
-  dev-workflow:
-    jobs:
-      - build-simple:
-          filters:
-            branches:
-              ignore:
-                - staging
-                - production
+  # dev-workflow:
+  #   jobs:
+  #     - build-simple:
+  #         filters:
+  #           branches:
+  #             ignore:
+  #               - staging
+  #               - production
   staging-workflow:
     jobs:
       - wait:
           context: staging-ctx
-          filters:
-            branches:
-              only:
-                - staging
+          # filters:
+          #   branches:
+          #     only:
+          #       - staging
       - display:
           context: staging-ctx
           requires:
             - wait
-          filters:
-            branches:
-              only:
-                - staging
+          # filters:
+          #   branches:
+          #     only:
+          #       - staging
   # staging-workflow:
   #   jobs:
   #     - build-simple:
