@@ -9,13 +9,13 @@ namespace Netpips.Core.Controller
     [AllowAnonymous]
     public class StatusController : ControllerBase
     {
-        [HttpGet("", Name = "Hello")]
+        [HttpGet("", Name = "Index")]
         [ProducesResponseType(200)]
-        public ObjectResult List()
+        public ObjectResult Index()
         {
             return Ok(new
             {
-                Date = DateTime.Now,
+                Date = DateTime.Now.ToString("yyyy-MM-dd"),
                 Ip = HttpContext.Connection.RemoteIpAddress.ToString()
             });
         }
