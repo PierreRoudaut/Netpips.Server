@@ -40,6 +40,7 @@ jobs:
       - run:
           name: ssh deploy
           command: |
+            echo $SSH_HOST
             ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/tmp/Netpips.CI/deploy/deploy_server.sh $CIRCLE_BRANCH"
 
 workflows:
