@@ -6,6 +6,7 @@ executors:
       - image: microsoft/dotnet:2.1-sdk
 
 jobs:
+
   build-simple:
     executor: dotnet-env
     steps:
@@ -17,7 +18,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: filebot
+          name: filebot install
           command: |
             apt-get update -y
             apt-get install -y openjdk-8-jre 
@@ -31,15 +32,16 @@ jobs:
       - run: dotnet test Netpips.Tests
 
   deploy-ssh:
-    executor: machine
+    machine: true
     steps:
       - add_ssh_keys:
           fingerprints:
             - $SSH_KEY_FINGERPRINT
       - run:
-          name: Trigger remote deploy script
+          name: ssh deploy
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "./deploy_server.sh $CIRCLE_BRANCH"
+            echo $SSH_HOST
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/tmp/Netpips.CI/deploy/deploy_server.sh $CIRCLE_BRANCH"
 
 workflows:
   version: 2
@@ -51,29 +53,18 @@ workflows:
               ignore:
                 - staging
                 - production
-staging-workflow:
+  staging-workflow:
     jobs:
-      - build-complete:
-          context: staging-ctx
+      - build-simple:
           filters:
             branches:
-              only: staging
+              only:
+                - staging
+      - hold:
+          type: approval
+          requires:
+            - build-simple
       - deploy-ssh:
           context: staging-ctx
-          requires: build-complete
-          filters:
-            branches:
-              only: staging
-production-workflow:
-    jobs:
-      - build-complete:
-          context: production-ctx
-          filters:
-            branches:
-              only: production
-      - deploy-ssh:
-          context: production-ctx
-          requires: build-complete
-          filters:
-            branches:
-              only: production
+          requires:
+            - hold

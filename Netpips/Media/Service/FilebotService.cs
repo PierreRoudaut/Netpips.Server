@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Netpips.Core;
@@ -27,30 +28,27 @@ namespace Netpips.Media.Service
             {
                 args += " -non-strict ";
             }
+
+            var expectedSrtPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)) + $".{lang}.srt";
             this.logger.LogInformation("filebot " + args);
+            Console.WriteLine("filebot " + args);
+
             var code = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
-            this.logger.LogInformation($"code: {code}, output: {output}, error: {error}");
+            var msg = $"code: {code}, output: {output}, error: {error}";
+            Console.WriteLine(msg);
+            this.logger.LogInformation(msg);
+            if (!File.Exists(expectedSrtPath))
+            {
+                Console.WriteLine(expectedSrtPath + " does not exists");
+                return false;
+            }
 
             /* -get-subtitles option always returns 0 regardless of failure */
-            if (error.Contains("No matching subtitles found:"))
-            {
-                this.logger.LogWarning("filebot GetSubtitles FAILED output: " + error);
-                return false;
-            }
-            var p = new Regex(@"Writing \[.*\] to \[(?<srt>.*)\]").Match(output);
-            if (!p.Success || !p.Groups["srt"].Success)
-            {
-                this.logger.LogWarning("filebot GetSubtitles FAILED to capture destPath with Regex in output: " + output);
-                return false;
-            }
-            srtPath = Path.Combine(Path.GetDirectoryName(path), p.Groups["srt"].Value);
-            this.logger.LogInformation($"SUCCESS: {srtPath}");
-
             this.logger.LogInformation("Renaming to 2 letter iso code");
-            var twoLetterSrtPath = FilesystemHelper.ConvertToTwoLetterIsoLanguageNameSubtitle(srtPath);
+            var twoLetterSrtPath = FilesystemHelper.ConvertToTwoLetterIsoLanguageNameSubtitle(expectedSrtPath);
             if (twoLetterSrtPath != null)
             {
-                FilesystemHelper.MoveOrReplace(srtPath, twoLetterSrtPath);
+                FilesystemHelper.MoveOrReplace(expectedSrtPath, twoLetterSrtPath);
                 srtPath = twoLetterSrtPath;
             }
             return true;

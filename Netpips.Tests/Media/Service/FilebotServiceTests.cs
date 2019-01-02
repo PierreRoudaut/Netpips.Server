@@ -26,7 +26,7 @@ namespace Netpips.Tests.Media.Service
         public void TryRenameTest_Case_Success()
         {
 
-            var path = Path.Combine(this.settings.DownloadsPath, "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mp4");
+            var path = Path.Combine(this.settings.DownloadsPath, "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mkv");
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
@@ -35,7 +35,7 @@ namespace Netpips.Tests.Media.Service
                 "TV Shows",
                 "The Big Bang Theory",
                 "Season 10",
-                "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mp4");
+                "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mkv");
 
             Assert.IsTrue(filebot.TryRename(path, this.settings.MediaLibraryPath, out var destPath, "Failed to rename using Filebot"));
             Assert.AreEqual(expectedPath, destPath);
