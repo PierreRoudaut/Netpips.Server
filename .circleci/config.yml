@@ -55,7 +55,7 @@ workflows:
   version: 2
   dev-workflow:
     jobs:
-      - sshpass:
+      - deploy-ssh:
           context: staging-ctx
           filters:
             branches:
