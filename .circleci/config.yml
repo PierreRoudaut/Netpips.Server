@@ -31,13 +31,6 @@ jobs:
       - run: apt-get install -y aria2
       - run: dotnet test Netpips.Tests
 
-  sshpass:
-    machine: true
-    steps:
-      - run: apt-get update -y
-      - run: sudo apt-get install -y sshpass
-      - run: sshpass -p"$SSH_PWD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "printenv > /tmp/remote.txt"
-
   deploy-ssh:
     machine: true
     steps:
@@ -47,15 +40,24 @@ jobs:
       - run:
           name: ssh deploy
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "printenv > /tmp/remote.txt"
-
-            # ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/tmp/Netpips.CI/deploy/deploy_server.sh $CIRCLE_BRANCH"
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/tmp/Netpips.CI/deploy/deploy_server.sh $CIRCLE_BRANCH"
+ 
+  dummy-ssh:
+    machine: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - $SSH_KEY_FINGERPRINT
+      - run:
+          name: ssh dummy
+          command: |
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "date >> /tmp/remote.txt"  
 
 workflows:
   version: 2
   dev-workflow:
     jobs:
-      - deploy-ssh:
+      - dummy-ssh:
           context: staging-ctx
           filters:
             branches:
