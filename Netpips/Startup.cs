@@ -78,17 +78,9 @@ namespace Netpips
                 };
         }
 
-        public Startup(IHostingEnvironment env, IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
-
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", reloadOnChange: true, optional: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", reloadOnChange: true, optional: true)
-                .AddEnvironmentVariables("NETPIPS_");
-            Configuration = builder.Build();
-
+            Configuration = AppSettingsFactory.BuildConfiguration();
             var netpipsAppSettings = Configuration.GetSection("Netpips").Get<NetpipsSettings>();
 
             AppAsserter.AssertCliDependencies();
@@ -191,7 +183,6 @@ namespace Netpips
 
             // events
             services.AddEvents();
-
 
             // services
             services.AddScoped<IDownloadItemService, DownloadItemService>();
