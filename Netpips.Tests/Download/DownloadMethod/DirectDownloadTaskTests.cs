@@ -38,8 +38,8 @@ namespace Netpips.Tests.Download.DownloadMethod
         {
             var testFile = new
             {
-                Url = "http://test-debit.free.fr/65536.rnd",
-                ExpectedSize = 67108864
+                Url = "http://test-debit.free.fr/1024.rnd",
+                ExpectedSize = 1048576
             };
 
             var item = new DownloadItem
