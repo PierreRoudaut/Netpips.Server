@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Netpips.Core.Settings;
 
 namespace Netpips.Core.Model
 {
@@ -11,10 +12,7 @@ namespace Netpips.Core.Model
         {
             var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
 
-            //AppContext.BaseDirectory
-            var configuration = new ConfigurationBuilder()
-                .AddEnvironmentVariables("NETPIPS_")
-                .Build();
+            var configuration = AppSettingsFactory.BuildConfiguration();
 
             var connectionString = configuration.GetConnectionString("Default");
             optionsBuilder.UseSqlServer(connectionString);

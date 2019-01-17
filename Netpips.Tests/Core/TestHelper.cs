@@ -64,9 +64,7 @@ namespace Netpips.Tests.Core
         /// <returns></returns>
         public static IConfigurationRoot GetTestConfiguration()
         {
-            var builder = new ConfigurationBuilder();
-            builder.AddEnvironmentVariables("NETPIPS_TEST_");
-            return builder.Build();
+            return AppSettingsFactory.BuildTestConfiguration();
         }
 
         /// <summary>
