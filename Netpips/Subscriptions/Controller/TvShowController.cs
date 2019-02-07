@@ -162,6 +162,7 @@ namespace Netpips.Subscriptions.Controller
                     {
                         return this.BadRequest(false);
                     }
+                    
                     this.memoryCache.Set(tvShowRssShowCacheKey, json);
                 }
                 catch (Exception ex)
