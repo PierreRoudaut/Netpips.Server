@@ -158,11 +158,11 @@ namespace Netpips.Subscriptions.Controller
                 try
                 {
                     json = GetShowDetail(showRssId);
-                    this.memoryCache.Set(tvShowRssShowCacheKey, json);
                     if (string.IsNullOrEmpty(json))
                     {
-                        throw new ApplicationException("No json retrieved");
+                        return this.BadRequest(false);
                     }
+                    this.memoryCache.Set(tvShowRssShowCacheKey, json);
                 }
                 catch (Exception ex)
                 {
