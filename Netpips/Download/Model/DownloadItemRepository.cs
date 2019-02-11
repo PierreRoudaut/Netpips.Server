@@ -110,5 +110,11 @@ namespace Netpips.Download.Model
             dbContext.Entry(item).State = EntityState.Modified;
             dbContext.SaveChanges();
         }
+
+        public bool HasPendingDownloads()
+        {
+            var pendingStates = new DownloadState[] { DownloadState.Downloading, DownloadState.Processing };
+            return dbContext.DownloadItems.Any(x => pendingStates.Contains(x.State));
+        }
     }
 }

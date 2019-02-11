@@ -2,6 +2,7 @@
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Netpips.Download.Model;
 
 namespace Netpips.Core.Controller
 {
@@ -10,6 +11,13 @@ namespace Netpips.Core.Controller
     [AllowAnonymous]
     public class StatusController : ControllerBase
     {
+        private readonly IDownloadItemRepository repository;
+
+        public StatusController(IDownloadItemRepository repository)
+        {
+            this.repository = repository;
+        }
+
         [HttpGet("", Name = "Status")]
         [ProducesResponseType(200)]
         public ObjectResult Status()
@@ -17,6 +25,8 @@ namespace Netpips.Core.Controller
             var now = DateTime.UtcNow;
             var lastBuildAt = System.IO.File.GetLastWriteTimeUtc(GetType().Assembly.Location);
             var elapsed = now.AddMilliseconds(-now.Subtract(lastBuildAt).TotalMilliseconds);
+
+            var canRedeploy = !repository.HasPendingDownloads();
 
             return Ok(new
             {
@@ -26,7 +36,8 @@ namespace Netpips.Core.Controller
                 {
                     Timestamp = lastBuildAt,
                     Elapsed = elapsed.Humanize()
-                }
+                },
+                CanRedeploy = canRedeploy
             });
         }
     }

@@ -33,5 +33,7 @@ namespace Netpips.Download.Model
         bool IsUrlDownloading(string url);
 
         List<DownloadItem> GetPassedItemsToArchive(int thresholdDays);
+
+        bool HasPendingDownloads();
     }
 }
