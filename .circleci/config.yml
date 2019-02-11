@@ -57,20 +57,19 @@ workflows:
   version: 2
   dev-workflow:
     jobs:
-      - dummy-ssh:
+      - deploy-ssh:
           context: staging-ctx
           filters:
             branches:
-              ignore:
-                - staging
-                - production
+              only:
+                - master
   staging-workflow:
     jobs:
-      # - build-simple:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - staging
+      - build-simple:
+          filters:
+            branches:
+              only:
+                - staging
       - hold:
           type: approval
           requires:
