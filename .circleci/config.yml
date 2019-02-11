@@ -40,7 +40,7 @@ jobs:
       - run:
           name: ssh deploy
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/tmp/Netpips.CI/deploy/deploy_server.sh $CIRCLE_BRANCH"
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/shared/Netpips.CI/deploy/deploy_server.sh"
  
   dummy-ssh:
     machine: true
@@ -51,7 +51,7 @@ jobs:
       - run:
           name: ssh dummy
           command: |
-            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "date >> /tmp/remote.txt"  
+            ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "date >> /tmp/dummy_ssh.txt"  
 
 workflows:
   version: 2
@@ -66,11 +66,11 @@ workflows:
                 - production
   staging-workflow:
     jobs:
-      - build-simple:
-          filters:
-            branches:
-              only:
-                - staging
+      # - build-simple:
+      #     filters:
+      #       branches:
+      #         only:
+      #           - staging
       - hold:
           type: approval
           requires:
