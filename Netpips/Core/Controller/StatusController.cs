@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,8 +16,9 @@ namespace Netpips.Core.Controller
         {
             return Ok(new
             {
-                Date = DateTime.Now.ToString("yyyy-MM-dd"),
-                Ip = HttpContext.Connection.RemoteIpAddress.ToString()
+                Date = DateTime.Now,
+                Ip = HttpContext.Connection.RemoteIpAddress.ToString(),
+                BuildAt = System.IO.File.GetLastWriteTime(GetType().Assembly.Location)
             });
         }
     }
