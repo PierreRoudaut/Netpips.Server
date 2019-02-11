@@ -14,8 +14,8 @@ namespace Netpips.Core.Controller
         [ProducesResponseType(200)]
         public ObjectResult Status()
         {
-            var now = DateTime.Now;
-            var lastBuildAt = System.IO.File.GetLastWriteTime(GetType().Assembly.Location);
+            var now = DateTime.UtcNow;
+            var lastBuildAt = System.IO.File.GetLastWriteTimeUtc(GetType().Assembly.Location);
             var elapsed = now.AddMilliseconds(-now.Subtract(lastBuildAt).TotalMilliseconds);
 
             return Ok(new
