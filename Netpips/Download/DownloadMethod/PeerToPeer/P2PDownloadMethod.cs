@@ -176,8 +176,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
 
         public static List<Regex> SupportedUrls = new List<Regex>
         {
-            new Regex(@"magnet:?.*"),
-            new Regex(@".*.torrent")
+            new Regex(@"magnet:?.*")
         };
 
         private bool PointsToTorrentUrl(string url)
@@ -202,8 +201,10 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
         public bool CanHandle(string fileUrl)
         {
             var res = SupportedUrls.Any(x => x.IsMatch(fileUrl));
-            if (res) return true;
-            if (Uri.IsWellFormedUriString(fileUrl, UriKind.Absolute)) PointsToTorrentUrl(fileUrl);
+            if (res)
+                return true;
+            if (Uri.IsWellFormedUriString(fileUrl, UriKind.Absolute))
+                return PointsToTorrentUrl(fileUrl);
             return false;
         }
 
