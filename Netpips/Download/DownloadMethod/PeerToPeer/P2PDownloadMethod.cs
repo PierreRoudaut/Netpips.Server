@@ -198,6 +198,11 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
             }
         }
 
+        /// <summary>
+        /// Check if a given url points to a valid P2P resource
+        /// </summary>
+        /// <param name="fileUrl"></param>
+        /// <returns></returns>
         public bool CanHandle(string fileUrl)
         {
             var res = SupportedUrls.Any(x => x.IsMatch(fileUrl));
