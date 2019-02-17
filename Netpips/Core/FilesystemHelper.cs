@@ -25,8 +25,10 @@ namespace Netpips.Core
                     FileOptions.DeleteOnClose)) { }
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine("IsDirectoryWritable");
+                Console.WriteLine(ex.Message);
                 return false;
             }
         }

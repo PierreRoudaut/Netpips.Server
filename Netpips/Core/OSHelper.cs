@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Serilog;
+using Serilog.Core;
 
 namespace Netpips.Core
 {
@@ -44,8 +46,16 @@ namespace Netpips.Core
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
             var success = p.WaitForExit(maxWaitingDuration);
-            output = sbOutput.ToString();
-            error = sbError.ToString();
+            try
+            {
+                output = sbOutput.ToString();
+                error = sbError.ToString();
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("OsHelper.ExecuteCommande: failed to read cmd stdout and stderr");
+                Log.Warning(ex.Message);
+            }
 
             return success ? p.ExitCode : -1;
         }
@@ -53,7 +63,7 @@ namespace Netpips.Core
         public static string GetRessourceContent(string ressourceFilename)
         {
             var asm = Assembly.GetCallingAssembly();
-            var resource = string.Format("Netpips.ressources.{0}", ressourceFilename);
+            var resource = $"Netpips.ressources.{ressourceFilename}";
             using (var stream = asm.GetManifestResourceStream(resource))
             {
                 if (stream == null) return string.Empty;
