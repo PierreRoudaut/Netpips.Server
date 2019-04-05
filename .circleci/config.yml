@@ -40,6 +40,7 @@ jobs:
       - run:
           name: ssh deploy
           command: |
+            echo "hello there"
             ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "/shared/Netpips.CI/deploy/deploy_server.sh"
  
   dummy-ssh:
