@@ -47,6 +47,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Text;
+using JsonConverter = Newtonsoft.Json.JsonConverter;
 
 namespace Netpips
 {
@@ -78,7 +79,7 @@ namespace Netpips
                 };
         }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             Configuration = AppSettingsFactory.BuildConfiguration();
             var netpipsAppSettings = Configuration.GetSection("Netpips").Get<NetpipsSettings>();
@@ -124,9 +125,9 @@ namespace Netpips
 
             // Mvc
             services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(
+                .AddMvcCore(options => options.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddNewtonsoftJson(
                 options =>
                     {
                         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -134,7 +135,7 @@ namespace Netpips
                         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                     });
 
-
+            
             // policies
             services.AddAuthorization(options =>
                 {
@@ -241,7 +242,7 @@ namespace Netpips
         }
 
         // To configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IOptions<NetpipsSettings> settings)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, IOptions<NetpipsSettings> settings)
         {
             // forward headers
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -292,7 +293,7 @@ namespace Netpips
             provider.UseScheduler(
                 scheduler =>
                     {
-                        if (!env.IsDevelopment())
+                        if (env.EnvironmentName == "prod")
                         {
                             // Start download from synced feed
                             scheduler
