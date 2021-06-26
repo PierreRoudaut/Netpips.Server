@@ -194,7 +194,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
                 {
                     return false;
                 }
-                return response.Content.Headers?.ContentDisposition?.FileName.EndsWith(".torrent") ?? false;
+                return response.Content.Headers?.ContentDisposition?.FileName?.TrimStart('"')?.TrimEnd('"')?.EndsWith(".torrent") ?? false;
             }
         }
 
