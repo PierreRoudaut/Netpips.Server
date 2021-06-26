@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
@@ -21,7 +22,7 @@ namespace Netpips.Search.Service
 
         protected BaseTorrentScrapper(ILogger<BaseTorrentScrapper> logger)
         {
-            this.Logger = logger;
+            Logger = logger;
         }
 
         /// <summary>
@@ -29,12 +30,17 @@ namespace Netpips.Search.Service
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        protected async Task<string> DoGet(string url)
+        public async Task<string> DoGet(string url, string acceptRequestHeaderValue = null)
         {
-            this.Logger.LogInformation("GET " + url);
+            Logger.LogInformation("GET " + url);
             using (var client = new HttpClient())
             {
                 client.DefaultRequestHeaders.Add("User-Agent", OsHelper.UserAgent);
+                if (!string.IsNullOrWhiteSpace(acceptRequestHeaderValue))
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptRequestHeaderValue));
+                }
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
                 HttpResponseMessage response;
                 try
@@ -47,19 +53,19 @@ namespace Netpips.Search.Service
                     Logger.LogWarning(e.Message);
                     return null;
                 }
-                this.Logger.LogInformation("GET " + url + " HttpStatusCode " + response.StatusCode);
+                Logger.LogInformation("GET " + url + " HttpStatusCode " + response.StatusCode.ToString("D"));
                 if (!response.IsSuccessStatusCode)
                 {
-                    this.Logger.LogWarning("GET " + url + " request failed");
+                    Logger.LogWarning("GET " + url + " request failed");
                     return null;
                 }
                 var html = await response.Content.ReadAsStringAsync();
                 if (string.IsNullOrEmpty(html))
                 {
-                    this.Logger.LogWarning("GET " + url + " empty response");
+                    Logger.LogWarning("GET " + url + " empty response");
                     return null;
                 }
-                this.Logger.LogInformation("GET " + url + " " + new ByteSize(html.Length).Humanize("#"));
+                Logger.LogInformation("GET " + url + " " + new ByteSize(html.Length).Humanize("#"));
                 return html;
             }
         }

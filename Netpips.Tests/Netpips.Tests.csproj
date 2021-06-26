@@ -85,6 +85,10 @@
     <EmbeddedResource Include="ressources\transmission-remote-summary-stats.valid.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Remove="ressources\magnetdl_search_results.html" />
+    <EmbeddedResource Include="ressources\magnetdl_search_results.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
