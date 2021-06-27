@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using System.Web;
 using HtmlAgilityPack;
 using Humanizer;
 using Humanizer.Bytes;
@@ -14,19 +13,21 @@ using Netpips.Search.Model;
 
 namespace Netpips.Search.Service
 {
-    public class MagnetDLScrapper : BaseTorrentScrapper, ITorrentSearchScrapper
+    public class MagnetDLScrapper : BaseTorrentScrapper, ITorrentSearchScrapper, ITorrentDetailScrapper
     {
         private readonly ILogger<MagnetDLScrapper> logger;
-        public static Uri BaseUri = new Uri("https://1337x.to");
-        
+        private static readonly Uri BaseUri = new Uri("https://magnetdl.com");
+        private static readonly Uri TorrentDetailPrefixUri = new Uri(BaseUri, "file");
         protected override string SearchEndpointFormat => "https://magnetdl.com/{0}/{1}/";
-
         private readonly HttpClient _httpClient;
-        
+
         public MagnetDLScrapper(ILogger<MagnetDLScrapper> logger) : base(logger)
         {
             this.logger = logger;
-            _httpClient = new HttpClient();
+            _httpClient = new HttpClient(new HttpClientHandler
+            {
+                AllowAutoRedirect = true
+            });
         }
 
         private async Task<string> ProcessSearchQueryAsync(string query)
@@ -36,7 +37,7 @@ namespace Netpips.Search.Service
             var secondPath = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
             var url = string.Format(SearchEndpointFormat, firstPath, secondPath);
 
-            Logger.LogInformation("GET " + url);
+            logger.LogInformation("GET " + url);
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
@@ -49,14 +50,15 @@ namespace Netpips.Search.Service
                     }
                 }
             };
-            HttpResponseMessage response = null;
             string html;
             try
             {
                 var sw = Stopwatch.StartNew();
-                response = await _httpClient.SendAsync(request);
+                var response = await _httpClient.SendAsync(request);
                 html = await response.Content.ReadAsStringAsync();
-                logger.LogInformation("{StatusCode} in {Ellapsed} {Bytes}", response.StatusCode.ToString("D"), sw.ElapsedMilliseconds, new ByteSize((double) response?.Content?.Headers?.ContentLength).Humanize("#"));
+                logger.LogInformation("{StatusCode} in {Ellapsed} {Bytes}", response.StatusCode.ToString("D"),
+                    sw.ElapsedMilliseconds,
+                    new ByteSize((double) response?.Content?.Headers?.ContentLength).Humanize("#"));
                 if (response.IsSuccessStatusCode)
                 {
                     logger.LogError(html);
@@ -82,41 +84,39 @@ namespace Netpips.Search.Service
             var items = ParseTorrentSearchResult(html);
             return items;
         }
-        
+
         public override List<TorrentSearchItem> ParseTorrentSearchResult(string html)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
-            var items = htmlDocument
-                .DocumentNode.Descendants("tbody").FirstOrDefault()
-                ?.Descendants("tr")
+
+            var items = htmlDocument.DocumentNode
+                .Descendants("tbody").FirstOrDefault()
+                ?.Elements("tr").Where(x => x.Elements("td").Count() == 8) // filter out blank rows
                 .Select(tr =>
                 {
-                    var tds = tr.Descendants("td").ToList();
-                    if (tds.Count < 5) return null;
+                    var tds = tr.Elements("td").ToList();
                     var item = new TorrentSearchItem
                     {
-                        Title = tds[0].ChildNodes[1].InnerText.Trim(),
-                        ScrapeUrl = tds[0].ChildNodes[1].GetAttributeValue("href", null),
-                        Size = ByteSize.TryParse(tds[4].FirstChild.InnerText.Trim(), out var size)
-                            ? (long) size.Bytes
+                        TorrentUrl = tds[0].Element("a").GetAttributeValue("href", string.Empty),
+                        Title = tds[1].Element("a").GetAttributeValue("title", string.Empty),
+                        ScrapeUrl =  new Uri(BaseUri, tds[1].Element("a").GetAttributeValue("href", string.Empty)).ToString(),
+                        Size = ByteSize.TryParse(tds[5].InnerText.Trim(), out var size)
+                            ? (long) Math.Round(size.Bytes)
                             : 0,
-                        Seeders = int.TryParse(tds[1].FirstChild.InnerText, out var seeders)
+                        Seeders = int.TryParse(tds[6].InnerText, out var seeders)
                             ? seeders
                             : 0,
-                        Leechers = int.TryParse(tds[2].FirstChild.InnerText, out var leechers)
+                        Leechers = int.TryParse(tds[7].InnerText, out var leechers)
                             ? leechers
                             : 0
                     };
-                    if (item.ScrapeUrl != null && item.Size > 0)
-                    {
-                        item.ScrapeUrl = BaseUri.OriginalString + item.ScrapeUrl;
-                        return item;
-                    }
-
-                    return null;
-                });
-            return items != null ? items.Where(i => i != null).ToList() : new List<TorrentSearchItem>();
+                    return item;
+                })
+                .ToList();
+            return items;
         }
+
+        public bool CanScrape(Uri torrentDetailUri) => TorrentDetailPrefixUri.IsBaseOf(torrentDetailUri);
     }
 }
