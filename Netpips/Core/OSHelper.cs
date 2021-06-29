@@ -4,7 +4,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Serilog;
-using Serilog.Core;
 
 namespace Netpips.Core
 {

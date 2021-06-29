@@ -23,18 +23,18 @@ namespace Netpips.Subscriptions.Model
         /// <inheritdoc />
         public void SyncFeedItems(List<ShowRssItem> items)
         {
-            var missingItems = items.Except(this.dbContext.ShowRssItems.ToList(), new ShowRssItem()).ToList();
-            this.logger.LogInformation("[FeedSyncJob] " + missingItems.Count + " missing items");
+            var missingItems = items.Except(dbContext.ShowRssItems.ToList(), new ShowRssItem()).ToList();
+            logger.LogInformation("[FeedSyncJob] " + missingItems.Count + " missing items");
             if (missingItems.Count == 0)
             {
-                this.logger.LogInformation("[FeedSyncJob] No missing items to add");
+                logger.LogInformation("[FeedSyncJob] No missing items to add");
                 return;
             }
             try
             {
-                this.dbContext.ShowRssItems.AddRange(missingItems);
-                this.dbContext.SaveChanges();
-                this.logger.LogInformation("[FeedSyncJob] Inserted " + missingItems.Count + " items");
+                dbContext.ShowRssItems.AddRange(missingItems);
+                dbContext.SaveChanges();
+                logger.LogInformation("[FeedSyncJob] Inserted " + missingItems.Count + " items");
             }
             catch (DbUpdateException ex)
             {
@@ -45,12 +45,12 @@ namespace Netpips.Subscriptions.Model
 
         public ShowRssItem FindShowRssItem(Guid downloadItemId)
         {
-            return this.dbContext.ShowRssItems.Include(x => x.DownloadItem).FirstOrDefault(x => x.DownloadItemId == downloadItemId);
+            return dbContext.ShowRssItems.Include(x => x.DownloadItem).FirstOrDefault(x => x.DownloadItemId == downloadItemId);
         }
 
         public ShowRssItem FindFirstQueuedItem()
         {
-            return this.dbContext.ShowRssItems
+            return dbContext.ShowRssItems
                 .FirstOrDefault(x => x.DownloadItemId == null);
         }
 
@@ -64,7 +64,7 @@ namespace Netpips.Subscriptions.Model
         public List<DownloadItem> FindRecentCompletedItems(int timeWindow)
         {
             var threshold = DateTime.Now.AddDays(-timeWindow);
-            var items = this.dbContext
+            var items = dbContext
                 .ShowRssItems
                 .Include(x => x.DownloadItem)
                 .Where(s => s.DownloadItem != null && s.DownloadItem.State == DownloadState.Completed &&

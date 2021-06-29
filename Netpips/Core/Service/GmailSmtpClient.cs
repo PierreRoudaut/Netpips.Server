@@ -18,7 +18,7 @@ namespace Netpips.Core.Service
         public GmailSmtpClient(ILogger<GmailSmtpClient> logger, IOptions<GmailMailerAccountSettings> options)
         {
             this.logger = logger;
-            this.netpipsAddress = new MailAddress(options.Value.Username, "Netpips");
+            netpipsAddress = new MailAddress(options.Value.Username, "Netpips");
             client = new SmtpClient
             {
                 Port = 587,

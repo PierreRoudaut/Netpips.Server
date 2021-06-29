@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Netpips.Core.Model;
-using Netpips.Identity.Model;
 
 namespace Netpips.Download.Model
 {
@@ -61,7 +60,7 @@ namespace Netpips.Download.Model
         /// <returns></returns>
         public bool IsUrlDownloading(string url)
         {
-            return this.dbContext.DownloadItems.Include(x => x.Owner)
+            return dbContext.DownloadItems.Include(x => x.Owner)
                 .Where(x => !x.Archived)
                 .Any(x => x.FileUrl == url);
         }
@@ -71,7 +70,7 @@ namespace Netpips.Download.Model
         {
             var thresholdDate = DateTime.Now.AddDays(-1 * thresholdDays);
 
-            var toArchive = this.dbContext.DownloadItems.Where(
+            var toArchive = dbContext.DownloadItems.Where(
                 d => !d.Archived && ((d.State == DownloadState.Canceled && d.CanceledAt < thresholdDate)
                                      || d.State == DownloadState.Completed && d.CompletedAt < thresholdDate)).ToList();
 

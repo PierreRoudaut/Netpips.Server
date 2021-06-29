@@ -25,30 +25,30 @@ namespace Netpips.Subscriptions.Job
         public Task Invoke()
         {
             //todo: check if no download pendings
-            this.logger.LogInformation("[ConsumeFeedJob] Start");
-            var showRssItem = this.showRssItemRepository.FindFirstQueuedItem();
+            logger.LogInformation("[ConsumeFeedJob] Start");
+            var showRssItem = showRssItemRepository.FindFirstQueuedItem();
             if (showRssItem == null)
             {
-                this.logger.LogInformation("[ConsumeFeedJob] 0 item to consume");
+                logger.LogInformation("[ConsumeFeedJob] 0 item to consume");
                 return  Task.CompletedTask;
             }
-            this.logger.LogInformation($"[ConsumeFeedJob] 1 item: {showRssItem.Title}");
-            var daemonUser = this.userRepository.GetDaemonUser();
+            logger.LogInformation($"[ConsumeFeedJob] 1 item: {showRssItem.Title}");
+            var daemonUser = userRepository.GetDaemonUser();
             var downloadItem = new DownloadItem
             {
                 OwnerId = daemonUser.Id,
                 FileUrl = showRssItem.Link
             };
 
-            if (!this.downloadItemService.StartDownload(downloadItem, out var error))
+            if (!downloadItemService.StartDownload(downloadItem, out var error))
             {
-                this.logger.LogError("[ConsumeFeedJob] Failed: " + error);
+                logger.LogError("[ConsumeFeedJob] Failed: " + error);
                 return Task.CompletedTask;
             }
-            this.logger.LogInformation("[ConsumeFeedJob] Succeeded");
+            logger.LogInformation("[ConsumeFeedJob] Succeeded");
             showRssItem.DownloadItem = downloadItem;
-            this.showRssItemRepository.Update(showRssItem);
-            this.logger.LogInformation("[ConsumeFeedJob] Updated database");
+            showRssItemRepository.Update(showRssItem);
+            logger.LogInformation("[ConsumeFeedJob] Updated database");
             return Task.CompletedTask;
         }
     }

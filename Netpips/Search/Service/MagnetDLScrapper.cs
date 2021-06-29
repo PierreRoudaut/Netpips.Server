@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using HtmlAgilityPack;
 using Humanizer;
 using Humanizer.Bytes;
@@ -16,50 +17,51 @@ namespace Netpips.Search.Service
     public class MagnetDLScrapper : BaseTorrentScrapper, ITorrentSearchScrapper, ITorrentDetailScrapper
     {
         private readonly ILogger<MagnetDLScrapper> logger;
-        private static readonly Uri BaseUri = new Uri("https://magnetdl.com");
+        private static readonly Uri BaseUri = new Uri("https://www.magnetdl.com");
         private static readonly Uri TorrentDetailPrefixUri = new Uri(BaseUri, "file");
-        protected override string SearchEndpointFormat => "https://magnetdl.com/{0}/{1}/";
-        private readonly HttpClient _httpClient;
+        protected override string SearchEndpointFormat => "http://magnetdl.com/{0}/{1}/";
+        private readonly HttpClient httpClient;
 
         public MagnetDLScrapper(ILogger<MagnetDLScrapper> logger) : base(logger)
         {
             this.logger = logger;
-            _httpClient = new HttpClient(new HttpClientHandler
+            httpClient = new HttpClient(
+                new HttpClientHandler
+                {
+                    AllowAutoRedirect = true
+                })
             {
-                AllowAutoRedirect = true
-            });
-        }
-
-        private async Task<string> ProcessSearchQueryAsync(string query)
-        {
-            // https://www.magnetdl.com/t/the-bad-batch-s01e09/
-            var firstPath = query.Trim().ToLower().First();
-            var secondPath = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
-            var url = string.Format(SearchEndpointFormat, firstPath, secondPath);
-
-            logger.LogInformation("GET " + url);
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(url),
-                Headers =
+                BaseAddress = BaseUri,
+                Timeout = TimeSpan.FromSeconds(3),
+                DefaultRequestHeaders =
                 {
                     Accept =
                     {
                         MediaTypeWithQualityHeaderValue.Parse("text/html")
                     }
                 }
+
             };
+        }
+
+        private async Task<string> ProcessSearchQueryAsync(string query)
+        {
+            // https://www.magnetdl.com/t/the-bad-batch-s01e09/
+            var queryFirstLetter = query.Trim().ToLower().First();
+            var queryAsKebabCase = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
+            var path = $"{queryFirstLetter}/{queryAsKebabCase}/";
+
+            logger.LogInformation("GET " + path);
             string html;
             try
             {
                 var sw = Stopwatch.StartNew();
-                var response = await _httpClient.SendAsync(request);
+                var response = await httpClient.GetAsync(path);
                 html = await response.Content.ReadAsStringAsync();
                 logger.LogInformation("{StatusCode} in {Ellapsed} {Bytes}", response.StatusCode.ToString("D"),
                     sw.ElapsedMilliseconds,
                     new ByteSize((double) response?.Content?.Headers?.ContentLength).Humanize("#"));
-                if (response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
                     logger.LogError(html);
                     return null;
@@ -77,7 +79,7 @@ namespace Netpips.Search.Service
         public async Task<List<TorrentSearchItem>> SearchAsync(string query)
         {
             var html = await ProcessSearchQueryAsync(query);
-            if (!string.IsNullOrWhiteSpace(html))
+            if (string.IsNullOrWhiteSpace(html))
                 return null;
 
             // todo: unit test to parse magnetdl_search_results.html
@@ -98,9 +100,10 @@ namespace Netpips.Search.Service
                     var tds = tr.Elements("td").ToList();
                     var item = new TorrentSearchItem
                     {
-                        TorrentUrl = tds[0].Element("a").GetAttributeValue("href", string.Empty),
+                        TorrentUrl = HttpUtility.HtmlDecode(tds[0].Element("a").GetAttributeValue("href", string.Empty)),
                         Title = tds[1].Element("a").GetAttributeValue("title", string.Empty),
-                        ScrapeUrl =  new Uri(BaseUri, tds[1].Element("a").GetAttributeValue("href", string.Empty)).ToString(),
+                        ScrapeUrl = new Uri(BaseUri, tds[1].Element("a").GetAttributeValue("href", string.Empty))
+                            .ToString(),
                         Size = ByteSize.TryParse(tds[5].InnerText.Trim(), out var size)
                             ? (long) Math.Round(size.Bytes)
                             : 0,

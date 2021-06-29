@@ -35,7 +35,7 @@ namespace Netpips.Media.Service
 
             return mover
                 .MoveVideoFile(item.FileSystemInfo.FullName)
-                .Select(fsInfo => new PlainMediaItem(fsInfo, this.settings.MediaLibraryPath));
+                .Select(fsInfo => new PlainMediaItem(fsInfo, settings.MediaLibraryPath));
         }
 
         public PlainMediaItem GetSubtitles(PlainMediaItem item, string lang)
@@ -52,7 +52,7 @@ namespace Netpips.Media.Service
                 return null;
             }
 
-            return new PlainMediaItem(new FileInfo(srtPath), this.settings.MediaLibraryPath);
+            return new PlainMediaItem(new FileInfo(srtPath), settings.MediaLibraryPath);
         }
     }
 }

@@ -47,7 +47,7 @@ namespace Netpips.Identity.Service
 
         public AuthService(IOptions<AuthSettings> options, ILogger<AuthService> logger, IGoogleAuthService googleAuthService)
         {
-            this.settings = options.Value;
+            settings = options.Value;
             this.logger = logger;
             this.googleAuthService = googleAuthService;
         }
@@ -59,7 +59,7 @@ namespace Netpips.Identity.Service
             payload = null;
             try
             {
-                payload = this.googleAuthService.ValidateAsync(idToken).Result;
+                payload = googleAuthService.ValidateAsync(idToken).Result;
             }
             catch (Exception e)
             {
@@ -72,7 +72,7 @@ namespace Netpips.Identity.Service
             {
                 err = AuthError.EmailNotVerified;
             }
-            else if (payload.Audience.ToString() != this.settings.GoogleClientId)
+            else if (payload.Audience.ToString() != settings.GoogleClientId)
             {
                 err = AuthError.WrongAudience;
             }
@@ -107,13 +107,13 @@ namespace Netpips.Identity.Service
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString())
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.settings.JwtKey));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(this.settings.JwtExpireMinutes));
+            var expires = DateTime.Now.AddMinutes(Convert.ToDouble(settings.JwtExpireMinutes));
 
             var token = new JwtSecurityToken(
-                issuer: this.settings.JwtIssuer,
-                audience: this.settings.JwtIssuer,
+                issuer: settings.JwtIssuer,
+                audience: settings.JwtIssuer,
                 claims: claims,
                 expires: expires,
                 signingCredentials: creds

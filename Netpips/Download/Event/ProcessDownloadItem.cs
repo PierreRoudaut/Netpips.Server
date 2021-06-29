@@ -24,11 +24,11 @@ namespace Netpips.Download.Event
         }
         public Task HandleAsync(ItemDownloaded broadcasted)
         {
-            this.logger.LogInformation("[HandleAsync] handling DownloadItemDownloaded event for: " + broadcasted.DownloadItemId);
+            logger.LogInformation("[HandleAsync] handling DownloadItemDownloaded event for: " + broadcasted.DownloadItemId);
             var item = repository.Find(broadcasted.DownloadItemId);
 
             // mark item as processing
-            item = this.repository.Find(item.Id);
+            item = repository.Find(item.Id);
             item.DownloadedAt = DateTime.Now;
             item.State = DownloadState.Processing;
             repository.Update(item);
@@ -41,12 +41,12 @@ namespace Netpips.Download.Event
             }
             catch (System.Exception e)
             {
-                this.logger.LogError("ProcessDownloadItem Failed to process download items");
-                this.logger.LogError(e.Message);
+                logger.LogError("ProcessDownloadItem Failed to process download items");
+                logger.LogError(e.Message);
             }
 
             // mark item as completed
-            item = this.repository.Find(item.Id);
+            item = repository.Find(item.Id);
             item.MovedFiles = movedFiles;
             item.CompletedAt = DateTime.Now;
             item.State = DownloadState.Completed;
