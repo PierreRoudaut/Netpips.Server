@@ -1,5 +1,4 @@
 # Netpips.Server
-[![CircleCI](https://circleci.com/gh/PierreRoudaut/Netpips.Server.svg?style=svg)](https://circleci.com/gh/PierreRoudaut/Netpips.Server)
 
 Manage downloads, media files and libraries for Plex Media Server through a REST API
 
