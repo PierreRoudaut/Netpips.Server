@@ -5,7 +5,6 @@ Manage downloads, media files and libraries for Plex Media Server through a REST
 ## About
 Netpips is a companion server app for Plex Media Server. It's main goal is to enable users to collaboratively download content (TV Shows, Movies, etc) to the Plex library folders while keeping them organized.
 
-
 ## Installing
 
 Netpips is Web API project running on ASP.NET Core 2.1.
