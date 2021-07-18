@@ -13,6 +13,7 @@ jobs:
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.5
         with:
+          tag_prefix: 'netpips-server-'
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create a GitHub release
         uses: actions/create-release@v1
@@ -20,5 +21,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.tag_version.outputs.new_tag }}
-          release_name: Release ${{ steps.tag_version.outputs.new_tag }}
+          release_name: Release Netpips.Server ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
