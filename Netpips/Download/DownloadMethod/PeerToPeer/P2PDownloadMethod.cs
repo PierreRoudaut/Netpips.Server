@@ -57,7 +57,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
         {
             var stopWatch = new Stopwatch();
             stopWatch.Start();
-            var exitCode = aria2CService.DownloadTorrentFile(magnetLink, torrentFolder, TimeSpan.FromSeconds(30));
+            var exitCode = aria2CService.DownloadTorrentFile(magnetLink, torrentFolder, TimeSpan.FromSeconds(120));
             stopWatch.Stop();
             logger.LogInformation("aria2c duration: " + stopWatch.Elapsed.Seconds + "," + stopWatch.Elapsed.Milliseconds + "s");
             if (exitCode == -1)

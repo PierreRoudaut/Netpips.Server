@@ -9,10 +9,12 @@ namespace Netpips.Core.Settings
     {
         public static IConfigurationRoot BuildConfiguration()
         {
-            var settingsPath = Directory
-                .EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                    "netpips.*.settings.json", SearchOption.TopDirectoryOnly)
-                .FirstOrDefault(x => Path.GetFileName(x) != "netpips.test.settings.json");
+            // var settingsPath = Directory
+            //     .EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            //         "netpips.*.settings.json", SearchOption.TopDirectoryOnly)
+            //     .FirstOrDefault(x => Path.GetFileName(x) != "netpips.test.settings.json");
+            
+            var settingsPath = "/home/netpips/netpips.Production.settings.json";
 
             if (settingsPath == null)
             {
@@ -27,7 +29,8 @@ namespace Netpips.Core.Settings
         public static IConfigurationRoot BuildTestConfiguration()
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))
+                .SetBasePath("/home/netpips")
+                //.SetBasePath(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))
                 .AddJsonFile("netpips.test.settings.json", reloadOnChange: true, optional: false);
 
             return builder.Build();

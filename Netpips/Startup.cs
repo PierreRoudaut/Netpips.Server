@@ -278,7 +278,8 @@ namespace Netpips
 
             // CORS
             app.UseCors(builder => builder
-                .WithOrigins(Configuration.GetValue<string>("Netpips:Domain"))
+                //.WithOrigins(Configuration.GetValue<string>("Netpips:Domain"))
+                .WithOrigins("*")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
