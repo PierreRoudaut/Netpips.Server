@@ -72,7 +72,7 @@ namespace Netpips.Media.Service
                 destDirInfo.Create();
             }
             filesystemItems.Add(new FileInfo(videoDestPath));
-            FilesystemHelper.MoveOrReplace(videoSrcPath, videoDestPath, this.logger);
+            FilesystemHelper.MoveOrReplace(videoSrcPath, videoDestPath, logger);
             return filesystemItems;
         }
 
@@ -129,7 +129,7 @@ namespace Netpips.Media.Service
 
         public List<MediaItem> ProcessDownloadItem(DownloadItem item)
         {
-            return new List<MediaItem>(this.ProcessDir(Path.Combine(settings.DownloadsPath, item.Token))
+            return new List<MediaItem>(ProcessDir(Path.Combine(settings.DownloadsPath, item.Token))
                 .Select(p => new PlainMediaItem(p, settings.MediaLibraryPath).ToMediaItem)
                 .OrderBy(x => x.Path)
                 .ToList());
@@ -161,7 +161,7 @@ namespace Netpips.Media.Service
                         break;
                     case ".rar":
                         if (archiveExtractorService.HandleRarFile(fsInfo.FullName, out var destDir))
-                            processedFiles.AddRange(this.ProcessDir(destDir));
+                            processedFiles.AddRange(ProcessDir(destDir));
                         else
                             processedFiles.AddRange(Directory.GetFiles(destDir, "*.rar", SearchOption.TopDirectoryOnly).Select(f => new FileInfo(f)));
                         break;

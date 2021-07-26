@@ -40,27 +40,27 @@ namespace Netpips.Search.Controller
         {
             q = q.Replace("'", "");
             var cacheSearchKey = $"[torrent-search][{q}]";
-            this.logger.LogInformation(cacheSearchKey);
+            logger.LogInformation(cacheSearchKey);
             var items = new List<TorrentSearchItem>();
-            if (!this.memoryCache.TryGetValue(cacheSearchKey, out items))
+            if (!memoryCache.TryGetValue(cacheSearchKey, out items))
             {
-                this.logger.LogInformation("No items retrieved from cache");
-                var searchScrappers = this.serviceProvider.GetServices<ITorrentSearchScrapper>().ToList();
-                this.logger.LogInformation($"Using [{searchScrappers.Count}] scrappers [{string.Join(", ", searchScrappers.Select(x => x.GetType().Name))}] with timeout {SearchTimeout.TotalMilliseconds} ms");
+                logger.LogInformation("No items retrieved from cache");
+                var searchScrappers = serviceProvider.GetServices<ITorrentSearchScrapper>().ToList();
+                logger.LogInformation($"Using [{searchScrappers.Count}] scrappers [{string.Join(", ", searchScrappers.Select(x => x.GetType().Name))}] with timeout {SearchTimeout.TotalMilliseconds} ms");
 
                 var tasks = searchScrappers.Select(s => s.SearchAsync(q));
                 var agregatedResults = await tasks.WhenAll(SearchTimeout);
-                this.logger.LogInformation($"[{agregatedResults.Length}] scrappers completed within timeout");
+                logger.LogInformation($"[{agregatedResults.Length}] scrappers completed within timeout");
                 items = agregatedResults.SelectMany(c => c).OrderByDescending(r => r.Seeders).Take(20).ToList();
 
-                this.logger.LogInformation($"[{agregatedResults.Length}] scrappers completed within timeout [{items.Count}] total");
+                logger.LogInformation($"[{agregatedResults.Length}] scrappers completed within timeout [{items.Count}] total");
                 var breakdown = items.GroupBy(c => new Uri(c.ScrapeUrl).Host);
-                this.logger.LogInformation(string.Join(", ", breakdown.Select(g => $"[{g.Key} => {g.Count()}]")));
-                this.memoryCache.Set(cacheSearchKey, items, TimeSpan.FromMinutes(5));
+                logger.LogInformation(string.Join(", ", breakdown.Select(g => $"[{g.Key} => {g.Count()}]")));
+                memoryCache.Set(cacheSearchKey, items, TimeSpan.FromMinutes(5));
             }
             else
             {
-                this.logger.LogInformation($"[{items.Count}] items retrieved from cache");
+                logger.LogInformation($"[{items.Count}] items retrieved from cache");
             }
             return Ok(items);
         }
@@ -72,18 +72,18 @@ namespace Netpips.Search.Controller
         public async Task<ObjectResult> ScrapeTorrentUrlAsync([FromBody] string scrapeUrl)
         {
             var scrapeUri = new Uri(scrapeUrl);
-            var torrentDetailScrapper = this.serviceProvider.GetServices<ITorrentDetailScrapper>().FirstOrDefault(s => s.CanScrape(scrapeUri));
+            var torrentDetailScrapper = serviceProvider.GetServices<ITorrentDetailScrapper>().FirstOrDefault(s => s.CanScrape(scrapeUri));
             if (torrentDetailScrapper == null)
             {
-                return this.BadRequest("Not handled url");
+                return BadRequest("Not handled url");
             }
 
             var torrentUrl = await torrentDetailScrapper.ScrapeTorrentUrlAsync(scrapeUrl);
             if (torrentUrl == null)
             {
-                return this.NotFound("Torrent link not found. Please try another link");
+                return NotFound("Torrent link not found. Please try another link");
             }
-            return this.Ok(torrentUrl);
+            return Ok(torrentUrl);
         }
     }
 }

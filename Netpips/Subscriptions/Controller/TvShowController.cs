@@ -41,9 +41,9 @@ namespace Netpips.Subscriptions.Controller
 
         private User GetUser()
         {
-            var userGuid = this.User.GetId();
-            this.logger.LogInformation("User id:" + userGuid);
-            return this.userRepository.FindUser(userGuid);
+            var userGuid = User.GetId();
+            logger.LogInformation("User id:" + userGuid);
+            return userRepository.FindUser(userGuid);
         }
 
         [HttpPost("unsubscribe/{showRssId}", Name = "Unsubscribe")]
@@ -51,7 +51,7 @@ namespace Netpips.Subscriptions.Controller
         [ProducesResponseType(200)]
         public ObjectResult Unsubscribe(int showRssId)
         {
-            var user = this.GetUser();
+            var user = GetUser();
 
             //check for user subscription
             var subscription = user.TvShowSubscriptions.FirstOrDefault(s => s.ShowRssId == showRssId);
@@ -63,8 +63,8 @@ namespace Netpips.Subscriptions.Controller
             // removing global subscription if no other users have subscribed to the show
             if (!userRepository.IsTvShowSubscribedByOtherUsers(showRssId, user.Id))
             {
-                var context = this.showRssGlobalSubscriptionService.Authenticate(out _);
-                var result = this.showRssGlobalSubscriptionService.UnsubscribeToShow(context, showRssId);
+                var context = showRssGlobalSubscriptionService.Authenticate(out _);
+                var result = showRssGlobalSubscriptionService.UnsubscribeToShow(context, showRssId);
                 if (!result.Succeeded)
                 {
                     return BadRequest("Internal error, failed to unsubscribe to show");
@@ -82,7 +82,7 @@ namespace Netpips.Subscriptions.Controller
         [ProducesResponseType(200)]
         public ObjectResult Subscribe(int showRssId)
         {
-            var user = this.GetUser();
+            var user = GetUser();
             // check for existing user subscription
             var subscription = user.TvShowSubscriptions.FirstOrDefault(s => s.ShowRssId == showRssId);
             if (subscription != null)
@@ -90,12 +90,12 @@ namespace Netpips.Subscriptions.Controller
                 return BadRequest("Show already subscribed");
             }
 
-            var context = this.showRssGlobalSubscriptionService.Authenticate(out var subscriptionsSummary);
+            var context = showRssGlobalSubscriptionService.Authenticate(out var subscriptionsSummary);
             var globalSubscription = subscriptionsSummary.SubscribedShows.FirstOrDefault(s => s.ShowRssId == showRssId);
             // Add to globalsubcription if show not globally subscribed
             if (globalSubscription == null)
             {
-                var result = this.showRssGlobalSubscriptionService.SubscribeToShow(context, showRssId);
+                var result = showRssGlobalSubscriptionService.SubscribeToShow(context, showRssId);
                 if (!result.Succeeded)
                 {
                     return BadRequest("Internal error, failed to subscribe to show");
@@ -121,7 +121,7 @@ namespace Netpips.Subscriptions.Controller
             const string TvShowRssShows = "[tv-show-rss-all-shows]";
             if (!memoryCache.TryGetValue(TvShowRssShows, out List<TvShowRss> allShows))
             {
-                this.showRssGlobalSubscriptionService.Authenticate(out var subscriptions);
+                showRssGlobalSubscriptionService.Authenticate(out var subscriptions);
                 logger.LogInformation("Subscribed shows: " + string.Join(", ", subscriptions.SubscribedShows.Select(s => s.ShowTitle)));
                 logger.LogInformation("Available shows: " + subscriptions.AvailableShows.Count);
                 logger.LogInformation("No items retrieved from cache");
@@ -130,7 +130,7 @@ namespace Netpips.Subscriptions.Controller
                     .Concat(subscriptions.SubscribedShows)
                     .OrderBy(c => c.ShowTitle)
                     .ToList();
-                this.memoryCache.Set(TvShowRssShows, allShows);
+                memoryCache.Set(TvShowRssShows, allShows);
             }
             else
             {
@@ -144,7 +144,7 @@ namespace Netpips.Subscriptions.Controller
         [ProducesResponseType(typeof(List<int>), 200)]
         public ObjectResult GetSubscribed()
         {
-            var user = this.GetUser();
+            var user = GetUser();
             return Ok(user.TvShowSubscriptions);
         }
 
@@ -160,17 +160,17 @@ namespace Netpips.Subscriptions.Controller
                     json = GetShowDetail(showRssId);
                     if (string.IsNullOrEmpty(json))
                     {
-                        return this.BadRequest(false);
+                        return BadRequest(false);
                     }
                     
-                    this.memoryCache.Set(tvShowRssShowCacheKey, json);
+                    memoryCache.Set(tvShowRssShowCacheKey, json);
                 }
                 catch (Exception ex)
                 {
-                    this.memoryCache.Remove(tvShowRssShowCacheKey);
-                    this.logger.LogError("Failed to fetch info for showRssId: " + showRssId);
-                    this.logger.LogError(ex.Message);
-                    return this.BadRequest(false);
+                    memoryCache.Remove(tvShowRssShowCacheKey);
+                    logger.LogError("Failed to fetch info for showRssId: " + showRssId);
+                    logger.LogError(ex.Message);
+                    return BadRequest(false);
                 }
             }
             else
@@ -184,7 +184,7 @@ namespace Netpips.Subscriptions.Controller
         {
             //Getting tvMazeId
             var showRssUrl = $"https://showrss.info/show/{showRssId}.rss";
-            this.logger.LogInformation("Getting first show for: " + showRssUrl);
+            logger.LogInformation("Getting first show for: " + showRssUrl);
             var rootElement = XElement.Load(showRssUrl);
             XNamespace np = rootElement.Attributes().First(a => a.Value.Contains("showrss")).Value;
             var tvMazeIdContent = rootElement.Descendants(np + "external_id").FirstOrDefault()?.Value;

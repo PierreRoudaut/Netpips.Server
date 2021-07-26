@@ -42,7 +42,7 @@ namespace Netpips.Identity.Controller
                 Role = user.Role,
                 Email = user.Email
             };
-            if (!this.service.CanUpdate(User.GetRole(), userToCreate.Role))
+            if (!service.CanUpdate(User.GetRole(), userToCreate.Role))
             {
                 return StatusCode(403, new { Error = "NotAllowed", Message = "User does not have permission" });
             }
@@ -64,7 +64,7 @@ namespace Netpips.Identity.Controller
             {
                 return StatusCode(404, new { Error = "UserNotFound", Message = "User not found" });
             }
-            if (!this.service.CanUpdate(User.GetRole(), userToUpdate.Role, subjectNewRole: user.Role))
+            if (!service.CanUpdate(User.GetRole(), userToUpdate.Role, subjectNewRole: user.Role))
             {
                 return StatusCode(403, new { Error = "NotAllowed", Message = "User does not have permission" });
             }
@@ -84,17 +84,17 @@ namespace Netpips.Identity.Controller
         public ObjectResult DeleteUser([FromBody] Guid id)
         {
             var userId = id;
-            var userToDelete = this.repository.FindUser(userId);
+            var userToDelete = repository.FindUser(userId);
             if (userToDelete == null)
             {
                 return StatusCode(404, new { Error = "UserNotFound", Message = "User not found" });
             }
 
-            if (!this.service.CanUpdate(User.GetRole(), userToDelete.Role))
+            if (!service.CanUpdate(User.GetRole(), userToDelete.Role))
             {
                 return StatusCode(403, new { Error = "NotAllowed", Message = "User does not have permission" });
             }
-            this.repository.DeleteUser(userToDelete);
+            repository.DeleteUser(userToDelete);
             return StatusCode(200, new { Status = "UserDeleted", Message = "User deleted" });
 
         }

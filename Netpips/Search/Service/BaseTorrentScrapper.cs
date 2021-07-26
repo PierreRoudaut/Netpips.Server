@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
@@ -15,26 +16,33 @@ namespace Netpips.Search.Service
 {
     public abstract class BaseTorrentScrapper
     {
-        protected readonly ILogger<BaseTorrentScrapper> Logger;
+        private readonly ILogger<BaseTorrentScrapper> logger;
         protected abstract string SearchEndpointFormat { get; }
 
 
         protected BaseTorrentScrapper(ILogger<BaseTorrentScrapper> logger)
         {
-            this.Logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
         /// Fetch html
         /// </summary>
         /// <param name="url"></param>
+        /// <param name="acceptRequestHeaderValue"></param>
         /// <returns></returns>
-        protected async Task<string> DoGet(string url)
+        public async Task<string> DoGet(string url, string acceptRequestHeaderValue = null)
         {
-            this.Logger.LogInformation("GET " + url);
+            logger.LogInformation("GET " + url);
             using (var client = new HttpClient())
             {
+                client.DefaultRequestHeaders.Add("Accept", "text/html");
                 client.DefaultRequestHeaders.Add("User-Agent", OsHelper.UserAgent);
+                if (!string.IsNullOrWhiteSpace(acceptRequestHeaderValue))
+                {
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse(acceptRequestHeaderValue));
+                }
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
                 HttpResponseMessage response;
                 try
@@ -43,23 +51,23 @@ namespace Netpips.Search.Service
                 }
                 catch (Exception e)
                 {
-                    Logger.LogWarning(url + " request failed");
-                    Logger.LogWarning(e.Message);
+                    logger.LogWarning(url + " request failed");
+                    logger.LogWarning(e.Message);
                     return null;
                 }
-                this.Logger.LogInformation("GET " + url + " HttpStatusCode " + response.StatusCode);
+                logger.LogInformation("GET " + url + " HttpStatusCode " + response.StatusCode.ToString("D"));
                 if (!response.IsSuccessStatusCode)
                 {
-                    this.Logger.LogWarning("GET " + url + " request failed");
+                    logger.LogWarning("GET " + url + " request failed");
                     return null;
                 }
                 var html = await response.Content.ReadAsStringAsync();
                 if (string.IsNullOrEmpty(html))
                 {
-                    this.Logger.LogWarning("GET " + url + " empty response");
+                    logger.LogWarning("GET " + url + " empty response");
                     return null;
                 }
-                this.Logger.LogInformation("GET " + url + " " + new ByteSize(html.Length).Humanize("#"));
+                logger.LogInformation("GET " + url + " " + new ByteSize(html.Length).Humanize("#"));
                 return html;
             }
         }
@@ -76,18 +84,23 @@ namespace Netpips.Search.Service
             return torrentUrl;
         }
 
+        
+        /// <summary>
+        /// Retrieves the first found magnet link on a page
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
         public string ParseTorrentDetailResult(string html)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
             var a = htmlDocument.DocumentNode.Descendants("a")
-                .FirstOrDefault(x => x.GetAttributeValue("href", "").StartsWith("magnet"));
+                .FirstOrDefault(x => x.GetAttributeValue("href", string.Empty).StartsWith("magnet:?"));
 
-            return a?.Attributes["href"].Value;
+            var magnetLink = a?.GetAttributeValue("href", null);
+            return !string.IsNullOrWhiteSpace(magnetLink) ? HttpUtility.HtmlDecode(magnetLink) : null;
         }
 
-
-        // SEARCH
 
         public async Task<List<TorrentSearchItem>> SearchAsync(string query)
         {

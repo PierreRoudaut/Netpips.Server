@@ -11,8 +11,8 @@ namespace Netpips.Core.Authorization
 
         protected BaseRequirement(int httpCode, Enum error)
         {
-            this.HttpCode = httpCode;
-            this.Error = error;
+            HttpCode = httpCode;
+            Error = error;
         }
     }
 }

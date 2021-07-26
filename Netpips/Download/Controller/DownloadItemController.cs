@@ -34,7 +34,7 @@ namespace Netpips.Download.Controller
         public ObjectResult List()
         {
             var list = repository.FindAllUnarchived().ToList();
-            this.logger.LogInformation($"Listing {list.Count} items");
+            logger.LogInformation($"Listing {list.Count} items");
             return Ok(list);
         }
 
@@ -94,7 +94,7 @@ namespace Netpips.Download.Controller
         [ProducesResponseType(typeof(string), 500)]
         public ObjectResult IsUrlSupported([FromBody] string fileUrl)
         {
-            var result = this.service.ValidateUrl(fileUrl);
+            var result = service.ValidateUrl(fileUrl);
             return Ok(result);
         }
 

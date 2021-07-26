@@ -21,6 +21,7 @@ namespace Netpips.Tests.Search.Service
         [Category(TestCategory.Network)]
         [Category(TestCategory.ThirdParty)]
         [Test]
+        [Ignore("1337x down")]
         public async Task SearchAsyncTest()
         {
             var service = new _1337xScrapper(this.Logger.Object);
@@ -31,6 +32,7 @@ namespace Netpips.Tests.Search.Service
         [Category(TestCategory.Network)]
         [Category(TestCategory.ThirdParty)]
         [Test]
+        [Ignore("1337x down")]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
             const string ScrapeUrl = "https://1337x.to/torrent/1338262/Armageddon-1998-1080p-BrRip-x264-YIFY/";

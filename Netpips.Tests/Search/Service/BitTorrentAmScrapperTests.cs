@@ -20,6 +20,7 @@ namespace Netpips.Tests.Search.Service
 
         [Category(TestCategory.Network)]
         [Category(TestCategory.ThirdParty)]
+        [Ignore("bittorrent down")]
         [Test]
         public async Task SearchAsyncTest()
         {
@@ -31,6 +32,7 @@ namespace Netpips.Tests.Search.Service
         [Category(TestCategory.Network)]
         [Category(TestCategory.ThirdParty)]
         [Test]
+        [Ignore("bittorrent down")]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
             const string ScrapeUrl = "http://bittorrent.am/download-torrent/8068638/100//Armageddon-(1998)-1080p-BrRip-x264-2.00GB-YIFY.html";

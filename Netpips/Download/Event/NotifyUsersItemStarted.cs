@@ -13,7 +13,7 @@ namespace Netpips.Download.Event
         }
         public Task HandleAsync(ItemStarted broadcasted)
         {
-            this.logger.LogInformation("[HandleAsync] handling DownloadItemStarted event for: " + broadcasted.Item.Name);
+            logger.LogInformation("[HandleAsync] handling DownloadItemStarted event for: " + broadcasted.Item.Name);
             //todo: send push notification with SignalR
             return Task.CompletedTask;
         }

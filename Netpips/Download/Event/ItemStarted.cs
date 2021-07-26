@@ -8,7 +8,7 @@ namespace Netpips.Download.Event
         public DownloadItem Item { get; set; }
         public ItemStarted(DownloadItem item)
         {
-            this.Item = item;
+            Item = item;
         }
     }
 }

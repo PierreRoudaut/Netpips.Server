@@ -1,7 +1,5 @@
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Logging;
 using Netpips.Core;
@@ -30,13 +28,13 @@ namespace Netpips.Media.Service
             }
 
             var expectedSrtPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)) + $".{lang}.srt";
-            this.logger.LogInformation("filebot " + args);
+            logger.LogInformation("filebot " + args);
             Console.WriteLine("filebot " + args);
 
             var code = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
             var msg = $"code: {code}, output: {output}, error: {error}";
             Console.WriteLine(msg);
-            this.logger.LogInformation(msg);
+            logger.LogInformation(msg);
             if (!File.Exists(expectedSrtPath))
             {
                 Console.WriteLine(expectedSrtPath + " does not exists");
@@ -44,7 +42,7 @@ namespace Netpips.Media.Service
             }
 
             /* -get-subtitles option always returns 0 regardless of failure */
-            this.logger.LogInformation("Renaming to 2 letter iso code");
+            logger.LogInformation("Renaming to 2 letter iso code");
             var twoLetterSrtPath = FilesystemHelper.ConvertToTwoLetterIsoLanguageNameSubtitle(expectedSrtPath);
             if (twoLetterSrtPath != null)
             {
@@ -74,9 +72,9 @@ namespace Netpips.Media.Service
                 args += " --db " + db.Quoted();
             }
 
-            this.logger.LogInformation("filebot " + args);
+            logger.LogInformation("filebot " + args);
             var exitCode = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
-            this.logger.LogInformation($"code: {exitCode}, output: {output}, error: {error}");
+            logger.LogInformation($"code: {exitCode}, output: {output}, error: {error}");
 
             if (exitCode != 0)
             {
@@ -84,20 +82,20 @@ namespace Netpips.Media.Service
                 if (match.Success && match.Groups["dest"].Success)
                 {
                     destPath = match.Groups["dest"].Value;
-                    this.logger.LogInformation($"Filebot.TryRename [SUCCESS] [FileAlreadyExists] [{destPath}]");
+                    logger.LogInformation($"Filebot.TryRename [SUCCESS] [FileAlreadyExists] [{destPath}]");
                     return true;
                 }
-                this.logger.LogWarning("Filebot.TryRename [FAILED]", args, error);
+                logger.LogWarning("Filebot.TryRename [FAILED]", args, error);
                 return false;
             }
             var p = new Regex(@"\[" + action.ToUpper() + @"\].*\[.*\] to \[(?<dest>.*)\]").Match(output);
             if (p.Success && p.Groups["dest"].Success)
             {
                 destPath = p.Groups["dest"].Value;
-                this.logger.LogWarning($"Filebot.TryRename [SUCCESS] [{destPath}]");
+                logger.LogWarning($"Filebot.TryRename [SUCCESS] [{destPath}]");
                 return true;
             }
-            this.logger.LogWarning("Filebot.TryRename [FAILED] to capture destPath in output: ", output);
+            logger.LogWarning("Filebot.TryRename [FAILED] to capture destPath in output: ", output);
             return false;
         }
     }

@@ -20,12 +20,12 @@ namespace Netpips.Identity.Model
         {
             this.logger = logger;
             this.dbContext = dbContext;
-            this.settings = options.Value;
+            settings = options.Value;
         }
 
         public User GetDaemonUser()
         {
-            return this.dbContext.Users.First(u => u.Email == settings.DaemonUserEmail);
+            return dbContext.Users.First(u => u.Email == settings.DaemonUserEmail);
         }
 
         public User FindUser(string email) => dbContext.Users
@@ -38,8 +38,8 @@ namespace Netpips.Identity.Model
 
         public void DeleteUser(User user)
         {
-            this.dbContext.Users.Remove(user);
-            this.dbContext.SaveChanges();
+            dbContext.Users.Remove(user);
+            dbContext.SaveChanges();
         }
 
         public List<User> GetUsers(Guid userToExclude)

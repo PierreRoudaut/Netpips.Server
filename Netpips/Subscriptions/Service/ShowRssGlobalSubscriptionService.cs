@@ -73,7 +73,7 @@ namespace Netpips.Subscriptions.Service
             return new SubscriptionsSummary
             {
                 SubscribedShows = ParseSubscribedShows(htmlDocument),
-                AvailableShows = this.ParseAvailableShows(htmlDocument)
+                AvailableShows = ParseAvailableShows(htmlDocument)
             };
         }
 
@@ -111,7 +111,7 @@ namespace Netpips.Subscriptions.Service
                 var response = client.SendAsync(request).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    this.logger.LogError("SubscribeToShow failed " + (int)response.StatusCode + " " + response.ReasonPhrase);
+                    logger.LogError("SubscribeToShow failed " + (int)response.StatusCode + " " + response.ReasonPhrase);
                     return new SubscriptionResult { Succeeded = false };
                 }
 
@@ -146,7 +146,7 @@ namespace Netpips.Subscriptions.Service
                 var response = client.SendAsync(request).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    this.logger.LogError("SubscribeToShow failed " + (int)response.StatusCode + " " + response.ReasonPhrase);
+                    logger.LogError("SubscribeToShow failed " + (int)response.StatusCode + " " + response.ReasonPhrase);
                     return new UnsubscriptionResult { Succeeded = false };
                 }
                 var html = response.Content.ReadAsStringAsync().Result;
@@ -193,7 +193,7 @@ namespace Netpips.Subscriptions.Service
                 response = client.SendAsync(loginRequest).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    this.logger.LogError("Authenticate failed " + (int)response.StatusCode + " " + response.ReasonPhrase);
+                    logger.LogError("Authenticate failed " + (int)response.StatusCode + " " + response.ReasonPhrase);
                     return null;
                 }
                 var html = response.Content.ReadAsStringAsync().Result;

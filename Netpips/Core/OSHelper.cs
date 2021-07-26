@@ -4,13 +4,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using Serilog;
-using Serilog.Core;
 
 namespace Netpips.Core
 {
     public static class OsHelper
     {
-        public static string UserAgent = "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36";
+        public static string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 
         public static int ExecuteCommand(string command, string arguments, out string output, out string error, TimeSpan? timeout = null)
         {

@@ -79,7 +79,7 @@ namespace Netpips.Download.Service
                 item.Archived = false;
                 item.State = DownloadState.Downloading;
 
-                this.repository.Add(item);
+                repository.Add(item);
                 _ = dispatcher.Broadcast(new ItemStarted(item));
             }
             catch (FileNotDownloadableException ex)

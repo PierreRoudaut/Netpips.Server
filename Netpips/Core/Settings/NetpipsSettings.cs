@@ -9,11 +9,11 @@ namespace Netpips.Core.Settings
     {
         public string HomePath { get; set; }
         public static string[] MediaFolders = { "TV Shows", "Movies", "Music", "Others", "Podcasts" };
-        public IEnumerable<string> MediaFolderPaths => MediaFolders.Select(f => Path.Combine(this.MediaLibraryPath, f));
-        public string MediaLibraryPath => Path.Combine(this.HomePath, "medialibrary");
-        public string LogsPath => Path.Combine(this.HomePath, "logs");
-        public string DownloadsPath => Path.Combine(this.HomePath, "downloads");
-        public string TorrentDoneScript => Path.Combine(this.HomePath, ".torrent_done.sh");
+        public IEnumerable<string> MediaFolderPaths => MediaFolders.Select(f => Path.Combine(MediaLibraryPath, f));
+        public string MediaLibraryPath => Path.Combine(HomePath, "medialibrary");
+        public string LogsPath => Path.Combine(HomePath, "logs");
+        public string DownloadsPath => Path.Combine(HomePath, "downloads");
+        public string TorrentDoneScript => Path.Combine(HomePath, ".torrent_done.sh");
 
         public string DaemonUserEmail { get; set; }
 
