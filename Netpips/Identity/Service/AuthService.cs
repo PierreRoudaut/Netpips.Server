@@ -72,10 +72,10 @@ namespace Netpips.Identity.Service
             {
                 err = AuthError.EmailNotVerified;
             }
-            else if (payload.Audience.ToString() != settings.GoogleClientId)
-            {
-                err = AuthError.WrongAudience;
-            }
+            // else if (payload.Audience.ToString() != this.settings.GoogleClientId)
+            // {
+            //     err = AuthError.WrongAudience;
+            // }
             else if (payload.ExpirationTimeSeconds != null && ExtensionMethods.ConvertFromUnixTimestamp(payload.ExpirationTimeSeconds.Value) <= DateTime.Now)
             {
                 err = AuthError.TokenExpired;

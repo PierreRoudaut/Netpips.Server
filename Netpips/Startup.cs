@@ -105,12 +105,12 @@ namespace Netpips
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration.GetSection("Auth")["JwtIssuer"],
-                        ValidAudience = Configuration.GetSection("Auth")["JwtIssuer"],
+                        ValidateIssuerSigningKey = false,
+                        //ValidIssuer = Configuration.GetSection("Auth")["JwtIssuer"],
+                        //ValidAudience = Configuration.GetSection("Auth")["JwtIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("Auth")["JwtKey"]))
                     };
                 });
@@ -280,7 +280,8 @@ namespace Netpips
 
             // CORS
             app.UseCors(builder => builder
-                .WithOrigins(Configuration.GetValue<string>("Netpips:Domain"))
+                //.WithOrigins(Configuration.GetValue<string>("Netpips:Domain"))
+                .WithOrigins("*")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
             );
