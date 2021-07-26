@@ -20,7 +20,7 @@ namespace Netpips.Subscriptions.Model
 
         public List<string> GetSubscribedUsersEmail(ShowRssItem showRssItem)
         {
-            return this.dbContext.TvShowSubscriptions
+            return dbContext.TvShowSubscriptions
                 .Include(x => x.User)
                 .Where(x => x.ShowRssId == showRssItem.ShowRssId && x.User.TvShowSubscriptionEmailNotificationEnabled)
                 .Select(x => x.User.Email).ToList();

@@ -21,7 +21,7 @@ namespace Netpips.Subscriptions.Job
 
         public ShowRssFeedSyncJob(ILogger<ShowRssFeedSyncJob> logger, IOptions<ShowRssSettings> options, IShowRssItemRepository repository)
         {
-            this.settings = options.Value;
+            settings = options.Value;
             this.logger = logger;
             this.repository = repository;
         }
@@ -29,7 +29,7 @@ namespace Netpips.Subscriptions.Job
         public List<ShowRssItem> FetchRssItemsFromFeed()
         {
             //todo, make XElement load xml as Stream and bypass "unexpected token" error
-            var feed = XElement.Load(this.settings.Feed);
+            var feed = XElement.Load(settings.Feed);
             XNamespace np = feed.Attributes().First(a => a.Value.Contains("showrss")).Value;
             var items = feed
                 .Descendants("item")
@@ -52,21 +52,21 @@ namespace Netpips.Subscriptions.Job
 
         public Task Invoke()
         {
-            this.logger.LogInformation("[FeedSyncJob] Start");
+            logger.LogInformation("[FeedSyncJob] Start");
             List<ShowRssItem> items;
             try
             {
-                items = this.FetchRssItemsFromFeed();
-                this.logger.LogInformation($"[FeedSyncJob] fetched {items.Count} items in feed");
+                items = FetchRssItemsFromFeed();
+                logger.LogInformation($"[FeedSyncJob] fetched {items.Count} items in feed");
             }
             catch (Exception ex)
             {
-                this.logger.LogError("[FeedSyncJob] failed to fetch ShowRssItems");
-                this.logger.LogError(ex.Message);
+                logger.LogError("[FeedSyncJob] failed to fetch ShowRssItems");
+                logger.LogError(ex.Message);
                 return Task.CompletedTask;
             }
-            this.repository.SyncFeedItems(items);
-            this.logger.LogInformation("[FeedSyncJob] Completed");
+            repository.SyncFeedItems(items);
+            logger.LogInformation("[FeedSyncJob] Completed");
             return Task.CompletedTask;
         }
     }

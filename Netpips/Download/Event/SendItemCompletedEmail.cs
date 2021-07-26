@@ -31,25 +31,25 @@ namespace Netpips.Download.Event
             this.smtpService = smtpService;
             this.logger = logger;
             this.downloadItemRepository = downloadItemRepository;
-            this.settings = options.Value;
+            settings = options.Value;
         }
 
         public Task HandleAsync(ItemDownloaded broadcasted)
         {
-            this.logger.LogInformation("SendItemCompletedEmail START");
+            logger.LogInformation("SendItemCompletedEmail START");
             var item = downloadItemRepository.Find(broadcasted.DownloadItemId);
             if (tvShowSubscriptionRepository.IsSubscriptionDownload(item, out var subscribedUsersEmails))
             {
-                this.logger.LogInformation("Item was downloaded by a subscription");
-                this.logger.LogInformation($"Sending email to [{string.Join(",", subscribedUsersEmails)}]");
+                logger.LogInformation("Item was downloaded by a subscription");
+                logger.LogInformation($"Sending email to [{string.Join(",", subscribedUsersEmails)}]");
                 NotifySubscribedUsers(item, subscribedUsersEmails);
             }
             else
             {
-                this.logger.LogInformation($"Item was manually downloaded by {item.Owner.Email}");
+                logger.LogInformation($"Item was manually downloaded by {item.Owner.Email}");
                 NotifyOwner(item);
             }
-            this.logger.LogInformation("SendItemCompletedEmail END");
+            logger.LogInformation("SendItemCompletedEmail END");
             return Task.CompletedTask;
         }
 

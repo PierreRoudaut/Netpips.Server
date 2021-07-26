@@ -21,7 +21,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
         public string ParseStandardValue(string property)
         {
             var standardPattern = string.Format(@"  {0}: (?<value>.*(?=\n))", property);
-            var match = new Regex(standardPattern).Match(this.summaryStats);
+            var match = new Regex(standardPattern).Match(summaryStats);
             if (!match.Groups["value"].Success)
             {
                 return null;
@@ -51,7 +51,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
             get
             {
                 const string Format = @"  Total size: (?<value>.*(?=\())";
-                var match = new Regex(Format).Match(this.summaryStats);
+                var match = new Regex(Format).Match(summaryStats);
                 if (!match.Groups["value"].Success || !ByteSize.TryParse(match.Groups["value"].Value, out var byteSize))
                 {
                     return 0;
@@ -85,7 +85,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
             get
             {
                 var pattern = "  Peers: connected to 0, uploading to 0, downloading from (?<nb_peers>.*)";
-                var match = new Regex(pattern).Match(this.summaryStats);
+                var match = new Regex(pattern).Match(summaryStats);
                 if (!match.Groups["nb_peers"].Success || !int.TryParse(match.Groups["nb_peers"].Value, out var nbPeers))
                 {
                     return 0;
@@ -109,7 +109,7 @@ namespace Netpips.Download.DownloadMethod.PeerToPeer
             {
                 var list = new List<File>();
                 var pattern = @"[\t\s]+\d+:[\t\s]+(?<percent>\d+)%[\t\s]+[A-Za-z]+[\t\s]+[A-Za-z]+[\t\s]+(?<nb>\S+)[\t\s]+(?<unit>[A-Za-z]+)[\t\s]+(?<filename>.*)";
-                var matchs = new Regex(pattern).Matches(this.fullStats).ToList();
+                var matchs = new Regex(pattern).Matches(fullStats).ToList();
                 matchs.ForEach(m =>
                 {
                     var progress = double.TryParse(m.Groups["percent"].Value, out var p) ? p : 0;

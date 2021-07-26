@@ -20,7 +20,7 @@ namespace Netpips.Subscriptions.Job
         {
             this.repository = repository;
             this.filebot = filebot;
-            this.settings = options.Value;
+            settings = options.Value;
         }
 
         public Task Invoke()

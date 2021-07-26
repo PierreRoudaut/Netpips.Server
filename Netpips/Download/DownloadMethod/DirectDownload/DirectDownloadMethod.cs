@@ -32,7 +32,7 @@ namespace Netpips.Download.DownloadMethod.DirectDownload
             this.logger = logger;
             this.settings = settings.Value;
             this.dispatcher = dispatcher;
-            this.directDownloadSettings = directDownloadOptions.Value;
+            directDownloadSettings = directDownloadOptions.Value;
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Netpips.Download.DownloadMethod.DirectDownload
                 {
                     var msg = "An error occured while authenticating on provider: " + fileHosterInfo.Name;
                     logger.LogCritical(msg);
-                    this.logger.LogError("Status code: " + response.StatusCode);
+                    logger.LogError("Status code: " + response.StatusCode);
                     throw new StartDownloadException(msg);
                 }
 

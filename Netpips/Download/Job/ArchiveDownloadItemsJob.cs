@@ -25,16 +25,16 @@ namespace Netpips.Download.Job
 
         public Task Invoke()
         {
-            this.logger.LogInformation("[ArchiveDownloadItemsJob] Start");
+            logger.LogInformation("[ArchiveDownloadItemsJob] Start");
             var toArchive = repository.GetPassedItemsToArchive(ArchiveThresholdDays);
-            this.logger.LogInformation($"[ArchiveDownloadItemsJob] {toArchive.Count} items to archive");
+            logger.LogInformation($"[ArchiveDownloadItemsJob] {toArchive.Count} items to archive");
             toArchive.ForEach(item =>
             {
                 service.ArchiveDownload(item);
-                this.logger.LogInformation($"[ArchiveDownloadItemsJob] Archived {item.Token}");
+                logger.LogInformation($"[ArchiveDownloadItemsJob] Archived {item.Token}");
             });
 
-            this.logger.LogInformation($"[ArchiveDownloadItemsJob] Done");
+            logger.LogInformation($"[ArchiveDownloadItemsJob] Done");
             return Task.CompletedTask;
         }
     }
