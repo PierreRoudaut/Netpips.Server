@@ -8,6 +8,7 @@ namespace Netpips.Tests.Core
     {
 
         [Test]
+        [Category(TestCategory.LocalDependency)]
         [Category(TestCategory.Filebot)]
         [Category(TestCategory.Transmission)]
         [Category(TestCategory.MediaInfo)]

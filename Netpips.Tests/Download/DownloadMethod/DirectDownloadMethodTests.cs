@@ -15,7 +15,7 @@ using NUnit.Framework;
 namespace Netpips.Tests.Download.DownloadMethod
 {
     [TestFixture]
-    [Category(TestCategory.Network)]
+    [Category(TestCategory.ThirdParty)]
     public class DirectDownloadMethodTest
     {
         private DirectDownloadMethod downloadMethod;
@@ -26,10 +26,10 @@ namespace Netpips.Tests.Download.DownloadMethod
         [SetUp]
         public void Setup()
         {
-            this.settingsMock = new Mock<IOptions<NetpipsSettings>>();
-            this.settingsMock.Setup(x => x.Value).Returns(TestHelper.CreateNetpipsAppSettings());
-            this.directDownloadSettings = new Mock<IOptions<DirectDownloadSettings>>();
-            this.directDownloadSettings.Setup(x => x.Value).Returns(TestHelper.CreateDirectDownloadSettings());
+            settingsMock = new Mock<IOptions<NetpipsSettings>>();
+            settingsMock.Setup(x => x.Value).Returns(TestHelper.CreateNetpipsAppSettings());
+            directDownloadSettings = new Mock<IOptions<DirectDownloadSettings>>();
+            directDownloadSettings.Setup(x => x.Value).Returns(TestHelper.CreateDirectDownloadSettings());
 
             autoMocker = new AutoMocker();
             autoMocker.Use(new Mock<IDispatcher>().Object);
@@ -37,7 +37,7 @@ namespace Netpips.Tests.Download.DownloadMethod
             autoMocker.Use(settingsMock.Object);
             autoMocker.Use(directDownloadSettings.Object);
 
-            this.downloadMethod = autoMocker.CreateInstance<DirectDownloadMethod>();
+            downloadMethod = autoMocker.CreateInstance<DirectDownloadMethod>();
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace Netpips.Tests.Download.DownloadMethod
                 FileUrl = "http://test-debit.free.fr/1024.rnd"
             };
 
-            var result = this.downloadMethod.CheckDownloadability(item, new List<string>());
+            var result = downloadMethod.CheckDownloadability(item, new List<string>());
             Assert.IsTrue(result);
             Assert.IsFalse(string.IsNullOrEmpty(item.Name));
             Assert.AreEqual(1048576, item.TotalSize);
@@ -65,7 +65,7 @@ namespace Netpips.Tests.Download.DownloadMethod
                 FileUrl = url
             };
 
-            var result = this.downloadMethod.CheckDownloadability(item, new List<string>());
+            var result = downloadMethod.CheckDownloadability(item, new List<string>());
             Assert.IsFalse(result);
         }
 
@@ -74,7 +74,7 @@ namespace Netpips.Tests.Download.DownloadMethod
         {
             var filehoster = autoMocker.Get<IOptions<DirectDownloadSettings>>().Value.Filehosters.First(f => f.Name == "1fichier");
             List<string> cookies = null;
-            Assert.DoesNotThrow(() => cookies = this.downloadMethod.Authenticate(filehoster));
+            Assert.DoesNotThrow(() => cookies = downloadMethod.Authenticate(filehoster));
             Assert.GreaterOrEqual(cookies.Count, 1, "Authentication on " + filehoster.Name + " should have retrieved at least 1 cookie");
         }
 
@@ -99,11 +99,11 @@ namespace Netpips.Tests.Download.DownloadMethod
         public void CancelTest()
         {
             var item = new DownloadItem { Token = "ABCD" };
-            Assert.False(this.downloadMethod.Cancel(item));
+            Assert.False(downloadMethod.Cancel(item));
 
             var task = new Mock<IDirectDownloadTask>();
             DirectDownloadMethod.DirectDownloadTasks[item.Token] = task.Object;
-            Assert.True(this.downloadMethod.Cancel(item));
+            Assert.True(downloadMethod.Cancel(item));
             task.Verify(t => t.Cancel(), Times.Once);
         }
 
@@ -114,7 +114,7 @@ namespace Netpips.Tests.Download.DownloadMethod
 
             const string FilenameFormat = "Video {0}.mkv";
             const int DirCount = 3;
-            var itemPath = Path.Combine(this.settingsMock.Object.Value.DownloadsPath, item.Token);
+            var itemPath = Path.Combine(settingsMock.Object.Value.DownloadsPath, item.Token);
             var tempPath = itemPath;
             for (var i = 1; i <= DirCount; i++)
             {
@@ -122,7 +122,7 @@ namespace Netpips.Tests.Download.DownloadMethod
                 File.WriteAllText(Path.Combine(tempPath, string.Format(FilenameFormat, i)), i.ToString());
             }
 
-            Assert.AreEqual(DirCount, this.downloadMethod.GetDownloadedSize(item));
+            Assert.AreEqual(DirCount, downloadMethod.GetDownloadedSize(item));
         }
     }
 }

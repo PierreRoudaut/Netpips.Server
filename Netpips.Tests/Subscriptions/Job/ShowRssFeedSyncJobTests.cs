@@ -24,19 +24,19 @@ namespace Netpips.Tests.Subscriptions.Job
         [SetUp]
         public void Setup()
         {
-            this.settings = TestHelper.CreateShowRssSettings();
-            this.logger = new Mock<ILogger<ShowRssFeedSyncJob>>();
-            this.repository = new Mock<IShowRssItemRepository>();
-            this.options = new Mock<IOptions<ShowRssSettings>>();
-            this.options
+            settings = TestHelper.CreateShowRssSettings();
+            logger = new Mock<ILogger<ShowRssFeedSyncJob>>();
+            repository = new Mock<IShowRssItemRepository>();
+            options = new Mock<IOptions<ShowRssSettings>>();
+            options
                 .SetupGet(x => x.Value)
-                .Returns(this.settings);
+                .Returns(settings);
         }
 
         [Test]
         public void FetchRssItemsFromFeedTest()
         {
-            var service = new ShowRssFeedSyncJob(this.logger.Object, this.options.Object, this.repository.Object);
+            var service = new ShowRssFeedSyncJob(logger.Object, options.Object, repository.Object);
 
             //todo, make XElement load xml as Stream and bypass "unexpected token" error
             var xml = TestHelper.GetRessourceContent("show_rss_polling_feed.xml");
@@ -48,9 +48,9 @@ namespace Netpips.Tests.Subscriptions.Job
         [Test]
         public void InvokeTest()
         {
-            var service = new ShowRssFeedSyncJob(this.logger.Object, this.options.Object, this.repository.Object);
+            var service = new ShowRssFeedSyncJob(logger.Object, options.Object, repository.Object);
             service.Invoke();
-            this.repository.Verify(x => x.SyncFeedItems(It.IsAny<List<ShowRssItem>>()), Times.Once());
+            repository.Verify(x => x.SyncFeedItems(It.IsAny<List<ShowRssItem>>()), Times.Once());
         }
     }
 }

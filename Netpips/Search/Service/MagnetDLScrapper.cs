@@ -101,7 +101,7 @@ namespace Netpips.Search.Service
                     var item = new TorrentSearchItem
                     {
                         TorrentUrl = HttpUtility.HtmlDecode(tds[0].Element("a").GetAttributeValue("href", string.Empty)),
-                        Title = tds[1].Element("a").GetAttributeValue("title", string.Empty),
+                        Title =  tds[1].Element("a").GetAttributeValue("title", string.Empty),
                         ScrapeUrl = new Uri(BaseUri, tds[1].Element("a").GetAttributeValue("href", string.Empty))
                             .ToString(),
                         Size = ByteSize.TryParse(tds[5].InnerText.Trim(), out var size)

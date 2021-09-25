@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace Netpips.Tests.Download.DownloadMethod
 {
     [TestFixture]
-    [Category(TestCategory.Network)]
+    [Category(TestCategory.Integration)]
     public class P2PDownloadMethodTests
     {
         private P2PDownloadMethod downloadMethod;
@@ -27,13 +27,13 @@ namespace Netpips.Tests.Download.DownloadMethod
         [SetUp]
         public void Setup()
         {
-            this.logger = new Mock<ILogger<P2PDownloadMethod>>();
-            this.settingsMock = new Mock<IOptions<NetpipsSettings>>();
-            this.ariaService = new Mock<IAria2CService>();
-            this.torrentService = new Mock<ITorrentDaemonService>();
+            logger = new Mock<ILogger<P2PDownloadMethod>>();
+            settingsMock = new Mock<IOptions<NetpipsSettings>>();
+            ariaService = new Mock<IAria2CService>();
+            torrentService = new Mock<ITorrentDaemonService>();
 
-            this.settings = TestHelper.CreateNetpipsAppSettings();
-            this.settingsMock.Setup(x => x.Value).Returns(this.settings);
+            settings = TestHelper.CreateNetpipsAppSettings();
+            settingsMock.Setup(x => x.Value).Returns(settings);
         }
 
         [TestCase("magnet:?magnetLinkNotFound", P2PDownloadMethod.BrokenMagnetLinkMessage, 1)]
@@ -42,13 +42,13 @@ namespace Netpips.Tests.Download.DownloadMethod
         {
             var item = new DownloadItem { FileUrl = magnetLink };
 
-            this.ariaService
+            ariaService
                 .Setup(x => x.DownloadTorrentFile(It.Is<string>(url => url == magnetLink), It.IsAny<string>(), It.IsAny<TimeSpan>()))
                 .Returns(ariaReturnValue);
-            this.downloadMethod =
-                new P2PDownloadMethod(this.logger.Object, this.settingsMock.Object, this.ariaService.Object, this.torrentService.Object);
+            downloadMethod =
+                new P2PDownloadMethod(logger.Object, settingsMock.Object, ariaService.Object, torrentService.Object);
 
-            var ex = Assert.Throws<FileNotDownloadableException>(() => this.downloadMethod.Start(item));
+            var ex = Assert.Throws<FileNotDownloadableException>(() => downloadMethod.Start(item));
             Assert.AreEqual(expectedExceptionMessage, ex.Message);
         }
 
@@ -56,23 +56,23 @@ namespace Netpips.Tests.Download.DownloadMethod
         public void DownloadCaseInvalidTorrent()
         {
 
-            this.downloadMethod =
-                new P2PDownloadMethod(this.logger.Object, this.settingsMock.Object, this.ariaService.Object, this.torrentService.Object);
+            downloadMethod =
+                new P2PDownloadMethod(logger.Object, settingsMock.Object, ariaService.Object, torrentService.Object);
 
             var item = new DownloadItem
             {
                 FileUrl = "http://invalid-torrent-url.com/file.torrent"
             };
 
-            var ex = Assert.Throws<FileNotDownloadableException>(() => this.downloadMethod.Start(item));
+            var ex = Assert.Throws<FileNotDownloadableException>(() => downloadMethod.Start(item));
             Assert.AreEqual(P2PDownloadMethod.TorrentFileNotFoundMessage, ex.Message);
         }
 
         [Test]
         public void DownloadCaseCorruptedTorrent()
         {
-            this.downloadMethod =
-                new P2PDownloadMethod(this.logger.Object, this.settingsMock.Object, this.ariaService.Object, this.torrentService.Object);
+            downloadMethod =
+                new P2PDownloadMethod(logger.Object, settingsMock.Object, ariaService.Object, torrentService.Object);
 
             var corruptedTorrentPath =
                 TestHelper.GetRessourceFullPath("The.Big.Bang.Theory.S11E14.HDTV.x264-SVA[rarbg].corrupted.torrent");
@@ -80,16 +80,16 @@ namespace Netpips.Tests.Download.DownloadMethod
             {
                 FileUrl = corruptedTorrentPath
             };
-            var ex = Assert.Throws<FileNotDownloadableException>(() => this.downloadMethod.Start(item));
+            var ex = Assert.Throws<FileNotDownloadableException>(() => downloadMethod.Start(item));
             Assert.AreEqual(P2PDownloadMethod.TorrentFileCorrupted, ex.Message);
         }
 
         [Test]
         public void DownloadCaseFailedToAddTorrentToDaemon()
         {
-            this.torrentService.Setup(x => x.AddTorrent(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
-            this.downloadMethod =
-                new P2PDownloadMethod(this.logger.Object, this.settingsMock.Object, this.ariaService.Object, this.torrentService.Object);
+            torrentService.Setup(x => x.AddTorrent(It.IsAny<string>(), It.IsAny<string>())).Returns(false);
+            downloadMethod =
+                new P2PDownloadMethod(logger.Object, settingsMock.Object, ariaService.Object, torrentService.Object);
 
             var torrentPath =
                 TestHelper.GetRessourceFullPath("The.Big.Bang.Theory.S11E14.HDTV.x264-SVA[rarbg].torrent");
@@ -99,16 +99,16 @@ namespace Netpips.Tests.Download.DownloadMethod
                 FileUrl = torrentPath
             };
 
-            var ex = Assert.Throws<StartDownloadException>(() => this.downloadMethod.Start(item));
+            var ex = Assert.Throws<StartDownloadException>(() => downloadMethod.Start(item));
             Assert.AreEqual(P2PDownloadMethod.TorrentDaemonAddFailureMessage, ex.Message);
         }
 
         [Test]
         public void DownloadCaseValid()
         {
-            this.torrentService.Setup(x => x.AddTorrent(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
-            this.downloadMethod =
-                new P2PDownloadMethod(this.logger.Object, this.settingsMock.Object, this.ariaService.Object, this.torrentService.Object);
+            torrentService.Setup(x => x.AddTorrent(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            downloadMethod =
+                new P2PDownloadMethod(logger.Object, settingsMock.Object, ariaService.Object, torrentService.Object);
 
             var torrentPath =
                 TestHelper.GetRessourceFullPath("The.Big.Bang.Theory.S11E14.HDTV.x264-SVA[rarbg].torrent");
@@ -118,7 +118,7 @@ namespace Netpips.Tests.Download.DownloadMethod
                 FileUrl = torrentPath
             };
 
-            Assert.DoesNotThrow(() => this.downloadMethod.Start(item));
+            Assert.DoesNotThrow(() => downloadMethod.Start(item));
             Assert.AreEqual("The.Big.Bang.Theory.S11E14.HDTV.x264-SVA[rarbg]", item.Name);
             Assert.AreEqual(140940255, item.TotalSize);
             Assert.AreEqual("25c8f093021fd9d97087f9444c160d9bb3d70e35", item.Hash);

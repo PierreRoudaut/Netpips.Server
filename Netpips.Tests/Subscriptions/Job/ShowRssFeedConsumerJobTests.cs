@@ -25,60 +25,60 @@ namespace Netpips.Tests.Subscriptions.Job
         [SetUp]
         public void Setup()
         {
-            this.logger = new Mock<ILogger<ShowRssFeedConsumerJob>>();
-            this.showRssItemrepository = new Mock<IShowRssItemRepository>();
-            this.userRepository = new Mock<IUserRepository>();
-            this.downloadItemService = new Mock<IDownloadItemService>();
+            logger = new Mock<ILogger<ShowRssFeedConsumerJob>>();
+            showRssItemrepository = new Mock<IShowRssItemRepository>();
+            userRepository = new Mock<IUserRepository>();
+            downloadItemService = new Mock<IDownloadItemService>();
            
         }
 
         [Test]
         public void InvokeTest_NoItemToConsume()
         {
-            this.showRssItemrepository.Setup(x => x.FindFirstQueuedItem()).Returns((ShowRssItem)null);
+            showRssItemrepository.Setup(x => x.FindFirstQueuedItem()).Returns((ShowRssItem)null);
             var service = new ShowRssFeedConsumerJob(
-                this.logger.Object,
-                this.showRssItemrepository.Object,
-                this.downloadItemService.Object,
-                this.userRepository.Object);
+                logger.Object,
+                showRssItemrepository.Object,
+                downloadItemService.Object,
+                userRepository.Object);
             service.Invoke();
             DownloadItemActionError error;
-            this.downloadItemService.Verify(x => x.StartDownload(It.IsAny<DownloadItem>(), out error), Times.Never);
+            downloadItemService.Verify(x => x.StartDownload(It.IsAny<DownloadItem>(), out error), Times.Never);
 
         }
 
         [Test]
         public void InvokeTest_StartFailed()
         {
-            this.userRepository.Setup(c => c.GetDaemonUser()).Returns(new User());
-            this.showRssItemrepository.Setup(x => x.FindFirstQueuedItem()).Returns(new ShowRssItem());
+            userRepository.Setup(c => c.GetDaemonUser()).Returns(new User());
+            showRssItemrepository.Setup(x => x.FindFirstQueuedItem()).Returns(new ShowRssItem());
             DownloadItemActionError error;
-            this.downloadItemService.Setup(x => x.StartDownload(It.IsAny<DownloadItem>(), out error)).Returns(false);
+            downloadItemService.Setup(x => x.StartDownload(It.IsAny<DownloadItem>(), out error)).Returns(false);
             var service = new ShowRssFeedConsumerJob(
-                this.logger.Object,
-                this.showRssItemrepository.Object,
-                this.downloadItemService.Object,
-                this.userRepository.Object);
+                logger.Object,
+                showRssItemrepository.Object,
+                downloadItemService.Object,
+                userRepository.Object);
             service.Invoke();
-            this.showRssItemrepository.Verify(x => x.Update(It.IsAny<ShowRssItem>()), Times.Never);
+            showRssItemrepository.Verify(x => x.Update(It.IsAny<ShowRssItem>()), Times.Never);
 
         }
 
         [Test]
         public void InvokeTest_Ok()
         {
-            this.userRepository.Setup(c => c.GetDaemonUser()).Returns(new User());
-            this.showRssItemrepository.Setup(x => x.FindFirstQueuedItem()).Returns(new ShowRssItem());
+            userRepository.Setup(c => c.GetDaemonUser()).Returns(new User());
+            showRssItemrepository.Setup(x => x.FindFirstQueuedItem()).Returns(new ShowRssItem());
             var item = new DownloadItem();
             DownloadItemActionError error;
-            this.downloadItemService.Setup(x => x.StartDownload(It.IsAny<DownloadItem>(), out error)).Returns(true);
+            downloadItemService.Setup(x => x.StartDownload(It.IsAny<DownloadItem>(), out error)).Returns(true);
             var service = new ShowRssFeedConsumerJob(
-                this.logger.Object,
-                this.showRssItemrepository.Object,
-                this.downloadItemService.Object,
-                this.userRepository.Object);
+                logger.Object,
+                showRssItemrepository.Object,
+                downloadItemService.Object,
+                userRepository.Object);
             service.Invoke();
-            this.showRssItemrepository.Verify(x => x.Update(It.IsAny<ShowRssItem>()), Times.Once);
+            showRssItemrepository.Verify(x => x.Update(It.IsAny<ShowRssItem>()), Times.Once);
 
         }
     }

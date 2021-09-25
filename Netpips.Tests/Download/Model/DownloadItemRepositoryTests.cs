@@ -53,9 +53,9 @@ namespace Netpips.Tests.Download.Model
             mockSet.As<IQueryable<DownloadItem>>().Setup(m => m.GetEnumerator()).Returns(itemsQueryable.GetEnumerator());
 
 
-            this.dbContext.SetupGet(c => c.DownloadItems).Returns(mockSet.Object);
+            dbContext.SetupGet(c => c.DownloadItems).Returns(mockSet.Object);
 
-            var repo = new DownloadItemRepository(this.logger.Object, this.dbContext.Object);
+            var repo = new DownloadItemRepository(logger.Object, dbContext.Object);
             var toArchive = repo.GetPassedItemsToArchive(ExpectedItemsCountToArchive);
 
             Assert.AreEqual(ExpectedItemsCountToArchive, toArchive.Count);
