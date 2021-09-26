@@ -1,10 +1,7 @@
 name: Netpips.Server
 on:
-  push:p
-    branches:
-      - master
+  push:
 
-# dotnet test --filter 'TestCategory!=LocalDependency'
 jobs:
   build:
     runs-on: ubuntu-latest
