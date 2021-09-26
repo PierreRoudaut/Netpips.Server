@@ -14,14 +14,18 @@ jobs:
 
           # Aria2
           sudo apt-get install -y aria2
+          aria2 --version
 
           # Mediainfo
           sudo apt-get install -y mediainfo
+          mediainfo --version
 
           # Transmission
-          # sudo apt-get install -y transmission-cli
-          # sudo apt-get install -y transmission-daemon
-          # sudo apt-get install -y transmission-common
+          sudo apt-get install -y transmission-cli
+          sudo apt-get install -y transmission-daemon
+          sudo apt-get install -y transmission-common
+          transmission-remote --version
+
 
           dotnet build
           dotnet test --filter 'TestCategory=Transmission'
