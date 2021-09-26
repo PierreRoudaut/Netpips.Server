@@ -8,7 +8,7 @@ namespace Netpips.Media.Service
         public bool TryGetDuration(string path, out TimeSpan duration)
         {
             duration = TimeSpan.FromMilliseconds(0);
-            if (OsHelper.ExecuteCommand("mediainfo", "--Inform=\"General;%Duration%\"", out var outputDuration, out _) != 0)
+            if (OsHelper.ExecuteCommand("mediainfo", $"--Inform=\"General;%Duration%\" \"{path}\"", out var outputDuration, out var stderr) != 0)
             {
                 return false;
             }

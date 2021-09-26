@@ -28,7 +28,7 @@ jobs:
 
           # Filebot
           sudo apt-get install -y filebot
-          filebot --version
+          filebot -version
 
           dotnet build
           dotnet test --filter 'TestCategory=Transmission'
