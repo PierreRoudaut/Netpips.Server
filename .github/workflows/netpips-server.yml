@@ -1,12 +1,25 @@
 name: Netpips.Server
 on:
-  push:
+  push:p
     branches:
       - master
 
 # dotnet test --filter 'TestCategory!=LocalDependency'
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v1
+    with:
+      dotnet-version: '2.1'
+      - run: |
+          dotnet build
+          dotnet test --filter 'TestCategory!=LocalDependency'
+  
   release:
+    if: github.ref == 'refs/heads/master'
+    depends-on: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
