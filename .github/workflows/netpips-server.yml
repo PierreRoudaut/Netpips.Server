@@ -26,6 +26,9 @@ jobs:
           sudo apt-get install -y transmission-common
           transmission-remote --version
 
+          # Filebot
+          sudo apt-get install -y filebot
+          filebot --version
 
           dotnet build
           dotnet test --filter 'TestCategory=Transmission'

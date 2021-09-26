@@ -11,7 +11,7 @@ namespace Netpips.Core
         public static void AssertCliDependencies()
         {
             var commandList = new Dictionary<string, string> {
-                // { "filebot", "-version" },
+                { "filebot", "-version" },
                 { "transmission-remote", "--version" },
                 { "mediainfo", "--version" },
                 { "aria2c", "--version" }
