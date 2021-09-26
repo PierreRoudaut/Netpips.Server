@@ -6,32 +6,42 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '2.1.x'
-      - run: |
-
-          # Aria2
+      - name: Install aria2c
+        run: |
           sudo apt-get install -y aria2
           aria2c --version
 
-          # Mediainfo
+      - name: Install mediainfo
+        run: |
           sudo apt-get install -y mediainfo
           mediainfo --version
 
-          # Transmission
+      - name: Install transmisstion-remote
+        run: |
           sudo apt-get install -y transmission-cli
           sudo apt-get install -y transmission-daemon
           sudo apt-get install -y transmission-common
           transmission-remote --version
 
-          # Filebot
-          sudo apt-get install -y filebot
+      - name: Install filebot
+        run: |
+          sudo apt-get install -y openjdk-8-jre
+          sudo apt-get install -y openjdk-8-jdk
+          wget -O filebot.deb 'https://app.filebot.net/download.php?type=deb&arch=amd64'
+          dpkg -i filebot.deb
+          rm -f   filebot.deb
           filebot -version
 
+      - name: Run unit tests
+        run: |
           dotnet build
-          dotnet test --filter 'TestCategory=Transmission'
+          dotnet test --filter 'TestCategory=LocalDependency'
   
   release:
     if: github.ref == 'refs/heads/master'
