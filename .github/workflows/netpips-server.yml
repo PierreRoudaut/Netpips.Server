@@ -12,7 +12,7 @@ jobs:
           dotnet-version: '2.1.x'
       - run: |
           dotnet build
-          dotnet test --filter 'TestCategory!=LocalDependency'
+          dotnet test --filter 'TestCategory=Transmission'
   
   release:
     if: github.ref == 'refs/heads/master'
