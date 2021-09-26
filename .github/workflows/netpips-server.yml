@@ -11,6 +11,15 @@ jobs:
         with:
           dotnet-version: '2.1.x'
       - run: |
+
+          # Mediainfo
+          apt-get install -y mediainfo
+
+          # Filebot
+          # apt-get install -y transmission-cli
+          # apt-get install -y transmission-daemon
+          # apt-get install -y transmission-common
+
           dotnet build
           dotnet test --filter 'TestCategory=Transmission'
   

@@ -11,10 +11,10 @@ namespace Netpips.Core
         public static void AssertCliDependencies()
         {
             var commandList = new Dictionary<string, string> {
-                { "filebot", "-version" },
-                { "transmission-remote", "--version" },
+                // { "filebot", "-version" },
+                // { "transmission-remote", "--version" },
                 { "mediainfo", "--version" },
-                { "aria2c", "--version" }
+                // { "aria2c", "--version" }
             };
             foreach (var command in commandList)
             {
