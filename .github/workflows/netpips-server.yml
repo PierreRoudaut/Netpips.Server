@@ -38,6 +38,7 @@ jobs:
           sudo dpkg -i filebot.deb
           rm -f filebot.deb
           filebot -version
+          echo -e "${{ secrets.OPENSUB_USERNAME }}\n${{ secrets.OPENSUB_PASSWORD }}" | filebot -script fn:configure
 
       - name: Run unit tests
         run: |
