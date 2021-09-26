@@ -14,7 +14,7 @@ namespace Netpips.Core
                 // { "filebot", "-version" },
                 // { "transmission-remote", "--version" },
                 { "mediainfo", "--version" },
-                // { "aria2c", "--version" }
+                { "aria2c", "--version" }
             };
             foreach (var command in commandList)
             {

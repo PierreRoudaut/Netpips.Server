@@ -12,13 +12,16 @@ jobs:
           dotnet-version: '2.1.x'
       - run: |
 
+          # Aria2
+          sudo apt-get install -y aria2
+
           # Mediainfo
           sudo apt-get install -y mediainfo
 
           # Filebot
-          # apt-get install -y transmission-cli
-          # apt-get install -y transmission-daemon
-          # apt-get install -y transmission-common
+          # sudo apt-get install -y transmission-cli
+          # sudo apt-get install -y transmission-daemon
+          # sudo apt-get install -y transmission-common
 
           dotnet build
           dotnet test --filter 'TestCategory=Transmission'
