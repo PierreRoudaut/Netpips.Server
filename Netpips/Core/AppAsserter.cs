@@ -12,7 +12,7 @@ namespace Netpips.Core
         {
             var commandList = new Dictionary<string, string> {
                 // { "filebot", "-version" },
-                // { "transmission-remote", "--version" },
+                { "transmission-remote", "--version" },
                 { "mediainfo", "--version" },
                 { "aria2c", "--version" }
             };

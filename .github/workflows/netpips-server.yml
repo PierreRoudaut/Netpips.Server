@@ -18,7 +18,7 @@ jobs:
           # Mediainfo
           sudo apt-get install -y mediainfo
 
-          # Filebot
+          # Transmission
           # sudo apt-get install -y transmission-cli
           # sudo apt-get install -y transmission-daemon
           # sudo apt-get install -y transmission-common
