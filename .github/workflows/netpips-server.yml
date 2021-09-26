@@ -16,7 +16,7 @@ jobs:
   
   release:
     if: github.ref == 'refs/heads/master'
-    depends-on: build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
