@@ -6,6 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Create netpips filesystem
+        run: |
+          sudo adduser --disabled-password --gecos "" netpips
+          echo "netpips:netpips" | sudo chpasswd
+
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Setup .NET
@@ -43,7 +48,7 @@ jobs:
       - name: Run unit tests
         run: |
           dotnet build
-          dotnet test --filter 'TestCategory=LocalDependency'
+          dotnet test
   
   release:
     if: github.ref == 'refs/heads/master'
