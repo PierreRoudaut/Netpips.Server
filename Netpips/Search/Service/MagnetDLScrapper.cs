@@ -76,7 +76,7 @@ namespace Netpips.Search.Service
             return html;
         }
 
-        public async Task<List<TorrentSearchItem>> SearchAsync(string query)
+        public new async Task<List<TorrentSearchItem>> SearchAsync(string query)
         {
             var html = await ProcessSearchQueryAsync(query);
             if (string.IsNullOrWhiteSpace(html))

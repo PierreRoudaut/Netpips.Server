@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Microsoft.Extensions.Configuration;
 
 namespace Netpips.Core.Settings
@@ -9,17 +8,13 @@ namespace Netpips.Core.Settings
     {
         public static IConfigurationRoot BuildConfiguration()
         {
-            // var settingsPath = Directory
-            //     .EnumerateFiles(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-            //         "netpips.*.settings.json", SearchOption.TopDirectoryOnly)
-            //     .FirstOrDefault(x => Path.GetFileName(x) != "netpips.test.settings.json");
-            
             var settingsPath = "/home/netpips/netpips.Production.settings.json";
 
             if (settingsPath == null)
             {
                 throw new ApplicationException("No settings file found");
             }
+
             var builder = new ConfigurationBuilder()
                 .AddJsonFile(settingsPath, reloadOnChange: true, optional: false);
 
@@ -28,12 +23,26 @@ namespace Netpips.Core.Settings
 
         public static IConfigurationRoot BuildTestConfiguration()
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath("/home/netpips")
-                //.SetBasePath(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile))
-                .AddJsonFile("netpips.test.settings.json", reloadOnChange: true, optional: false);
+            const string testSettingsFilename = "/home/netpips/netpips.test.settings.json";
+            if (File.Exists(testSettingsFilename))
+            {
+                return new ConfigurationBuilder()
+                    .AddJsonFile(testSettingsFilename, reloadOnChange: true, optional: false)
+                    .Build();
+            }
 
-            return builder.Build();
+            var testSettingsJson = Environment.GetEnvironmentVariable("NETPIPS_TEST_SETTINGS_JSON");
+            if (!string.IsNullOrWhiteSpace(testSettingsJson))
+            {
+                var tmpFilename = Path.GetTempFileName();
+                File.WriteAllText(tmpFilename, testSettingsJson);
+                return new ConfigurationBuilder()
+                    .AddJsonFile(testSettingsJson, reloadOnChange: true, optional: false)
+                    .Build();
+            }
+
+            throw new Exception(
+                $"Neither {testSettingsFilename} file exists nor NETPIPS_TEST_SETTINGS_JSON env var is not set");
         }
     }
 }

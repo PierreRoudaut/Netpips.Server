@@ -14,7 +14,7 @@ namespace Netpips.Tests.Core
 {
     public static class TestHelper
     {
-        public static User NotAnItemOwner =
+        public static readonly User NotAnItemOwner =
             new User
             {
                 Email = "not-an-owner@example.com",
@@ -25,7 +25,7 @@ namespace Netpips.Tests.Core
                 Id = Guid.NewGuid()
             };
 
-        public static User ItemOwner =
+        public static readonly User ItemOwner =
             new User
             {
                 Email = "owner@example.com",
@@ -36,7 +36,7 @@ namespace Netpips.Tests.Core
                 Id = Guid.NewGuid()
             };
 
-        public static User Admin =
+        public static readonly User Admin =
             new User
             {
                 Email = "admin@example.com",
@@ -47,7 +47,7 @@ namespace Netpips.Tests.Core
                 Id = Guid.NewGuid()
             };
 
-        public static User SuperAdmin =
+        public static readonly User SuperAdmin =
             new User
             {
                 Email = "super.admin@example.com",
@@ -62,7 +62,7 @@ namespace Netpips.Tests.Core
         /// Fetches a configuration based on NETPIPS_TEST_ prefix for env vars
         /// </summary>
         /// <returns></returns>
-        public static IConfigurationRoot GetTestConfiguration()
+        private static IConfigurationRoot GetTestConfiguration()
         {
             return AppSettingsFactory.BuildTestConfiguration();
         }
