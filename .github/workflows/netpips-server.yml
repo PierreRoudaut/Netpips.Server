@@ -6,12 +6,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Create netpips filesystem
+      - name: create netpips filesystem
         run: |
           sudo adduser --disabled-password --gecos "" netpips
           echo "netpips:netpips" | sudo chpasswd
 
-      - name: Checkout code
+      - name: checkout code
         uses: actions/checkout@v2
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
@@ -22,33 +22,33 @@ jobs:
           sudo apt-get install -y aria2
           aria2c --version
 
-      - name: Install mediainfo
+      - name: install mediainfo
         run: |
           sudo apt-get install -y mediainfo
           mediainfo --version
 
-      - name: Install transmisstion-remote
+      - name: install transmisstion-remote
         run: |
           sudo apt-get install -y transmission-cli
           sudo apt-get install -y transmission-daemon
           sudo apt-get install -y transmission-common
           transmission-remote --version
 
-      - name: Install filebot
+      - name: install & configure filebot
         run: |
           sudo apt-get install -y openjdk-8-jre
           sudo apt-get install -y openjdk-8-jdk
           sudo apt-get install -y libjna-java
           wget -O filebot.deb 'https://app.filebot.net/download.php?type=deb&arch=amd64'
           sudo dpkg -i filebot.deb
-          rm -f filebot.deb
+          rm filebot.deb
           filebot -version
           echo -e "${{ secrets.OPENSUB_USERNAME }}\n${{ secrets.OPENSUB_PASSWORD }}" | filebot -script fn:configure
-          echo $FILEBOT_LICENSE_PSM > filebot-license.psm
+          echo "${{ secrets.FILEBOT_LICENSE_PSM }}" > filebot-license.psm
           filebot --license filebot-license.psm
-          rm -f filebot-license.psm
+          rm filebot-license.psm
 
-      - name: Run unit tests
+      - name: run unit tests
         run: |
           export NETPIPS_TEST_SETTINGS_JSON=${{secrets.NETPIPS_TEST_SETTINGS_JSON}}
           dotnet build
