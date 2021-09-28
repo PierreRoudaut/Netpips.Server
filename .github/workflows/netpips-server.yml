@@ -50,7 +50,7 @@ jobs:
 
       - name: run unit tests
         run: |
-          export NETPIPS_TEST_SETTINGS_JSON=${{secrets.NETPIPS_TEST_SETTINGS_JSON}}
+          export NETPIPS_TEST_SETTINGS_JSON="${{ secrets.NETPIPS_TEST_SETTINGS_JSON }}"
           dotnet build
           dotnet test
   
