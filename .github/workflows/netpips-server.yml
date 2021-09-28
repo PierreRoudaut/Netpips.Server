@@ -44,6 +44,9 @@ jobs:
           rm -f filebot.deb
           filebot -version
           echo -e "${{ secrets.OPENSUB_USERNAME }}\n${{ secrets.OPENSUB_PASSWORD }}" | filebot -script fn:configure
+          echo $FILEBOT_LICENSE_PSM > filebot-license.psm
+          filebot --license filebot-license.psm
+          rm -f filebot-license.psm
 
       - name: Run unit tests
         run: |
