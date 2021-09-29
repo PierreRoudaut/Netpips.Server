@@ -7,10 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: test curl
-        run : |
-           curl -kv -L -H "Accept: text/html" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36" "https://www.magnetdl.com/t/the-bad-batch-s01e09/"
-           false
+      # - name: test curl
+      #   run : |
+      #      curl -kv -L -H "Accept: text/html" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36" "https://www.magnetdl.com/t/the-bad-batch-s01e09/"
+      #      false
+
       - name: create netpips filesystem
         run: |
           sudo adduser --disabled-password --gecos "" netpips
@@ -59,7 +60,7 @@ jobs:
           NETPIPS_TEST_SETTINGS_JSON: ${{ secrets.NETPIPS_TEST_SETTINGS_JSON }}
         run: |
           dotnet build
-          dotnet test --filter 'TestCategory=Failing'  # --logger html -r .
+          dotnet test # --filter 'TestCategory=Failing'  # --logger html -r .
 
       - name: upload tests artifact
         if: ${{ always() }}
