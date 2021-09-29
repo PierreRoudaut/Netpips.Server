@@ -37,7 +37,7 @@ namespace Netpips.Core.Settings
                 var tmpFilePath = Path.GetTempFileName();
                 File.WriteAllText(tmpFilePath, testSettingsAsJson);
                 var config = new ConfigurationBuilder()
-                    .AddJsonFile(testSettingsAsJson, reloadOnChange: false, optional: false)
+                    .AddJsonFile(tmpFilePath, reloadOnChange: false, optional: false)
                     .Build();
                 File.Delete(tmpFilePath);
                 return config;

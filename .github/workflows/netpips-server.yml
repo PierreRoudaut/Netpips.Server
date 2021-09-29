@@ -13,10 +13,11 @@ jobs:
 
       - name: checkout code
         uses: actions/checkout@v2
+
       - name: install .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '5.0.x'
+          dotnet-version: '2.1.x'
       - name: Install aria2c
         run: |
           sudo apt-get install -y aria2
@@ -53,7 +54,7 @@ jobs:
           NETPIPS_TEST_SETTINGS_JSON: ${{ secrets.NETPIPS_TEST_SETTINGS_JSON }}
         run: |
           dotnet build
-          dotnet test --logger html -r .
+          dotnet test #--logger html -r .
 
       - name: upload tests artifact
         if: ${{ always() }}
