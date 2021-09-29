@@ -27,6 +27,8 @@ namespace Netpips.Tests.Media.Service
         [Category(TestCategory.Failing)]
         public void TryRenameTest_Case_Success()
         {
+            const string p = nameof(TryRenameTest_Case_Success);
+            TestContext.Progress.WriteLine($"{p} START");
             var path = Path.Combine(settings.DownloadsPath,
                 "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mkv");
             TestHelper.CreateFile(path);
@@ -39,8 +41,10 @@ namespace Netpips.Tests.Media.Service
                 "Season 10",
                 "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mkv");
 
-            Assert.IsTrue(filebot.TryRename(path, settings.MediaLibraryPath, out var destPath), "Failed to rename using Filebot");
-            Assert.AreEqual(expectedPath, destPath);
+            var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
+            
+            Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties() }");
+            Assert.AreEqual(expectedPath, result.DestPath, "Expected path and dest path should be identical");
         }
 
         [Test]

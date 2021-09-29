@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Netpips.Core;
 using Netpips.Core.Settings;
@@ -189,5 +191,23 @@ namespace Netpips.Tests.Core
 
             return ressourcePath;
         }
+
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyInfos = new ConcurrentDictionary<Type, PropertyInfo[]>();
+
+        public static string ToStringOfProperties<T>(this T item)
+        {
+            var propertyInfos = PropertyInfos.GetOrAdd(typeof(T), type => type.GetProperties());
+
+            var sb = new StringBuilder();
+
+            foreach (var info in propertyInfos)
+            {
+                var value = info.GetValue(item) ?? "NULL";
+                sb.AppendLine(info.Name + ": " + value.ToString());
+            }
+
+            return sb.ToString();
+        }
+
     }
 }
