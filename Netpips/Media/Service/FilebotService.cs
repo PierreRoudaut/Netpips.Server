@@ -141,10 +141,10 @@ namespace Netpips.Media.Service
                     return result;
                 }
 
-                logger.LogWarning("Filebot.TryRename [FAILED]", args, result.StandardError);
-                result.Reason = "Unknown";
-                result.Succeeded = false;
-                return result;
+                // logger.LogWarning("Filebot.TryRename [FAILED]", args, result.StandardError);
+                // result.Reason = "Unknown";
+                // result.Succeeded = false;
+                // return result;
             }
 
             var p = new Regex(@"\[" + request.Action.ToUpper() + @"\].*\[.*\] to \[(?<dest>.*)\]").Match(result.StandardOutput);

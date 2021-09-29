@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Netpips.Search.Service;
@@ -24,8 +25,9 @@ namespace Netpips.Tests.Search.Service
         public async Task SearchAsyncTest()
         {
             var service = new MagnetDLScrapper(logger.Object);
-            var items = await service.SearchAsync("Game of thrones");
-            Assert.GreaterOrEqual(items.Count, 10);
+            var result = await service.SearchAsync("Game of thrones");
+            Assert.IsTrue(result.Succeeded, $"Search failed{Environment.NewLine}{result.ToStringOfProperties()}");
+            Assert.GreaterOrEqual(result.Items.Count, 10);
         }
 
         [Test]

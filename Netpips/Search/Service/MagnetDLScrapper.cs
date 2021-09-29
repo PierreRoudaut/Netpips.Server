@@ -44,46 +44,54 @@ namespace Netpips.Search.Service
             };
         }
 
-        private async Task<string> ProcessSearchQueryAsync(string query)
+        private async Task<TorrentSearchResult> ProcessSearchQueryAsync(string query)
         {
             // https://www.magnetdl.com/t/the-bad-batch-s01e09/
+
             var queryFirstLetter = query.Trim().ToLower().First();
             var queryAsKebabCase = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
             var path = $"{queryFirstLetter}/{queryAsKebabCase}/";
 
+            var result = new TorrentSearchResult();
+
             logger.LogInformation("GET " + path);
-            string html;
+            var sw = Stopwatch.StartNew();
             try
             {
-                var sw = Stopwatch.StartNew();
                 var response = await httpClient.GetAsync(path);
-                html = await response.Content.ReadAsStringAsync();
+                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
+                result.HttpStatusCode = response.StatusCode;
+                result.Html = await response.Content.ReadAsStringAsync();
                 logger.LogInformation("{StatusCode} in {Ellapsed} {Bytes}", response.StatusCode.ToString("D"),
                     sw.ElapsedMilliseconds,
                     new ByteSize((double) response?.Content?.Headers?.ContentLength).Humanize("#"));
                 if (!response.IsSuccessStatusCode)
                 {
-                    logger.LogError(html);
-                    return null;
+                    logger.LogError(result.Html);
+                    result.Succeeded = false;
+                    return result;
                 }
             }
             catch (Exception e)
             {
+                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
                 logger.LogError(e, "An error occured");
-                return null;
+                result.Succeeded = false;
+                return result;
             }
 
-            return html;
+            result.Succeeded = true;
+            return result;
         }
 
-        public new async Task<List<TorrentSearchItem>> SearchAsync(string query)
+        public new async Task<TorrentSearchResult> SearchAsync(string query)
         {
-            var html = await ProcessSearchQueryAsync(query);
-            if (string.IsNullOrWhiteSpace(html))
+            var result = await ProcessSearchQueryAsync(query);
+            if (string.IsNullOrWhiteSpace(result.Html))
                 return null;
 
-            var items = ParseTorrentSearchResult(html);
-            return items;
+            result.Items = ParseTorrentSearchResult(result.Html);
+            return result;
         }
 
         public override List<TorrentSearchItem> ParseTorrentSearchResult(string html)

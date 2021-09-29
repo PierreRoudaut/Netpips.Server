@@ -102,17 +102,19 @@ namespace Netpips.Search.Service
         }
 
 
-        public async Task<List<TorrentSearchItem>> SearchAsync(string query)
+        public async Task<TorrentSearchResult> SearchAsync(string query)
         {
             var urlEndpoint = string.Format(SearchEndpointFormat, HttpUtility.UrlEncode(query.ToLower()));
-            var html = await DoGet(urlEndpoint);
-            if (html == null)
+            var result = new TorrentSearchResult {Html = await DoGet(urlEndpoint)};
+            if (result.Html == null)
             {
-                return new List<TorrentSearchItem>();
+                result.Succeeded = false;
+                return result;
             }
 
-            var items = ParseTorrentSearchResult(html);
-            return items;
+            result.Succeeded = true;
+            result.Items = ParseTorrentSearchResult(result.Html);
+            return result;
         }
 
         public abstract List<TorrentSearchItem> ParseTorrentSearchResult(string html);

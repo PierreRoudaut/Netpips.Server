@@ -25,8 +25,8 @@ namespace Netpips.Tests.Search.Service
         public async Task SearchAsyncTest()
         {
             var service = new BitTorrentAmScrapper(Logger.Object);
-            var items = await service.SearchAsync("Game of thrones");
-            Assert.GreaterOrEqual(items.Count, 100);
+            var result = await service.SearchAsync("Game of thrones");
+            Assert.GreaterOrEqual(result.Items.Count, 100);
         }
 
         [Test]
@@ -35,10 +35,10 @@ namespace Netpips.Tests.Search.Service
         [Ignore("bittorrent down")]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
-            const string ScrapeUrl = "http://bittorrent.am/download-torrent/8068638/100//Armageddon-(1998)-1080p-BrRip-x264-2.00GB-YIFY.html";
+            const string scrapeUrl = "http://bittorrent.am/download-torrent/8068638/100//Armageddon-(1998)-1080p-BrRip-x264-2.00GB-YIFY.html";
             var service = new BitTorrentAmScrapper(Logger.Object);
 
-            var torrentUrl = await service.ScrapeTorrentUrlAsync(ScrapeUrl);
+            var torrentUrl = await service.ScrapeTorrentUrlAsync(scrapeUrl);
             Assert.NotNull(torrentUrl);
             Assert.IsTrue(torrentUrl.StartsWith("magnet:?"));
         }

@@ -51,7 +51,7 @@ namespace Netpips.Search.Controller
                 var tasks = searchScrappers.Select(s => s.SearchAsync(q));
                 var agregatedResults = await tasks.WhenAll(SearchTimeout);
                 logger.LogInformation($"[{agregatedResults.Length}] scrappers completed within timeout");
-                items = agregatedResults.SelectMany(c => c).OrderByDescending(r => r.Seeders).Take(20).ToList();
+                items = agregatedResults.Where(x => x.Succeeded).SelectMany(c => c.Items).OrderByDescending(r => r.Seeders).Take(20).ToList();
 
                 logger.LogInformation($"[{agregatedResults.Length}] scrappers completed within timeout [{items.Count}] total");
                 var breakdown = items.GroupBy(c => new Uri(c.ScrapeUrl).Host);

@@ -25,8 +25,8 @@ namespace Netpips.Tests.Search.Service
         public async Task SearchAsyncTest()
         {
             var service = new _1337xScrapper(Logger.Object);
-            var items = await service.SearchAsync("Game of thrones");
-            Assert.GreaterOrEqual(items.Count, 10);
+            var result = await service.SearchAsync("Game of thrones");
+            Assert.GreaterOrEqual(result.Items.Count, 10);
         }
 
         [Test]

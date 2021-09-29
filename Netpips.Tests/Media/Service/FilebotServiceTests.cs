@@ -44,6 +44,8 @@ namespace Netpips.Tests.Media.Service
 
             var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
             
+            TestContext.Progress.WriteLine(result.ToStringOfProperties());
+            
             Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties() }");
             Assert.AreEqual(expectedPath, result.DestPath, "Expected path and dest path should be identical");
         }
