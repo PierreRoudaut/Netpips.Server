@@ -6,6 +6,7 @@ using Netpips.Core.Settings;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace Netpips.Tests.Media.Service
 {
@@ -63,14 +64,9 @@ namespace Netpips.Tests.Media.Service
             TestHelper.CreateFile(alreadyExistingFilePath);
 
             var loggerMock = new Mock<ILogger<IFilebotService>>();
-
             var filebot = new FilebotService(loggerMock.Object);
-            TestContext.Progress.WriteLine("Path: {0} | AlreadyExisting: {1}", path, alreadyExistingFilePath);
 
             Assert.IsTrue(filebot.TryRename(path, settings.MediaLibraryPath, out var destPath));
-
-            TestContext.Progress.WriteLine("AlreadyExisting: {0} | DestPath: {1}", alreadyExistingFilePath, destPath);
-
             Assert.AreEqual(alreadyExistingFilePath, destPath);
         }
 
