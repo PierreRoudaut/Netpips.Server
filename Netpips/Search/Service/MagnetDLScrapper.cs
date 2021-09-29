@@ -82,7 +82,6 @@ namespace Netpips.Search.Service
             if (string.IsNullOrWhiteSpace(html))
                 return null;
 
-            // todo: unit test to parse magnetdl_search_results.html
             var items = ParseTorrentSearchResult(html);
             return items;
         }
