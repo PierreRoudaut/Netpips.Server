@@ -1,3 +1,4 @@
+using Netpips.Media.MediaInfo;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;

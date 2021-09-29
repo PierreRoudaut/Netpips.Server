@@ -47,6 +47,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Netpips.Media.Filebot;
+using Netpips.Media.MediaInfo;
 
 namespace Netpips
 {

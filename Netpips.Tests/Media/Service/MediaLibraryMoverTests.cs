@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Netpips.Core.Settings;
+using Netpips.Media.Filebot;
+using Netpips.Media.MediaInfo;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
@@ -61,7 +63,7 @@ namespace Netpips.Tests.Media.Service
 
             var videoDestPath = Path.Combine(settings.MediaLibraryPath, "TV Shows", "The Big Bang Theory", "Season 10", "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mp4");
 
-            filebotMock.Setup(x => x.TryRename(It.IsAny<string>(), settings.MediaLibraryPath, out videoDestPath, null, "test")).Returns(true);
+            filebotMock.Setup(x => x.Rename(It.IsAny<RenameRequest>())).Returns(new RenameResult {Succeeded = true, DestPath = videoDestPath });
             var mover = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
             var fsItems = mover.MoveVideoFile(videoSrcPath);
 
@@ -87,8 +89,7 @@ namespace Netpips.Tests.Media.Service
             var duration = TimeSpan.FromMinutes(minutes);
             mediaInfoMock.Setup(x => x.TryGetDuration(It.IsAny<string>(), out duration)).Returns(true);
 
-            string _;
-            filebotMock.Setup(x => x.TryRename(It.IsAny<string>(), It.IsAny<string>(), out _, null, It.IsAny<string>())).Returns(false);
+            filebotMock.Setup(x => x.Rename(It.IsAny<RenameRequest>())).Returns(new RenameResult {Succeeded = false});
 
             var mover = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
             var movedFsItems = mover.MoveVideoFile(videoSrcPath);
@@ -151,7 +152,7 @@ namespace Netpips.Tests.Media.Service
             }
             var _ = "";
             var duration = TimeSpan.FromMinutes(0);
-            filebotMock.Setup(x => x.TryRename(It.IsAny<string>(), It.IsAny<string>(), out _, null, It.IsAny<string>())).Returns(false);
+            filebotMock.Setup(x => x.Rename(It.IsAny<RenameRequest>())).Returns(new RenameResult {Succeeded = false});
             filebotMock.Setup(x => x.GetSubtitles(It.IsAny<string>(), out _, It.IsAny<string>(), It.IsAny<bool>())).Returns(false);
             mediaInfoMock.Setup(x => x.TryGetDuration(It.IsAny<string>(), out duration)).Returns(true);
 

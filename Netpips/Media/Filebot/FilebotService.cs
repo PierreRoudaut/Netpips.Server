@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Netpips.Core;
 using Netpips.Core.Extensions;
 
-namespace Netpips.Media.Service
+namespace Netpips.Media.Filebot
 {
     public class FilebotService : IFilebotService
     {
@@ -20,6 +20,7 @@ namespace Netpips.Media.Service
 
         public bool GetSubtitles(string path, out string srtPath, string lang = "eng", bool nonStrict = false)
         {
+            // todo: wrap in requst/result object
             srtPath = "";
             var args = "-get-subtitles " + path.Quoted() + " --lang " + lang.Quoted();
             if (nonStrict)
@@ -52,58 +53,6 @@ namespace Netpips.Media.Service
             }
 
             return true;
-        }
-
-        /// <inheritdoc />
-        /// <summary>
-        /// Get the media location for the file
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="baseDestPath"></param>
-        /// <param name="destPath"></param>
-        /// <param name="db"></param>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public bool TryRename(string path, string baseDestPath, out string destPath, string db = null,
-            string action = "test")
-        {
-            destPath = "";
-            var destFormat = baseDestPath + Path.DirectorySeparatorChar + "{plex}";
-            var args = "-rename " + path.Quoted() + " --format " + destFormat.Quoted() + " -non-strict --action " +
-                       action.Quoted();
-            if (db != null)
-            {
-                args += " --db " + db.Quoted();
-            }
-
-            logger.LogInformation("filebot " + args);
-            var exitCode = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
-            logger.LogInformation($"code: {exitCode}, output: {output}, error: {error}");
-
-            if (exitCode != 0)
-            {
-                var match = FileAlreadyExistsPattern.Match(output);
-                if (match.Success && match.Groups["dest"].Success)
-                {
-                    destPath = match.Groups["dest"].Value;
-                    logger.LogInformation($"Filebot.TryRename [SUCCESS] [FileAlreadyExists] [{destPath}]");
-                    return true;
-                }
-
-                logger.LogWarning("Filebot.TryRename [FAILED]", args, error);
-                return false;
-            }
-
-            var p = new Regex(@"\[" + action.ToUpper() + @"\].*\[.*\] to \[(?<dest>.*)\]").Match(output);
-            if (p.Success && p.Groups["dest"].Success)
-            {
-                destPath = p.Groups["dest"].Value;
-                logger.LogWarning($"Filebot.TryRename [SUCCESS] [{destPath}]");
-                return true;
-            }
-
-            logger.LogWarning("Filebot.TryRename [FAILED] to capture destPath in output: ", output);
-            return false;
         }
 
         /// <summary>
@@ -140,11 +89,6 @@ namespace Netpips.Media.Service
                     result.Succeeded = true;
                     return result;
                 }
-
-                // logger.LogWarning("Filebot.TryRename [FAILED]", args, result.StandardError);
-                // result.Reason = "Unknown";
-                // result.Succeeded = false;
-                // return result;
             }
 
             var p = new Regex(@"\[" + request.Action.ToUpper() + @"\].*\[.*\] to \[(?<dest>.*)\]").Match(result.StandardOutput);
@@ -161,31 +105,6 @@ namespace Netpips.Media.Service
             result.Reason = "Failed to capture destPath in stdout";
             logger.LogWarning("Filebot.TryRename [FAILED] to capture destPath in output: ", result.StandardOutput);
             return result;
-        }
-    }
-
-    public class RenameRequest
-    {
-        public string Path { get; set; }
-        public string BaseDestPath { get; set; }
-        public string Db { get; set; }
-        public string Action { get; set; } = "test";
-    }
-
-
-    public class RenameResult
-    {
-        public bool Succeeded { get; set; }
-        public string Reason { get; set; }
-        public string RawExecutedCommand { get; set; }
-        public string DestPath { get; set; }
-        public int ExitCode { get; set; }
-        public string StandardOutput { get; set; }
-        public string StandardError { get; set; }
-
-        public override string ToString()
-        {
-            return base.ToString();
         }
     }
 }

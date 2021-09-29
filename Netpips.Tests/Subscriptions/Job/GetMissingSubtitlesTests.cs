@@ -11,6 +11,7 @@ using Netpips.Tests.Core;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using Netpips.Media.Filebot;
 
 namespace Netpips.Tests.Subscriptions.Job
 {

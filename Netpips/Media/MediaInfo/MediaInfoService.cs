@@ -1,7 +1,7 @@
 using System;
 using Netpips.Core;
 
-namespace Netpips.Media.Service
+namespace Netpips.Media.MediaInfo
 {
     public class MediaInfoService : IMediaInfoService
     {

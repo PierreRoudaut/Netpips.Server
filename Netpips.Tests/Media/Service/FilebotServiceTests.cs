@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Netpips.Core.Settings;
+using Netpips.Media.Filebot;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
@@ -26,9 +27,9 @@ namespace Netpips.Tests.Media.Service
 
         [Test]
         [Category(TestCategory.Failing)]
-        public void TryRenameTest_Case_Success()
+        public void RenameTest_Case_Success()
         {
-            const string p = nameof(TryRenameTest_Case_Success);
+            const string p = nameof(RenameTest_Case_Success);
             TestContext.Progress.WriteLine($"{p} START");
             var path = Path.Combine(settings.DownloadsPath,
                 "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mkv");
@@ -44,15 +45,16 @@ namespace Netpips.Tests.Media.Service
 
             var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
             
-            TestContext.Progress.WriteLine(result.ToStringOfProperties());
-            
-            Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties() }");
+            Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties()}");
             Assert.AreEqual(expectedPath, result.DestPath, "Expected path and dest path should be identical");
         }
 
         [Test]
-        public void TryRenameTest_Case_FileAlreadyExists()
+        public void RenameTest_Case_FileAlreadyExists()
         {
+            const string p = nameof(RenameTest_Case_FileAlreadyExists);
+            TestContext.Progress.WriteLine($"{p} START");
+            
             var path = Path.Combine(settings.DownloadsPath,
                 "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mp4");
             TestHelper.CreateFile(path);
@@ -67,20 +69,24 @@ namespace Netpips.Tests.Media.Service
 
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-
-            Assert.IsTrue(filebot.TryRename(path, settings.MediaLibraryPath, out var destPath));
-            Assert.AreEqual(alreadyExistingFilePath, destPath);
+            
+            var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
+            
+            Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties()}");
+            Assert.AreEqual(alreadyExistingFilePath, result.DestPath);
         }
 
 
         [Test]
-        public void TryRenameTest_Case_Failure()
+        public void RenameTest_Case_Failure()
         {
             var path = Path.Combine(settings.DownloadsPath, Guid.NewGuid().ToString("N") + ".mp4");
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsFalse(filebot.TryRename(path, settings.MediaLibraryPath, out _));
+            
+            var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
+            Assert.IsFalse(result.Succeeded, $"Filebot should not have succeeded{Environment.NewLine + result.ToStringOfProperties()}");
         }
 
         [Test]
