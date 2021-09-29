@@ -26,7 +26,6 @@ namespace Netpips.Tests.Media.Service
         }
 
         [Test]
-        [Category(TestCategory.Failing)]
         public void RenameTest_Case_Success()
         {
             const string p = nameof(RenameTest_Case_Success);

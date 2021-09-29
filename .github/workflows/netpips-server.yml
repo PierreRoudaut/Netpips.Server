@@ -6,6 +6,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+
+      - name: test curl
+        run : |
+           curl -kv -L -H "Accept: text/html" "https://www.magnetdl.com/t/the-bad-batch-s01e09/"
+           false
       - name: create netpips filesystem
         run: |
           sudo adduser --disabled-password --gecos "" netpips
