@@ -54,7 +54,7 @@ jobs:
           NETPIPS_TEST_SETTINGS_JSON: ${{ secrets.NETPIPS_TEST_SETTINGS_JSON }}
         run: |
           dotnet build
-          dotnet test #--logger html -r .
+          dotnet test --filter 'TestCategory=Failing'  # --logger html -r .
 
       - name: upload tests artifact
         if: ${{ always() }}

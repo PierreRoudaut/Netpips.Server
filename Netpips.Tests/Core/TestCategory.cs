@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Netpips.Tests.Core
 {
     public static class TestCategory
@@ -11,8 +13,7 @@ namespace Netpips.Tests.Core
         public const string Aria2 = nameof(Aria2);
         public const string MediaInfo = nameof(MediaInfo);
         public const string Transmission = nameof(Transmission);
-
         public const string ThirdParty = nameof(ThirdParty);
-
+        public const string Failing = nameof(Failing);
     }
 }

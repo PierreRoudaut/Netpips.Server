@@ -24,6 +24,7 @@ namespace Netpips.Tests.Media.Service
         }
 
         [Test]
+        [Category(TestCategory.Failing)]
         public void TryRenameTest_Case_Success()
         {
             var path = Path.Combine(settings.DownloadsPath,
@@ -38,8 +39,7 @@ namespace Netpips.Tests.Media.Service
                 "Season 10",
                 "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mkv");
 
-            Assert.IsTrue(filebot.TryRename(path, settings.MediaLibraryPath, out var destPath,
-                "Failed to rename using Filebot"));
+            Assert.IsTrue(filebot.TryRename(path, settings.MediaLibraryPath, out var destPath), "Failed to rename using Filebot");
             Assert.AreEqual(expectedPath, destPath);
         }
 

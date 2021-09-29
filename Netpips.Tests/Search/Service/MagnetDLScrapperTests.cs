@@ -19,6 +19,7 @@ namespace Netpips.Tests.Search.Service
         }
 
         [Test]
+        [Category(TestCategory.Failing)]
         [Category(TestCategory.ThirdParty)]
         public async Task SearchAsyncTest()
         {
@@ -51,6 +52,7 @@ namespace Netpips.Tests.Search.Service
         
         [Test]
         [Category(TestCategory.ThirdParty)]
+        [Category(TestCategory.Failing)]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
             const string scrapeUrl = "https://www.magnetdl.com/file/4824310/star.wars.the.bad.batch.s01e08.720p.webrip.x265-minx-eztv/";
