@@ -53,8 +53,17 @@ jobs:
           NETPIPS_TEST_SETTINGS_JSON: ${{ secrets.NETPIPS_TEST_SETTINGS_JSON }}
         run: |
           dotnet build
-          dotnet test
-  
+          dotnet test --logger html -r .
+
+      - name: upload tests artifact
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: netpips-test-results.zip
+          if-no-files-found: warn
+          path: '*.html'
+
+ 
   release:
     if: github.ref == 'refs/heads/master'
     needs: build

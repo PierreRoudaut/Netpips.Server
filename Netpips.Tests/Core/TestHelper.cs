@@ -82,7 +82,7 @@ namespace Netpips.Tests.Core
 
         public static NetpipsSettings CreateNetpipsAppSettings()
         {
-            var netpips = new DirectoryInfo(Path.Combine(TestContext.CurrentContext.TestDirectory, TestContext.CurrentContext.Random.GetString(), "netpips"));
+            var netpips = new DirectoryInfo(Path.Combine(TestContext.CurrentContext.TestDirectory, "home", "netpips"));
             if (netpips.Exists)
                 netpips.Delete(true);
 

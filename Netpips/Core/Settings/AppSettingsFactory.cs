@@ -23,26 +23,28 @@ namespace Netpips.Core.Settings
 
         public static IConfigurationRoot BuildTestConfiguration()
         {
-            const string testSettingsFilename = "/home/netpips/netpips.test.settings.json";
-            if (File.Exists(testSettingsFilename))
+            const string testSettingsFilePath = "/home/netpips/netpips.test.settings.json";
+            if (File.Exists(testSettingsFilePath))
             {
                 return new ConfigurationBuilder()
-                    .AddJsonFile(testSettingsFilename, reloadOnChange: true, optional: false)
+                    .AddJsonFile(testSettingsFilePath, reloadOnChange: false, optional: false)
                     .Build();
             }
 
-            var testSettingsJson = Environment.GetEnvironmentVariable("NETPIPS_TEST_SETTINGS_JSON");
-            if (!string.IsNullOrWhiteSpace(testSettingsJson))
+            var testSettingsAsJson = Environment.GetEnvironmentVariable("NETPIPS_TEST_SETTINGS_JSON");
+            if (!string.IsNullOrWhiteSpace(testSettingsAsJson))
             {
-                var tmpFilename = Path.GetTempFileName();
-                File.WriteAllText(tmpFilename, testSettingsJson);
-                return new ConfigurationBuilder()
-                    .AddJsonFile(testSettingsJson, reloadOnChange: true, optional: false)
+                var tmpFilePath = Path.GetTempFileName();
+                File.WriteAllText(tmpFilePath, testSettingsAsJson);
+                var config = new ConfigurationBuilder()
+                    .AddJsonFile(testSettingsAsJson, reloadOnChange: false, optional: false)
                     .Build();
+                File.Delete(tmpFilePath);
+                return config;
             }
 
             throw new Exception(
-                $"Neither {testSettingsFilename} file exists nor NETPIPS_TEST_SETTINGS_JSON env var is not set");
+                $"Neither {testSettingsFilePath} file exists nor NETPIPS_TEST_SETTINGS_JSON env var is not set");
         }
     }
 }
