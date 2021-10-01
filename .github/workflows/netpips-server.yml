@@ -6,22 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
-      # - name: test curl
-      #   run : |
-      #      curl -kv -L -H "Accept: text/html" -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36" "https://www.magnetdl.com/t/the-bad-batch-s01e09/"
-      #      false
-      - name: install Python 3.9 & cfscrape
-        run: |
-          sudo apt update
-          sudo apt install software-properties-common
-          sudo add-apt-repository ppa:deadsnakes/ppa
-          sudo apt install python3.9
-          python3.9 --version
-          pip install -U cfscrape
-          python -c "import cfscrape; scraper = cfscrape.create_scraper(); r = scraper.get('https://www.magnetdl.com/t/the-bad-batch-s01e09/'); print(r.status_code); print(r.text)"
-          false
-
       - name: create netpips filesystem
         run: |
           sudo adduser --disabled-password --gecos "" netpips
@@ -64,6 +48,14 @@ jobs:
           echo "${{ secrets.FILEBOT_LICENSE_PSM }}" > filebot-license.psm
           filebot --license filebot-license.psm
           rm filebot-license.psm
+
+      - name: install Python 3.9 & cfscrape
+        run: |
+          sudo apt update
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt install python3.9
+          python3.9 --version
 
       - name: run unit tests
         env: 
