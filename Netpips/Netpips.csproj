@@ -35,11 +35,11 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <PackageReference Include="pythonnet_netstandard_py39_win" Version="2.5.1.1" />
+    <PackageReference Include="pythonnet_netstandard_py39_win" Version="2.5.2" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(OS)' == 'Linux' ">
-    <PackageReference Include="pythonnet_netstandard_py39_linux" Version="2.5.1.1" />
+  <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
+    <PackageReference Include="pythonnet_netstandard_py39_linux" Version="2.5.2" />
   </ItemGroup>
 
 </Project>

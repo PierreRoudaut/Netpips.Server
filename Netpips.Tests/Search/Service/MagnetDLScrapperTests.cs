@@ -26,6 +26,7 @@ namespace Netpips.Tests.Search.Service
         [Category(TestCategory.ThirdParty)]
         public async Task SearchAsyncTest()
         {
+            // python -c "import cfscrape; scraper = cfscrape.create_scraper(); r = scraper.get('https://www.magnetdl.com/t/the-bad-batch-s01e09/'); print(r.status_code); print(r.text)"
             var service = new MagnetDLScrapper(logger.Object);
             var result = await service.SearchAsync("Game of thrones");
             Assert.IsTrue(result.Succeeded, $"Search failed{Environment.NewLine}{result.ToStringOfProperties()}");
