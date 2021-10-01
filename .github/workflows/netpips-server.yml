@@ -19,8 +19,9 @@ jobs:
           sudo apt install python3.9
           python3.9 --version
           pip install -U cfscrape
+          python -c "import cfscrape; scraper = cfscrape.create_scraper(); r = scraper.get('https://www.magnetdl.com/t/the-bad-batch-s01e09/'); print(r.status_code); print(r.text)"
           false
-          
+
       - name: create netpips filesystem
         run: |
           sudo adduser --disabled-password --gecos "" netpips
