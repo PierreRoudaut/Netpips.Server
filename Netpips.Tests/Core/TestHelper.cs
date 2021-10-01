@@ -10,6 +10,7 @@ using Netpips.Core;
 using Netpips.Core.Settings;
 using Netpips.Identity.Authorization;
 using Netpips.Identity.Model;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Netpips.Tests.Core
@@ -194,7 +195,8 @@ namespace Netpips.Tests.Core
 
         private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyInfos = new ConcurrentDictionary<Type, PropertyInfo[]>();
 
-        public static string ToStringOfProperties<T>(this T item)
+        public static string ToJson<T>(this T item) => JsonConvert.SerializeObject(item, Formatting.Indented);
+        public static string ToStringOfProperties<T>(this T item, int i = 0)
         {
             var propertyInfos = PropertyInfos.GetOrAdd(typeof(T), type => type.GetProperties());
 
@@ -202,12 +204,13 @@ namespace Netpips.Tests.Core
 
             foreach (var info in propertyInfos)
             {
+                // if (info.GetType().IsClass && !info.GetType().IsAssignableFrom(typeof(Exception)))
+                //     return ToStringOfProperties((T) info.GetValue(item));
                 var value = info.GetValue(item) ?? "NULL";
-                sb.AppendLine(info.Name + ": " + value.ToString());
+                sb.AppendLine(Enumerable.Repeat('\t', i) + info.Name + ": " + value);
             }
 
             return sb.ToString();
         }
-
     }
 }

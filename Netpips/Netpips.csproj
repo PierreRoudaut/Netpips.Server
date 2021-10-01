@@ -34,4 +34,12 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <PackageReference Include="pythonnet_netstandard_py39_win" Version="2.5.1.1" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(OS)' == 'Linux' ">
+    <PackageReference Include="pythonnet_netstandard_py39_linux" Version="2.5.1.1" />
+  </ItemGroup>
+
 </Project>

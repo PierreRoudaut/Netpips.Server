@@ -60,7 +60,7 @@ namespace Netpips.Tests.Search.Service
             var htmlRessourceContent = TestHelper.GetRessourceContent("1337x_torrent_detail_result.html");
 
             const string ExpectedTorrentUrl = "magnet:?xt=urn:btih:B94867C9021189F3FFAA3CAC56AA75FA1122CC46&dn=Game.of.Thrones.S01E09.2011.Multi.BluRay.2160p.x265.HDR.-DTOne&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2740%2Fannounce&tr=udp%3A%2F%2F9.rarbg.me%3A2710%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Feddie4.nl%3A6969%2Fannounce&tr=udp%3A%2F%2Fshadowshq.yi.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.tiny-vps.com%3A6969%2Fannounce&tr=udp%3A%2F%2Finferno.demonoid.pw%3A3391%2Fannounce&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.vanitycore.co%3A6969%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.zer0day.to%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fcoppersurfer.tk%3A6969%2Fannounce";
-            var url = service.ParseTorrentDetailResult(htmlRessourceContent);
+            var url = service.ParseFirstMagnetLinkOrDefault(htmlRessourceContent);
             Assert.AreEqual(ExpectedTorrentUrl, url);
         }
     }

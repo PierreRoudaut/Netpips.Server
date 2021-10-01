@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -10,7 +11,9 @@ using HtmlAgilityPack;
 using Humanizer;
 using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
+using Netpips.Core.Http;
 using Netpips.Search.Model;
+using Python.Runtime;
 
 namespace Netpips.Search.Service
 {
@@ -44,54 +47,103 @@ namespace Netpips.Search.Service
             };
         }
 
-        private async Task<TorrentSearchResult> ProcessSearchQueryAsync(string query)
+        public async Task<HttpResponseLite> GetHttpResponseFomPythonCFScrapeAsync(string url)
+        {
+            if (!PythonEngine.IsInitialized)
+                PythonEngine.Initialize();
+            await Task.Delay(0);
+            logger.LogInformation("GET " + url);
+            var sw = Stopwatch.StartNew();
+            var result = new HttpResponseLite();
+            try
+            {
+                // https://github.com/pythonnet/pythonnet/wiki/Threading
+                var mThreadState = PythonEngine.BeginAllowThreads();
+                using (Py.GIL())
+                {
+                    dynamic cfscrape = Py.Import("cfscrape");
+                    dynamic scraper = cfscrape.create_scraper();
+                    PyObject response = scraper.get(url);
+                    result.StatusCode = (HttpStatusCode) response.GetAttr("status_code").As<int>();
+                    result.Html = response.GetAttr("text").As<string>();
+                    result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
+                }
+                PythonEngine.EndAllowThreads(mThreadState);
+            }
+            catch (Exception e)
+            {
+                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
+                result.Exception = e;
+            }
+            return result;
+        }
+        
+        private async Task<HttpResponseLite> GetHttpResponseAsync(string url)
+        {
+            var result = new HttpResponseLite();
+
+            logger.LogInformation("GET " + url);
+            var sw = Stopwatch.StartNew();
+            try
+            {
+                var response = await httpClient.GetAsync(url);
+                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
+                result.StatusCode = response.StatusCode;
+                result.Html = await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception e)
+            {
+                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
+                result.Exception = e;
+                logger.LogError(e, "An error occured");
+                return result;
+            }
+            return result;
+        }
+
+        public new async Task<string> ScrapeTorrentUrlAsync(string torrentDetailUrl)
+        {
+            var httpResponse = await GetHttpResponseFomPythonCFScrapeAsync(torrentDetailUrl);
+            
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                return null;
+            }
+
+            var torrentUrl = ParseFirstMagnetLinkOrDefault(httpResponse.Html);
+            return torrentUrl;
+
+        }
+
+        public new async Task<TorrentSearchResult> SearchAsync(string query)
         {
             // https://www.magnetdl.com/t/the-bad-batch-s01e09/
 
             var queryFirstLetter = query.Trim().ToLower().First();
             var queryAsKebabCase = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
-            var path = $"{queryFirstLetter}/{queryAsKebabCase}/";
+            var searchUrl = $"https://www.magnetdl.com/{queryFirstLetter}/{queryAsKebabCase}/";
 
-            var result = new TorrentSearchResult();
+            var torrentSearchResult = new TorrentSearchResult
+            {
+                Response = await GetHttpResponseFomPythonCFScrapeAsync(searchUrl)
+            };
+            // var result = await ProcessSearchQueryAsync(searchUrl);
 
-            logger.LogInformation("GET " + path);
-            var sw = Stopwatch.StartNew();
-            try
+            if (!torrentSearchResult.Response.IsSuccessStatusCode)
             {
-                var response = await httpClient.GetAsync(path);
-                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
-                result.HttpStatusCode = response.StatusCode;
-                result.Html = await response.Content.ReadAsStringAsync();
-                logger.LogInformation("{StatusCode} in {Ellapsed} {Bytes}", response.StatusCode.ToString("D"),
-                    sw.ElapsedMilliseconds,
-                    new ByteSize((double) response?.Content?.Headers?.ContentLength).Humanize("#"));
-                if (!response.IsSuccessStatusCode)
-                {
-                    logger.LogError(result.Html);
-                    result.Succeeded = false;
-                    return result;
-                }
-            }
-            catch (Exception e)
-            {
-                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
-                logger.LogError(e, "An error occured");
-                result.Succeeded = false;
-                return result;
+                torrentSearchResult.Succeeded = false;
+                return torrentSearchResult;
             }
 
-            result.Succeeded = true;
-            return result;
-        }
+            if (string.IsNullOrWhiteSpace(torrentSearchResult.Response.Html))
+            {
+                torrentSearchResult.Succeeded = false;
+                return torrentSearchResult;
+            }
 
-        public new async Task<TorrentSearchResult> SearchAsync(string query)
-        {
-            var result = await ProcessSearchQueryAsync(query);
-            if (string.IsNullOrWhiteSpace(result.Html))
-                return null;
-
-            result.Items = ParseTorrentSearchResult(result.Html);
-            return result;
+            torrentSearchResult.Items = ParseTorrentSearchResult(torrentSearchResult.Response.Html);
+            torrentSearchResult.Succeeded = true;
+            return torrentSearchResult;
         }
 
         public override List<TorrentSearchItem> ParseTorrentSearchResult(string html)
@@ -126,7 +178,7 @@ namespace Netpips.Search.Service
                 .ToList();
             return items;
         }
-
+        
         public bool CanScrape(Uri torrentDetailUri) => TorrentDetailPrefixUri.IsBaseOf(torrentDetailUri);
     }
 }

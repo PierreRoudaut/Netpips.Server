@@ -60,7 +60,7 @@ namespace Netpips.Tests.Search.Service
             var htmlRessourceContent = TestHelper.GetRessourceContent("bittorrentam_torrent_detail_result.html");
 
             const string ExpectedTorrentUrl = "magnet:?xt=urn:btih:55E5FE0436CD60C2F0CFC210B5E124CC1505F38D&dn=Game.of.Thrones.S07E04.The.Spoils.of.War.360p.WEB-DL&tr=udp://public.popcorn-tracker.org:6969&tr=udp%3A//tracker.leechers-paradise.org%3A6969&tr=udp%3A//zer0day.ch%3A1337&tr=udp%3A//open.demonii.com%3A1337&tr=udp%3A//tracker.coppersurfer.tk%3A6969&tr=udp%3A//exodus.desync.com%3A6969&tr=udp%3A//thetracker.org";
-            var url = service.ParseTorrentDetailResult(htmlRessourceContent);
+            var url = service.ParseFirstMagnetLinkOrDefault(htmlRessourceContent);
             Assert.AreEqual(ExpectedTorrentUrl, url);
         }
     }

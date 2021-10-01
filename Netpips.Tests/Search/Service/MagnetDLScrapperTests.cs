@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Netpips.Search.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
+using Python.Runtime;
 
 namespace Netpips.Tests.Search.Service
 {
@@ -61,7 +63,8 @@ namespace Netpips.Tests.Search.Service
             var service = new MagnetDLScrapper(logger.Object);
 
             var torrentUrl = await service.ScrapeTorrentUrlAsync(scrapeUrl);
-            Assert.AreEqual("magnet:?xt=urn:btih:a15d47a09eaa3eb99211bfd4697387b81845d3ae&dn=Star.Wars.The.Bad.Batch.S01E08.720p.WEBRip.x265-MiNX+%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp://tracker.internetwarriors.net:1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969", torrentUrl);
+            Assert.IsTrue(torrentUrl.StartsWith("magnet:?xt=urn:btih:a15d47a09eaa3eb99211bfd4697387b81845d3ae&dn=Star.Wars.The.Bad.Batch.S01E08.720p.WEBRip.x265-MiNX+%5Beztv%5D"));
+            // Assert.AreEqual("magnet:?xt=urn:btih:a15d47a09eaa3eb99211bfd4697387b81845d3ae&dn=Star.Wars.The.Bad.Batch.S01E08.720p.WEBRip.x265-MiNX+%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp://tracker.internetwarriors.net:1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969", torrentUrl);
         }
     }
 }

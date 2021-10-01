@@ -10,7 +10,8 @@ namespace Netpips.Tests.Core
 
         public const string LocalDependency = nameof(LocalDependency);
         public const string Filebot = nameof(Filebot);
-        public const string Aria2 = nameof(Aria2);
+        public const string Aria2 = nameof(Aria2); 
+        public const string Python = nameof(Python);
         public const string MediaInfo = nameof(MediaInfo);
         public const string Transmission = nameof(Transmission);
         public const string ThirdParty = nameof(ThirdParty);
