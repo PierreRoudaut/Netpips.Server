@@ -32,15 +32,15 @@ namespace Netpips.Tests.Search.Service
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.ThirdParty)]
-        [Ignore("1337x down")]
+        [Ignore("1337x has SSL error when attempting Python cfscrape")]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
-            const string ScrapeUrl = "https://1337x.to/torrent/1338262/Armageddon-1998-1080p-BrRip-x264-YIFY/";
+            const string scrapeUrl = "https://1337x.to/torrent/1338262/Armageddon-1998-1080p-BrRip-x264-YIFY/";
             var service = new _1337xScrapper(Logger.Object);
 
-            var torrentUrl = await service.ScrapeTorrentUrlAsync(ScrapeUrl);
+            var torrentUrl = await service.ScrapeTorrentUrlAsync(scrapeUrl);
             Assert.NotNull(torrentUrl);
-            Assert.IsTrue(torrentUrl.StartsWith("magnet:?"));
+            Assert.IsTrue(torrentUrl.StartsWith("magnet:?xt=urn:btih:64962623F6A161302220AB7829BA08DC5AD040B8&dn=Armageddon+1998+1080p+BrRip+x264+YIFY"));
         }
 
         [Test]

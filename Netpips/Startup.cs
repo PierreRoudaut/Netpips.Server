@@ -226,8 +226,6 @@ namespace Netpips
             //scrappers
             services.AddScoped<ITorrentSearchScrapper, _1337xScrapper>();
             services.AddScoped<ITorrentDetailScrapper, _1337xScrapper>();
-            services.AddScoped<ITorrentSearchScrapper, BitTorrentAmScrapper>();
-            services.AddScoped<ITorrentDetailScrapper, BitTorrentAmScrapper>();
             services.AddScoped<ITorrentSearchScrapper, MagnetDLScrapper>();
             services.AddScoped<ITorrentDetailScrapper, MagnetDLScrapper>();
 

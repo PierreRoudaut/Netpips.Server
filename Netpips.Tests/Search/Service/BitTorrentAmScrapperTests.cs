@@ -21,7 +21,7 @@ namespace Netpips.Tests.Search.Service
         [Test]
         [Category(TestCategory.ThirdParty)]
         [Category(TestCategory.Integration)]
-        [Ignore("bittorrent down")]
+        [Ignore("bittorrent seems down")]
         public async Task SearchAsyncTest()
         {
             var service = new BitTorrentAmScrapper(Logger.Object);
@@ -32,7 +32,7 @@ namespace Netpips.Tests.Search.Service
         [Test]
         [Category(TestCategory.Integration)]
         [Category(TestCategory.ThirdParty)]
-        [Ignore("bittorrent down")]
+        [Ignore("bittorrent seems down")]
         public async Task ScrapeTorrentUrlAsyncTest()
         {
             const string scrapeUrl = "http://bittorrent.am/download-torrent/8068638/100//Armageddon-(1998)-1080p-BrRip-x264-2.00GB-YIFY.html";
