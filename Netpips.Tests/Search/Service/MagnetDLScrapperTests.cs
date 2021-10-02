@@ -26,7 +26,6 @@ namespace Netpips.Tests.Search.Service
         [Category(TestCategory.ThirdParty)]
         public async Task SearchAsyncTest()
         {
-            // python -c "import cfscrape; scraper = cfscrape.create_scraper(); r = scraper.get('https://www.magnetdl.com/t/the-bad-batch-s01e09/'); print(r.status_code); print(r.text)"
             var service = new MagnetDLScrapper(logger.Object);
             var result = await service.SearchAsync("Game of thrones");
             Assert.IsTrue(result.Succeeded, $"Search failed{Environment.NewLine}{result.ToStringOfProperties()}");
@@ -65,7 +64,6 @@ namespace Netpips.Tests.Search.Service
 
             var torrentUrl = await service.ScrapeTorrentUrlAsync(scrapeUrl);
             Assert.IsTrue(torrentUrl.StartsWith("magnet:?xt=urn:btih:a15d47a09eaa3eb99211bfd4697387b81845d3ae&dn=Star.Wars.The.Bad.Batch.S01E08.720p.WEBRip.x265-MiNX+%5Beztv%5D"));
-            // Assert.AreEqual("magnet:?xt=urn:btih:a15d47a09eaa3eb99211bfd4697387b81845d3ae&dn=Star.Wars.The.Bad.Batch.S01E08.720p.WEBRip.x265-MiNX+%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp://tracker.internetwarriors.net:1337&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969", torrentUrl);
         }
     }
 }

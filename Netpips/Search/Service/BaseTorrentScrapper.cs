@@ -87,7 +87,7 @@ namespace Netpips.Search.Service
 
         
         /// <summary>
-        /// Retrieves the first found magnet link on a page
+        /// Retrieves the first found magnet link on an html document
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>

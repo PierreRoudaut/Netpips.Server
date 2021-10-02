@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
-using Humanizer;
 using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
 using Netpips.Core.Http;
@@ -47,63 +45,11 @@ namespace Netpips.Search.Service
             };
         }
 
-        public async Task<HttpResponseLite> GetHttpResponseFomPythonCFScrapeAsync(string url)
-        {
-            if (!PythonEngine.IsInitialized)
-                PythonEngine.Initialize();
-            await Task.Delay(0);
-            logger.LogInformation("GET " + url);
-            var sw = Stopwatch.StartNew();
-            var result = new HttpResponseLite();
-            try
-            {
-                // https://github.com/pythonnet/pythonnet/wiki/Threading
-                var mThreadState = PythonEngine.BeginAllowThreads();
-                using (Py.GIL())
-                {
-                    dynamic cfscrape = Py.Import("cfscrape");
-                    dynamic scraper = cfscrape.create_scraper();
-                    PyObject response = scraper.get(url);
-                    result.StatusCode = (HttpStatusCode) response.GetAttr("status_code").As<int>();
-                    result.Html = response.GetAttr("text").As<string>();
-                    result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
-                }
-                PythonEngine.EndAllowThreads(mThreadState);
-            }
-            catch (Exception e)
-            {
-                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
-                result.Exception = e;
-            }
-            return result;
-        }
-        
-        private async Task<HttpResponseLite> GetHttpResponseAsync(string url)
-        {
-            var result = new HttpResponseLite();
-
-            logger.LogInformation("GET " + url);
-            var sw = Stopwatch.StartNew();
-            try
-            {
-                var response = await httpClient.GetAsync(url);
-                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
-                result.StatusCode = response.StatusCode;
-                result.Html = await response.Content.ReadAsStringAsync();
-            }
-            catch (Exception e)
-            {
-                result.Ellapsed = $"{sw.ElapsedMilliseconds}ms";
-                result.Exception = e;
-                logger.LogError(e, "An error occured");
-                return result;
-            }
-            return result;
-        }
 
         public new async Task<string> ScrapeTorrentUrlAsync(string torrentDetailUrl)
         {
-            var httpResponse = await GetHttpResponseFomPythonCFScrapeAsync(torrentDetailUrl);
+            await Task.Delay(0);
+            var httpResponse = HttpCfscrapeService.GetFromPythonCommandLine(torrentDetailUrl);
             
             if (!httpResponse.IsSuccessStatusCode)
             {
@@ -117,6 +63,7 @@ namespace Netpips.Search.Service
 
         public new async Task<TorrentSearchResult> SearchAsync(string query)
         {
+            await Task.Delay(0);
             // https://www.magnetdl.com/t/the-bad-batch-s01e09/
 
             var queryFirstLetter = query.Trim().ToLower().First();
@@ -125,9 +72,8 @@ namespace Netpips.Search.Service
 
             var torrentSearchResult = new TorrentSearchResult
             {
-                Response = await GetHttpResponseFomPythonCFScrapeAsync(searchUrl)
+                Response = HttpCfscrapeService.GetFromPythonCommandLine(searchUrl)
             };
-            // var result = await ProcessSearchQueryAsync(searchUrl);
 
             if (!torrentSearchResult.Response.IsSuccessStatusCode)
             {
@@ -143,6 +89,7 @@ namespace Netpips.Search.Service
 
             torrentSearchResult.Items = ParseTorrentSearchResult(torrentSearchResult.Response.Html);
             torrentSearchResult.Succeeded = true;
+            
             return torrentSearchResult;
         }
 
