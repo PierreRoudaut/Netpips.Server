@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
+using Netpips.Core.Http;
 using Netpips.Search.Model;
 
 namespace Netpips.Search.Service
 {
     public class _1337xScrapper : BaseTorrentScrapper, ITorrentDetailScrapper, ITorrentSearchScrapper
     {
-        public static Uri BaseUri = new Uri("https://1337x.to");
+        private static readonly Uri BaseUri = new Uri("https://1337x.to");
 
-        public static Uri TorrentDetailPrefixUri = new Uri(BaseUri, "torrent");
+        private static readonly Uri TorrentDetailPrefixUri = new Uri(BaseUri, "torrent");
 
         protected override string SearchEndpointFormat => "https://1337x.to/search/{0}/1/";
 
@@ -22,6 +24,21 @@ namespace Netpips.Search.Service
         }
 
         public bool CanScrape(Uri torrentDetailUri) => TorrentDetailPrefixUri.IsBaseOf(torrentDetailUri);
+        
+        // public new async Task<string> ScrapeTorrentUrlAsync(string torrentDetailUrl)
+        // {
+        //     await Task.Delay(0);
+        //     var httpResponse = HttpCfscrapeService.GetFromPythonCommandLine(torrentDetailUrl);
+        //     
+        //     if (!httpResponse.IsSuccessStatusCode)
+        //     {
+        //         return null;
+        //     }
+        //
+        //     var torrentUrl = ParseFirstMagnetLinkOrDefault(httpResponse.Html);
+        //     return torrentUrl;
+        //
+        // }
 
         public override List<TorrentSearchItem> ParseTorrentSearchResult(string html)
         {

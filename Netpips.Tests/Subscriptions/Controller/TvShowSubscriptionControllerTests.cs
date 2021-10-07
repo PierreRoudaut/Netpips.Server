@@ -32,12 +32,12 @@ namespace Netpips.Tests.Subscriptions.Controller
         [SetUp]
         public void Setup()
         {
-            this.logger = new Mock<ILogger<TvShowController>>();
-            this.showRssService = new Mock<IShowRssGlobalSubscriptionService>();
-            this.memoryCache = new Mock<IMemoryCache>();
-            this.downloadItemService = new Mock<IDownloadItemService>();
-            this.downloadItemRepository = new Mock<IDownloadItemRepository>();
-            this.userRepository = new Mock<IUserRepository>();
+            logger = new Mock<ILogger<TvShowController>>();
+            showRssService = new Mock<IShowRssGlobalSubscriptionService>();
+            memoryCache = new Mock<IMemoryCache>();
+            downloadItemService = new Mock<IDownloadItemService>();
+            downloadItemRepository = new Mock<IDownloadItemRepository>();
+            userRepository = new Mock<IUserRepository>();
         }
 
         #region Unsubscribe
@@ -56,8 +56,8 @@ namespace Netpips.Tests.Subscriptions.Controller
                 TvShowSubscriptions = new List<TvShowSubscription>()
             };
 
-            this.userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
-            var controller = new TvShowController(this.logger.Object, this.showRssService.Object, this.userRepository.Object, this.memoryCache.Object)
+            userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
+            var controller = new TvShowController(logger.Object, showRssService.Object, userRepository.Object, memoryCache.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user.MapToClaimPrincipal() } }
             };
@@ -90,16 +90,16 @@ namespace Netpips.Tests.Subscriptions.Controller
                         }
             };
 
-            this.userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
-            this.userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
+            userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
+            userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
 
             var emptySummary = new SubscriptionsSummary();
-            this.showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
-            this.showRssService
+            showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
+            showRssService
                 .Setup(c => c.UnsubscribeToShow(It.IsAny<ShowRssAuthenticationContext>(), It.IsAny<int>()))
                 .Returns(new ShowRssGlobalSubscriptionService.UnsubscriptionResult { Succeeded = false });
 
-            var controller = new TvShowController(this.logger.Object, this.showRssService.Object, this.userRepository.Object, this.memoryCache.Object)
+            var controller = new TvShowController(logger.Object, showRssService.Object, userRepository.Object, memoryCache.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user.MapToClaimPrincipal() } }
             };
@@ -132,16 +132,16 @@ namespace Netpips.Tests.Subscriptions.Controller
                         }
             };
 
-            this.userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
-            this.userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
+            userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
+            userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
 
             var emptySummary = new SubscriptionsSummary();
-            this.showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
-            this.showRssService
+            showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
+            showRssService
                 .Setup(c => c.UnsubscribeToShow(It.IsAny<ShowRssAuthenticationContext>(), It.IsAny<int>()))
                 .Returns(new ShowRssGlobalSubscriptionService.UnsubscriptionResult { Succeeded = true });
 
-            var controller = new TvShowController(this.logger.Object, this.showRssService.Object, this.userRepository.Object, this.memoryCache.Object)
+            var controller = new TvShowController(logger.Object, showRssService.Object, userRepository.Object, memoryCache.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user.MapToClaimPrincipal() } }
             };
@@ -178,8 +178,8 @@ namespace Netpips.Tests.Subscriptions.Controller
                         }
             };
 
-            this.userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
-            var controller = new TvShowController(this.logger.Object, this.showRssService.Object, this.userRepository.Object, this.memoryCache.Object)
+            userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
+            var controller = new TvShowController(logger.Object, showRssService.Object, userRepository.Object, memoryCache.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user.MapToClaimPrincipal() } }
             };
@@ -204,16 +204,16 @@ namespace Netpips.Tests.Subscriptions.Controller
                 TvShowSubscriptions = new List<TvShowSubscription>()
             };
 
-            this.userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
-            this.userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
+            userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
+            userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
 
             var emptySummary = new SubscriptionsSummary { SubscribedShows = new List<TvShowRss>() };
-            this.showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
-            this.showRssService
+            showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
+            showRssService
                 .Setup(c => c.SubscribeToShow(It.IsAny<ShowRssAuthenticationContext>(), It.IsAny<int>()))
                 .Returns(new ShowRssGlobalSubscriptionService.SubscriptionResult { Succeeded = false });
 
-            var controller = new TvShowController(this.logger.Object, this.showRssService.Object, this.userRepository.Object, this.memoryCache.Object)
+            var controller = new TvShowController(logger.Object, showRssService.Object, userRepository.Object, memoryCache.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user.MapToClaimPrincipal() } }
             };
@@ -237,16 +237,16 @@ namespace Netpips.Tests.Subscriptions.Controller
                 TvShowSubscriptions = new List<TvShowSubscription>()
             };
 
-            this.userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
-            this.userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
+            userRepository.Setup(c => c.FindUser(It.IsAny<Guid>())).Returns(user);
+            userRepository.Setup(c => c.IsTvShowSubscribedByOtherUsers(It.IsAny<int>(), It.IsAny<Guid>())).Returns(false);
 
             var emptySummary = new SubscriptionsSummary { SubscribedShows = new List<TvShowRss>() };
-            this.showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
-            this.showRssService
+            showRssService.Setup(c => c.Authenticate(out emptySummary)).Returns(new ShowRssAuthenticationContext());
+            showRssService
                 .Setup(c => c.SubscribeToShow(It.IsAny<ShowRssAuthenticationContext>(), It.IsAny<int>()))
                 .Returns(new ShowRssGlobalSubscriptionService.SubscriptionResult { Succeeded = true, Summary = new SubscriptionsSummary { SubscribedShows = new List<TvShowRss> { new TvShowRss { ShowRssId = 123 } } } });
 
-            var controller = new TvShowController(this.logger.Object, this.showRssService.Object, this.userRepository.Object, this.memoryCache.Object)
+            var controller = new TvShowController(logger.Object, showRssService.Object, userRepository.Object, memoryCache.Object)
             {
                 ControllerContext = new ControllerContext { HttpContext = new DefaultHttpContext { User = user.MapToClaimPrincipal() } }
             };

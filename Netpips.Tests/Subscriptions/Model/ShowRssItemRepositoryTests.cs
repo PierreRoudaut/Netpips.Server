@@ -20,8 +20,8 @@ namespace Netpips.Tests.Subscriptions.Model
         [SetUp]
         public void Setup()
         {
-            this.logger = new Mock<ILogger<ShowRssItemRepository>>();
-            this.dbContext = new Mock<AppDbContext>();
+            logger = new Mock<ILogger<ShowRssItemRepository>>();
+            dbContext = new Mock<AppDbContext>();
         }
 
 
@@ -49,11 +49,11 @@ namespace Netpips.Tests.Subscriptions.Model
                                    new ShowRssItem { Guid = "mnop"}
                                };
 
-            this.dbContext.SetupGet(c => c.ShowRssItems).Returns(mockSet.Object);
+            dbContext.SetupGet(c => c.ShowRssItems).Returns(mockSet.Object);
 
-            var repo = new ShowRssItemRepository(this.logger.Object, this.dbContext.Object);
+            var repo = new ShowRssItemRepository(logger.Object, dbContext.Object);
             repo.SyncFeedItems(newItems);
-            this.dbContext.Verify(c => c.SaveChanges(), Times.Once);
+            dbContext.Verify(c => c.SaveChanges(), Times.Once);
 
         }
 
@@ -115,9 +115,9 @@ namespace Netpips.Tests.Subscriptions.Model
             mockSet.As<IQueryable<ShowRssItem>>().Setup(m => m.ElementType).Returns(showRssItemsQueryable.ElementType);
             mockSet.As<IQueryable<ShowRssItem>>().Setup(m => m.GetEnumerator()).Returns(showRssItemsQueryable.GetEnumerator());
 
-            this.dbContext.SetupGet(c => c.ShowRssItems).Returns(mockSet.Object);
+            dbContext.SetupGet(c => c.ShowRssItems).Returns(mockSet.Object);
 
-            var repo = new ShowRssItemRepository(this.logger.Object, this.dbContext.Object);
+            var repo = new ShowRssItemRepository(logger.Object, dbContext.Object);
             var items = repo.FindRecentCompletedItems(timeWindow);
             Assert.AreEqual(expectedNbItems, items.Count);
         }

@@ -22,20 +22,20 @@ namespace Netpips.Tests.Subscriptions.Service
         [SetUp]
         public void Setup()
         {
-            this.settings = TestHelper.CreateShowRssSettings();
-            this.logger = new Mock<ILogger<ShowRssGlobalSubscriptionService>>();
-            this.options = new Mock<IOptions<ShowRssSettings>>();
-            this.options
+            settings = TestHelper.CreateShowRssSettings();
+            logger = new Mock<ILogger<ShowRssGlobalSubscriptionService>>();
+            options = new Mock<IOptions<ShowRssSettings>>();
+            options
                 .SetupGet(x => x.Value)
                 .Returns(settings);
         }
 
         [Test]
-        [Category(TestCategory.Network)]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.ThirdParty)]
         public void AuthenticateTest()
         {
-            var service = new ShowRssGlobalSubscriptionService(this.logger.Object, this.options.Object);
+            var service = new ShowRssGlobalSubscriptionService(logger.Object, options.Object);
             service.Authenticate(out var result);
             Assert.Greater(result.AvailableShows.Count, 900);
         }
@@ -43,7 +43,7 @@ namespace Netpips.Tests.Subscriptions.Service
         [Test]
         public void ParseSubscriptionsResultTest()
         {
-            var service = new ShowRssGlobalSubscriptionService(this.logger.Object, this.options.Object);
+            var service = new ShowRssGlobalSubscriptionService(logger.Object, options.Object);
             var html = TestHelper.GetRessourceContent("showRSS.html");
 
             var result = service.ParseSubscriptionsResult(html);
@@ -55,7 +55,7 @@ namespace Netpips.Tests.Subscriptions.Service
         [Test]
         public void ParseCsrfTokenTest()
         {
-            var service = new ShowRssGlobalSubscriptionService(this.logger.Object, this.options.Object);
+            var service = new ShowRssGlobalSubscriptionService(logger.Object, options.Object);
             var html = TestHelper.GetRessourceContent("showRSS.html");
             var token = service.ParseCsrfToken(html);
 
@@ -63,11 +63,11 @@ namespace Netpips.Tests.Subscriptions.Service
         }
 
         [Test]
-        [Category(TestCategory.Network)]
         [Category(TestCategory.Integration)]
+        [Category(TestCategory.ThirdParty)]
         public void SubscribeUnsubscribeShowTest()
         {
-            var service = new ShowRssGlobalSubscriptionService(this.logger.Object, this.options.Object);
+            var service = new ShowRssGlobalSubscriptionService(logger.Object, options.Object);
             var context = service.Authenticate(out var initialResult);
 
             var show = initialResult.AvailableShows.Random();

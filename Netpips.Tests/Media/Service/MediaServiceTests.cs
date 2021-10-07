@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Netpips.Core.Settings;
+using Netpips.Media.Filebot;
 using Netpips.Media.Model;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;

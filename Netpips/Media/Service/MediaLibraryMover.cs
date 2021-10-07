@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 using Netpips.Core;
 using Netpips.Core.Settings;
 using Netpips.Download.Model;
+using Netpips.Media.Filebot;
+using Netpips.Media.MediaInfo;
 using Netpips.Media.Model;
 
 namespace Netpips.Media.Service
@@ -41,7 +43,9 @@ namespace Netpips.Media.Service
         {
             var filesystemItems = new List<FileSystemInfo>();
 
-            if (!filebot.TryRename(videoSrcPath, settings.MediaLibraryPath, out var videoDestPath))
+            string videoDestPath;
+            var renameResult = filebot.Rename(new RenameRequest{Path = videoSrcPath, BaseDestPath = settings.MediaLibraryPath});
+            if (!renameResult.Succeeded)
             {
                 //fallback strategy to move video file based on duration
                 logger.LogInformation("[MoveVideoFile] TryRename failed, executing fallback logic");
@@ -53,11 +57,12 @@ namespace Netpips.Media.Service
                 else if (minutesDuration >= 105)
                     fallbackDir = "Movies";
                 logger.LogInformation($"[MoveVideoFile] TryRename fallback destDir is [{fallbackDir}]");
-               videoDestPath = Path.Combine(settings.MediaLibraryPath, fallbackDir, Path.GetFileName(videoSrcPath));
+                videoDestPath = Path.Combine(settings.MediaLibraryPath, fallbackDir, Path.GetFileName(videoSrcPath));
             } 
             else
             {
-                logger.LogInformation("[MoveVideoFile] TryRename Succeeded videoDestPath: " + videoDestPath);
+                videoDestPath = renameResult.DestPath;
+                logger.LogInformation("[MoveVideoFile] TryRename Succeeded videoDestPath: " + renameResult.DestPath);
             }
 
             //create dest dir if it does not exists and move item

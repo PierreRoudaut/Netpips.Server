@@ -1,11 +1,87 @@
 name: Netpips.Server
 on:
   push:
-    branches:
-      - master
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: create netpips filesystem
+        run: |
+          sudo adduser --disabled-password --gecos "" netpips
+          echo "netpips:netpips" | sudo chpasswd
+
+      - name: checkout code
+        uses: actions/checkout@v2
+
+      - name: install .NET Core 2.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.1.x'
+
+      - name: install aria2c
+        run: |
+          sudo apt-get install -y aria2
+          aria2c --version
+
+      - name: install mediainfo
+        run: |
+          sudo apt-get install -y mediainfo
+          mediainfo --version
+
+      - name: install transmisstion-remote
+        run: |
+          sudo apt-get install -y transmission-cli
+          sudo apt-get install -y transmission-daemon
+          sudo apt-get install -y transmission-common
+          transmission-remote --version
+
+      - name: install & configure filebot
+        run: |
+          sudo apt-get install -y openjdk-8-jre
+          sudo apt-get install -y openjdk-8-jdk
+          sudo apt-get install -y libjna-java
+          wget -O filebot.deb 'https://app.filebot.net/download.php?type=deb&arch=amd64'
+          sudo dpkg -i filebot.deb
+          rm filebot.deb
+          filebot -version
+          echo -e "${{ secrets.OPENSUB_USERNAME }}\n${{ secrets.OPENSUB_PASSWORD }}" | filebot -script fn:configure
+          echo "${{ secrets.FILEBOT_LICENSE_PSM }}" > filebot-license.psm
+          filebot --license filebot-license.psm
+          rm filebot-license.psm
+
+      - name: install python3.9 & pip & cfscrape
+        run: |
+          sudo apt update
+          sudo apt install software-properties-common
+          sudo add-apt-repository ppa:deadsnakes/ppa
+          sudo apt install python3.9
+          python3.9 --version
+          sudo apt update
+          sudo apt install python3-pip
+          pip --version
+          pip install -U cfscrape
+
+      - name: run unit tests
+        env: 
+          NETPIPS_TEST_SETTINGS_JSON: ${{ secrets.NETPIPS_TEST_SETTINGS_JSON }}
+        run: |
+          dotnet build
+          dotnet test # --filter 'TestCategory=Failing'  # --logger html -r .
+
+      # - name: upload tests artifact
+      #   if: ${{ always() }}
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: netpips-test-results.zip
+      #     if-no-files-found: warn
+      #     path: '*.html'
+
+ 
+  release:
+    if: github.ref == 'refs/heads/master'
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

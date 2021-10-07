@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
-using Humanizer;
 using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
+using Netpips.Core.Http;
 using Netpips.Search.Model;
+using Python.Runtime;
 
 namespace Netpips.Search.Service
 {
@@ -44,47 +45,52 @@ namespace Netpips.Search.Service
             };
         }
 
-        private async Task<string> ProcessSearchQueryAsync(string query)
-        {
-            // https://www.magnetdl.com/t/the-bad-batch-s01e09/
-            var queryFirstLetter = query.Trim().ToLower().First();
-            var queryAsKebabCase = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
-            var path = $"{queryFirstLetter}/{queryAsKebabCase}/";
 
-            logger.LogInformation("GET " + path);
-            string html;
-            try
+        public new async Task<string> ScrapeTorrentUrlAsync(string torrentDetailUrl)
+        {
+            await Task.Delay(0);
+            var httpResponse = HttpCfscrapeService.GetFromPythonCommandLine(torrentDetailUrl);
+            
+            if (!httpResponse.IsSuccessStatusCode)
             {
-                var sw = Stopwatch.StartNew();
-                var response = await httpClient.GetAsync(path);
-                html = await response.Content.ReadAsStringAsync();
-                logger.LogInformation("{StatusCode} in {Ellapsed} {Bytes}", response.StatusCode.ToString("D"),
-                    sw.ElapsedMilliseconds,
-                    new ByteSize((double) response?.Content?.Headers?.ContentLength).Humanize("#"));
-                if (!response.IsSuccessStatusCode)
-                {
-                    logger.LogError(html);
-                    return null;
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "An error occured");
                 return null;
             }
 
-            return html;
+            var torrentUrl = ParseFirstMagnetLinkOrDefault(httpResponse.Html);
+            return torrentUrl;
+
         }
 
-        public async Task<List<TorrentSearchItem>> SearchAsync(string query)
+        public new async Task<TorrentSearchResult> SearchAsync(string query)
         {
-            var html = await ProcessSearchQueryAsync(query);
-            if (string.IsNullOrWhiteSpace(html))
-                return null;
+            await Task.Delay(0);
+            // https://www.magnetdl.com/t/the-bad-batch-s01e09/
 
-            // todo: unit test to parse magnetdl_search_results.html
-            var items = ParseTorrentSearchResult(html);
-            return items;
+            var queryFirstLetter = query.Trim().ToLower().First();
+            var queryAsKebabCase = query.Trim().ToLower().Replace(' ', '-').Replace("'", string.Empty);
+            var searchUrl = $"https://www.magnetdl.com/{queryFirstLetter}/{queryAsKebabCase}/";
+
+            var torrentSearchResult = new TorrentSearchResult
+            {
+                Response = HttpCfscrapeService.GetFromPythonCommandLine(searchUrl)
+            };
+
+            if (!torrentSearchResult.Response.IsSuccessStatusCode)
+            {
+                torrentSearchResult.Succeeded = false;
+                return torrentSearchResult;
+            }
+
+            if (string.IsNullOrWhiteSpace(torrentSearchResult.Response.Html))
+            {
+                torrentSearchResult.Succeeded = false;
+                return torrentSearchResult;
+            }
+
+            torrentSearchResult.Items = ParseTorrentSearchResult(torrentSearchResult.Response.Html);
+            torrentSearchResult.Succeeded = true;
+            
+            return torrentSearchResult;
         }
 
         public override List<TorrentSearchItem> ParseTorrentSearchResult(string html)
@@ -101,7 +107,7 @@ namespace Netpips.Search.Service
                     var item = new TorrentSearchItem
                     {
                         TorrentUrl = HttpUtility.HtmlDecode(tds[0].Element("a").GetAttributeValue("href", string.Empty)),
-                        Title = tds[1].Element("a").GetAttributeValue("title", string.Empty),
+                        Title =  tds[1].Element("a").GetAttributeValue("title", string.Empty),
                         ScrapeUrl = new Uri(BaseUri, tds[1].Element("a").GetAttributeValue("href", string.Empty))
                             .ToString(),
                         Size = ByteSize.TryParse(tds[5].InnerText.Trim(), out var size)
@@ -119,7 +125,7 @@ namespace Netpips.Search.Service
                 .ToList();
             return items;
         }
-
+        
         public bool CanScrape(Uri torrentDetailUri) => TorrentDetailPrefixUri.IsBaseOf(torrentDetailUri);
     }
 }

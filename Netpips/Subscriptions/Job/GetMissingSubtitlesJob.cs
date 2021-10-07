@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Coravel.Invocable;
 using Microsoft.Extensions.Options;
 using Netpips.Core.Settings;
+using Netpips.Media.Filebot;
 using Netpips.Media.Service;
 using Netpips.Subscriptions.Model;
 using Serilog;

@@ -1,20 +1,23 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Netpips.Core;
 using Netpips.Core.Settings;
 using Netpips.Identity.Authorization;
 using Netpips.Identity.Model;
+using Newtonsoft.Json;
 using NUnit.Framework;
 
 namespace Netpips.Tests.Core
 {
     public static class TestHelper
     {
-        public static User NotAnItemOwner =
+        public static readonly User NotAnItemOwner =
             new User
             {
                 Email = "not-an-owner@example.com",
@@ -25,7 +28,7 @@ namespace Netpips.Tests.Core
                 Id = Guid.NewGuid()
             };
 
-        public static User ItemOwner =
+        public static readonly User ItemOwner =
             new User
             {
                 Email = "owner@example.com",
@@ -36,7 +39,7 @@ namespace Netpips.Tests.Core
                 Id = Guid.NewGuid()
             };
 
-        public static User Admin =
+        public static readonly User Admin =
             new User
             {
                 Email = "admin@example.com",
@@ -47,7 +50,7 @@ namespace Netpips.Tests.Core
                 Id = Guid.NewGuid()
             };
 
-        public static User SuperAdmin =
+        public static readonly User SuperAdmin =
             new User
             {
                 Email = "super.admin@example.com",
@@ -62,7 +65,7 @@ namespace Netpips.Tests.Core
         /// Fetches a configuration based on NETPIPS_TEST_ prefix for env vars
         /// </summary>
         /// <returns></returns>
-        public static IConfigurationRoot GetTestConfiguration()
+        private static IConfigurationRoot GetTestConfiguration()
         {
             return AppSettingsFactory.BuildTestConfiguration();
         }
@@ -82,7 +85,7 @@ namespace Netpips.Tests.Core
 
         public static NetpipsSettings CreateNetpipsAppSettings()
         {
-            var netpips = new DirectoryInfo(Path.Combine(TestContext.CurrentContext.TestDirectory, TestContext.CurrentContext.Random.GetString(), "netpips"));
+            var netpips = new DirectoryInfo(Path.Combine(TestContext.CurrentContext.TestDirectory, "home", "netpips"));
             if (netpips.Exists)
                 netpips.Delete(true);
 
@@ -188,6 +191,26 @@ namespace Netpips.Tests.Core
             }
 
             return ressourcePath;
+        }
+
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyInfos = new ConcurrentDictionary<Type, PropertyInfo[]>();
+
+        public static string ToJson<T>(this T item) => JsonConvert.SerializeObject(item, Formatting.Indented);
+        public static string ToStringOfProperties<T>(this T item, int i = 0)
+        {
+            var propertyInfos = PropertyInfos.GetOrAdd(typeof(T), type => type.GetProperties());
+
+            var sb = new StringBuilder();
+
+            foreach (var info in propertyInfos)
+            {
+                // if (info.GetType().IsClass && !info.GetType().IsAssignableFrom(typeof(Exception)))
+                //     return ToStringOfProperties((T) info.GetValue(item));
+                var value = info.GetValue(item) ?? "NULL";
+                sb.AppendLine(Enumerable.Repeat('\t', i) + info.Name + ": " + value);
+            }
+
+            return sb.ToString();
         }
     }
 }

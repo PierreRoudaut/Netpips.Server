@@ -47,6 +47,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Netpips.Media.Filebot;
+using Netpips.Media.MediaInfo;
+using Python.Runtime;
 
 namespace Netpips
 {
@@ -223,8 +226,6 @@ namespace Netpips
             //scrappers
             services.AddScoped<ITorrentSearchScrapper, _1337xScrapper>();
             services.AddScoped<ITorrentDetailScrapper, _1337xScrapper>();
-            services.AddScoped<ITorrentSearchScrapper, BitTorrentAmScrapper>();
-            services.AddScoped<ITorrentDetailScrapper, BitTorrentAmScrapper>();
             services.AddScoped<ITorrentSearchScrapper, MagnetDLScrapper>();
             services.AddScoped<ITorrentDetailScrapper, MagnetDLScrapper>();
 

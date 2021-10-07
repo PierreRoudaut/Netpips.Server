@@ -9,9 +9,12 @@ namespace Netpips.Core
 {
     public static class OsHelper
     {
-        public static string UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
+        public static string UserAgent =
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36";
 
-        public static int ExecuteCommand(string command, string arguments, out string output, out string error, TimeSpan? timeout = null)
+
+        public static int ExecuteCommand(string command, string arguments, out string output, out string error,
+            TimeSpan? timeout = null)
         {
             var sbOutput = new StringBuilder();
             var sbError = new StringBuilder();
@@ -23,9 +26,7 @@ namespace Netpips.Core
             }
 
             var maxWaitingDuration =
-                TimeSpan.MaxValue == timeout.Value ?
-                    int.MaxValue :
-                    (int)timeout.Value.TotalMilliseconds;
+                TimeSpan.MaxValue == timeout.Value ? int.MaxValue : (int) timeout.Value.TotalMilliseconds;
 
             var p = new Process
             {
@@ -69,7 +70,6 @@ namespace Netpips.Core
                 var reader = new StreamReader(stream);
                 return reader.ReadToEnd();
             }
-
         }
     }
 }

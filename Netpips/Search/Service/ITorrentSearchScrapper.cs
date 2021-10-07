@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Netpips.Search.Model;
+﻿using System.Threading.Tasks;
 
 namespace Netpips.Search.Service
 {
     public interface ITorrentSearchScrapper
     {
-        Task<List<TorrentSearchItem>> SearchAsync(string query);
+        Task<TorrentSearchResult> SearchAsync(string query);
     }
 }

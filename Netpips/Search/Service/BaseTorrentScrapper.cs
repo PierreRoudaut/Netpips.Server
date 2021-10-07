@@ -10,6 +10,7 @@ using Humanizer;
 using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
 using Netpips.Core;
+using Netpips.Core.Http;
 using Netpips.Search.Model;
 
 namespace Netpips.Search.Service
@@ -80,21 +81,22 @@ namespace Netpips.Search.Service
                 return null;
             }
 
-            var torrentUrl = ParseTorrentDetailResult(html);
+            var torrentUrl = ParseFirstMagnetLinkOrDefault(html);
             return torrentUrl;
         }
 
         
         /// <summary>
-        /// Retrieves the first found magnet link on a page
+        /// Retrieves the first found magnet link on an html document
         /// </summary>
         /// <param name="html"></param>
         /// <returns></returns>
-        public string ParseTorrentDetailResult(string html)
+        public string ParseFirstMagnetLinkOrDefault(string html)
         {
             var htmlDocument = new HtmlDocument();
             htmlDocument.LoadHtml(html);
-            var a = htmlDocument.DocumentNode.Descendants("a")
+            var a = htmlDocument.DocumentNode
+                .Descendants("a")
                 .FirstOrDefault(x => x.GetAttributeValue("href", string.Empty).StartsWith("magnet:?"));
 
             var magnetLink = a?.GetAttributeValue("href", null);
@@ -102,17 +104,25 @@ namespace Netpips.Search.Service
         }
 
 
-        public async Task<List<TorrentSearchItem>> SearchAsync(string query)
+        public async Task<TorrentSearchResult> SearchAsync(string query)
         {
             var urlEndpoint = string.Format(SearchEndpointFormat, HttpUtility.UrlEncode(query.ToLower()));
-            var html = await DoGet(urlEndpoint);
-            if (html == null)
+            var result = new TorrentSearchResult
             {
-                return new List<TorrentSearchItem>();
+                Response = new HttpResponseLite
+                {
+                    Html = await DoGet(urlEndpoint)
+                }
+            };
+            if (result.Response.Html == null)
+            {
+                result.Succeeded = false;
+                return result;
             }
 
-            var items = ParseTorrentSearchResult(html);
-            return items;
+            result.Succeeded = true;
+            result.Items = ParseTorrentSearchResult(result.Response.Html);
+            return result;
         }
 
         public abstract List<TorrentSearchItem> ParseTorrentSearchResult(string html);

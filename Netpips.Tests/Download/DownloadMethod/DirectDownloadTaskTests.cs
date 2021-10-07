@@ -16,7 +16,7 @@ using NUnit.Framework;
 namespace Netpips.Tests.Download.DownloadMethod
 {
     [TestFixture]
-    [Category(TestCategory.Network)]
+    [Category(TestCategory.ThirdParty)]
     public class DirectDownloadTaskTest
     {
         private List<string> cookies;
@@ -26,11 +26,11 @@ namespace Netpips.Tests.Download.DownloadMethod
         [SetUp]
         public void Setup()
         {
-            this.settings = TestHelper.CreateNetpipsAppSettings();
+            settings = TestHelper.CreateNetpipsAppSettings();
 
             var loggerMock = new Mock<ILogger<DirectDownloadMethod>>();
-            this.cookies = new List<string>();
-            this.dispatcher = new Mock<IDispatcher>();
+            cookies = new List<string>();
+            dispatcher = new Mock<IDispatcher>();
         }
 
         [Test]
@@ -48,14 +48,14 @@ namespace Netpips.Tests.Download.DownloadMethod
                 Token = TestHelper.Uid()
             };
 
-            var downloadDestPath = Path.Combine(this.settings.DownloadsPath, item.Token, item.FileUrl.Split('/').Last());
+            var downloadDestPath = Path.Combine(settings.DownloadsPath, item.Token, item.FileUrl.Split('/').Last());
             Directory.CreateDirectory(Path.GetDirectoryName(downloadDestPath));
             var directDownloadTask = new DirectDownloadTask(item, dispatcher.Object, downloadDestPath, cookies);
             DirectDownloadMethod.DirectDownloadTasks[item.Token] = directDownloadTask;
             await DirectDownloadMethod.DirectDownloadTasks[item.Token].StartAsync();
             Assert.AreEqual(testFile.ExpectedSize, new FileInfo(downloadDestPath).Length,
                 "A file of size: " + testFile.ExpectedSize + " should have been downloaded");
-            this.dispatcher.Verify(x => x.Broadcast(It.IsAny<ItemDownloaded>()), Times.Once);
+            dispatcher.Verify(x => x.Broadcast(It.IsAny<ItemDownloaded>()), Times.Once);
         }
 
         [Test]
@@ -73,7 +73,7 @@ namespace Netpips.Tests.Download.DownloadMethod
                 Token = Guid.NewGuid().ToString()
             };
 
-            var downloadDestPath = Path.Combine(this.settings.DownloadsPath, item.Token, item.FileUrl.Split('/').Last());
+            var downloadDestPath = Path.Combine(settings.DownloadsPath, item.Token, item.FileUrl.Split('/').Last());
             Directory.CreateDirectory(Path.GetDirectoryName(downloadDestPath));
 
             var directDownloadTask = new DirectDownloadTask(item, dispatcher.Object, downloadDestPath, cookies);
@@ -84,7 +84,7 @@ namespace Netpips.Tests.Download.DownloadMethod
             {
                 DirectDownloadMethod.DirectDownloadTasks[item.Token].Cancel();
                 Assert.AreNotEqual(testFile.ExpectedSize, new FileInfo(downloadDestPath).Length, "The file was downloaded entirely despite cancellation");
-                this.dispatcher.Verify(x => x.Broadcast(It.IsAny<ItemDownloaded>()), Times.Never);
+                dispatcher.Verify(x => x.Broadcast(It.IsAny<ItemDownloaded>()), Times.Never);
             }
         }
     }

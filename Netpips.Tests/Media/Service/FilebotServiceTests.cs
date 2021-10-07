@@ -3,15 +3,18 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Netpips.Core.Settings;
+using Netpips.Media.Filebot;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
+using NUnit.Framework.Internal;
 
 namespace Netpips.Tests.Media.Service
 {
     [TestFixture]
     [Category(TestCategory.Filebot)]
-    [Category(TestCategory.Integration)]
+    [Category(TestCategory.LocalDependency)]
+    [Category(TestCategory.ThirdParty)]
     public class FilebotServiceTests
     {
         private NetpipsSettings settings;
@@ -19,36 +22,44 @@ namespace Netpips.Tests.Media.Service
         [SetUp]
         public void SetUp()
         {
-            this.settings = TestHelper.CreateNetpipsAppSettings();
+            settings = TestHelper.CreateNetpipsAppSettings();
         }
 
         [Test]
-        public void TryRenameTest_Case_Success()
+        public void RenameTest_Case_Success()
         {
-
-            var path = Path.Combine(this.settings.DownloadsPath, "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mkv");
+            const string p = nameof(RenameTest_Case_Success);
+            TestContext.Progress.WriteLine($"{p} START");
+            var path = Path.Combine(settings.DownloadsPath,
+                "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mkv");
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
             var expectedPath = Path.Combine(
-                this.settings.MediaLibraryPath,
+                settings.MediaLibraryPath,
                 "TV Shows",
                 "The Big Bang Theory",
                 "Season 10",
                 "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mkv");
 
-            Assert.IsTrue(filebot.TryRename(path, this.settings.MediaLibraryPath, out var destPath, "Failed to rename using Filebot"));
-            Assert.AreEqual(expectedPath, destPath);
+            var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
+            
+            Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties()}");
+            Assert.AreEqual(expectedPath, result.DestPath, "Expected path and dest path should be identical");
         }
 
         [Test]
-        public void TryRenameTest_Case_FileAlreadyExists()
+        public void RenameTest_Case_FileAlreadyExists()
         {
-            var path = Path.Combine(this.settings.DownloadsPath, "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mp4");
+            const string p = nameof(RenameTest_Case_FileAlreadyExists);
+            TestContext.Progress.WriteLine($"{p} START");
+            
+            var path = Path.Combine(settings.DownloadsPath,
+                "The.Big.Bang.Theory.S10E01.FASTSUB.VOSTFR.HDTV.x264-FDS.mp4");
             TestHelper.CreateFile(path);
 
             var alreadyExistingFilePath = Path.Combine(
-                this.settings.MediaLibraryPath,
+                settings.MediaLibraryPath,
                 "TV Shows",
                 "The Big Bang Theory",
                 "Season 10",
@@ -57,39 +68,44 @@ namespace Netpips.Tests.Media.Service
 
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-
-            Assert.IsTrue(filebot.TryRename(path, this.settings.MediaLibraryPath, out var destPath));
-            Assert.AreEqual(alreadyExistingFilePath, destPath);
+            
+            var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
+            
+            Assert.IsTrue(result.Succeeded, $"Failed to rename using Filebot{Environment.NewLine + result.ToStringOfProperties()}");
+            Assert.AreEqual(alreadyExistingFilePath, result.DestPath);
         }
 
 
         [Test]
-        public void TryRenameTest_Case_Failure()
+        public void RenameTest_Case_Failure()
         {
-            var path = Path.Combine(this.settings.DownloadsPath, Guid.NewGuid().ToString("N") + ".mp4");
+            var path = Path.Combine(settings.DownloadsPath, Guid.NewGuid().ToString("N") + ".mp4");
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsFalse(filebot.TryRename(path, this.settings.MediaLibraryPath, out _));
+            
+            var result = filebot.Rename(new RenameRequest {Path = path, BaseDestPath = settings.MediaLibraryPath});
+            Assert.IsFalse(result.Succeeded, $"Filebot should not have succeeded{Environment.NewLine + result.ToStringOfProperties()}");
         }
 
         [Test]
         public void GetSubtitlesTest_Case_NonStrict()
         {
-            var itemDir = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid());
+            var itemDir = Path.Combine(settings.DownloadsPath, TestHelper.Uid());
             Directory.CreateDirectory(itemDir);
             var itemPath = Path.Combine(itemDir, "The Big Bang Theory - S11E17 - The Athenaeum Allocation.mkv");
             TestHelper.CreateFile(itemPath);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsTrue(filebot.GetSubtitles(itemPath, out var srtPath, nonStrict: true), "filebot -get-subtitles failed");
+            Assert.IsTrue(filebot.GetSubtitles(itemPath, out var srtPath, nonStrict: true),
+                "filebot -get-subtitles failed");
             Assert.IsTrue(File.Exists(srtPath), ".srt not found");
         }
 
         [Test]
         public void GetSubtitlesTest_Case_StrictOn_ShouldFail()
         {
-            var itemDir = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid());
+            var itemDir = Path.Combine(settings.DownloadsPath, TestHelper.Uid());
             Directory.CreateDirectory(itemDir);
             var itemPath = Path.Combine(itemDir, "The Big Bang Theory - S11E17 - The Athenaeum Allocation.mkv");
             TestHelper.CreateFile(itemPath);
@@ -102,13 +118,14 @@ namespace Netpips.Tests.Media.Service
         [Test]
         public void GetSubtitlesTest_Case_WithLang_NonStrict()
         {
-            var itemDir = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid());
+            var itemDir = Path.Combine(settings.DownloadsPath, TestHelper.Uid());
             Directory.CreateDirectory(itemDir);
             var path = Path.Combine(itemDir, "The Big Bang Theory - S11E17 - The Athenaeum Allocation.mkv");
             TestHelper.CreateFile(path);
             var loggerMock = new Mock<ILogger<IFilebotService>>();
             var filebot = new FilebotService(loggerMock.Object);
-            Assert.IsTrue(filebot.GetSubtitles(path, out var srtPath, "eng", nonStrict: true), "filebot -get-subtitles failed");
+            Assert.IsTrue(filebot.GetSubtitles(path, out var srtPath, "eng", nonStrict: true),
+                "filebot -get-subtitles failed");
             Assert.IsTrue(File.Exists(srtPath), ".srt not found");
         }
     }

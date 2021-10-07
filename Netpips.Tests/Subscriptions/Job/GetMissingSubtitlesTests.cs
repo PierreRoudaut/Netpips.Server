@@ -11,6 +11,7 @@ using Netpips.Tests.Core;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
+using Netpips.Media.Filebot;
 
 namespace Netpips.Tests.Subscriptions.Job
 {
@@ -28,14 +29,14 @@ namespace Netpips.Tests.Subscriptions.Job
         [SetUp]
         public void Setup()
         {
-            this.autoMocker = new AutoMocker();
-            this.filebot = new Mock<IFilebotService>();
-            this.options = new Mock<IOptions<NetpipsSettings>>();
-            this.settings = TestHelper.CreateNetpipsAppSettings();
-            options.SetupGet(x => x.Value).Returns(this.settings);
+            autoMocker = new AutoMocker();
+            filebot = new Mock<IFilebotService>();
+            options = new Mock<IOptions<NetpipsSettings>>();
+            settings = TestHelper.CreateNetpipsAppSettings();
+            options.SetupGet(x => x.Value).Returns(settings);
             autoMocker.Use(options.Object);
             autoMocker.Use(filebot.Object);
-            this.repository = new Mock<IShowRssItemRepository>();
+            repository = new Mock<IShowRssItemRepository>();
         }
 
         [Test]

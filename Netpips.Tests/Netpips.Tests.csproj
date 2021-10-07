@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
-
     <IsPackable>false</IsPackable>
 
   </PropertyGroup>
@@ -87,6 +86,10 @@
     </EmbeddedResource>
     <None Remove="ressources\magnetdl_search_results.html" />
     <EmbeddedResource Include="ressources\magnetdl_search_results.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="ressources\1718ms-video-file.mp4" />
+    <EmbeddedResource Include="ressources\1718ms-video-file.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

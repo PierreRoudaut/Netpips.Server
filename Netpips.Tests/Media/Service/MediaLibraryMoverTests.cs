@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Netpips.Core.Settings;
+using Netpips.Media.Filebot;
+using Netpips.Media.MediaInfo;
 using Netpips.Media.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
@@ -26,29 +28,29 @@ namespace Netpips.Tests.Media.Service
         [SetUp]
         public void Setup()
         {
-            this.settings = TestHelper.CreateNetpipsAppSettings();
+            settings = TestHelper.CreateNetpipsAppSettings();
 
-            this.loggerMock = new Mock<ILogger<MediaLibraryMover>>();
-            this.settingsMock = new Mock<IOptions<NetpipsSettings>>();
-            this.settingsMock.Setup(x => x.Value).Returns(this.settings);
-            this.filebotMock = new Mock<IFilebotService>();
-            this.mediaInfoMock = new Mock<IMediaInfoService>();
-            this.archiveMock = new Mock<IArchiveExtractorService>();
+            loggerMock = new Mock<ILogger<MediaLibraryMover>>();
+            settingsMock = new Mock<IOptions<NetpipsSettings>>();
+            settingsMock.Setup(x => x.Value).Returns(settings);
+            filebotMock = new Mock<IFilebotService>();
+            mediaInfoMock = new Mock<IMediaInfoService>();
+            archiveMock = new Mock<IArchiveExtractorService>();
         }
 
         [Test]
         public void MoveMusicItemTest()
         {
 
-            var mover = new MediaLibraryMover(this.settingsMock.Object, this.loggerMock.Object, this.filebotMock.Object, this.mediaInfoMock.Object, this.archiveMock.Object);
+            var mover = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
 
             var musicFilename = "Cosmic Gate - Be Your Sound.mp3";
-            var musicSrcPath = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid(), musicFilename);
+            var musicSrcPath = Path.Combine(settings.DownloadsPath, TestHelper.Uid(), musicFilename);
 
             TestHelper.CreateFile(musicSrcPath);
             var musicDestPath = mover.MoveMusicFile(musicSrcPath);
             Assert.IsTrue(File.Exists(musicDestPath.FullName), "music test file was not moved");
-            Assert.AreEqual(Path.Combine(this.settings.MediaLibraryPath, "Music", musicFilename), musicDestPath.FullName);
+            Assert.AreEqual(Path.Combine(settings.MediaLibraryPath, "Music", musicFilename), musicDestPath.FullName);
 
         }
 
@@ -56,13 +58,13 @@ namespace Netpips.Tests.Media.Service
         public void MoveVideoItemTestCaseRenameOk()
         {
 
-            var videoSrcPath = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid(), "the.big.bang.theory.s10.e01.mp4");
+            var videoSrcPath = Path.Combine(settings.DownloadsPath, TestHelper.Uid(), "the.big.bang.theory.s10.e01.mp4");
             TestHelper.CreateFile(videoSrcPath);
 
-            var videoDestPath = Path.Combine(this.settings.MediaLibraryPath, "TV Shows", "The Big Bang Theory", "Season 10", "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mp4");
+            var videoDestPath = Path.Combine(settings.MediaLibraryPath, "TV Shows", "The Big Bang Theory", "Season 10", "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mp4");
 
-            this.filebotMock.Setup(x => x.TryRename(It.IsAny<string>(), this.settings.MediaLibraryPath, out videoDestPath, null, "test")).Returns(true);
-            var mover = new MediaLibraryMover(this.settingsMock.Object, this.loggerMock.Object, this.filebotMock.Object, this.mediaInfoMock.Object, this.archiveMock.Object);
+            filebotMock.Setup(x => x.Rename(It.IsAny<RenameRequest>())).Returns(new RenameResult {Succeeded = true, DestPath = videoDestPath });
+            var mover = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
             var fsItems = mover.MoveVideoFile(videoSrcPath);
 
             Assert.AreEqual(3, fsItems.Count, "Tbbt folder and season folder should be created");
@@ -81,19 +83,18 @@ namespace Netpips.Tests.Media.Service
 
             const string Filename = "Unknown Video.mkv";
 
-            var videoSrcPath = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid(), Filename);
+            var videoSrcPath = Path.Combine(settings.DownloadsPath, TestHelper.Uid(), Filename);
             TestHelper.CreateFile(videoSrcPath);
 
             var duration = TimeSpan.FromMinutes(minutes);
-            this.mediaInfoMock.Setup(x => x.TryGetDuration(It.IsAny<string>(), out duration)).Returns(true);
+            mediaInfoMock.Setup(x => x.TryGetDuration(It.IsAny<string>(), out duration)).Returns(true);
 
-            string _;
-            this.filebotMock.Setup(x => x.TryRename(It.IsAny<string>(), It.IsAny<string>(), out _, null, It.IsAny<string>())).Returns(false);
+            filebotMock.Setup(x => x.Rename(It.IsAny<RenameRequest>())).Returns(new RenameResult {Succeeded = false});
 
-            var mover = new MediaLibraryMover(this.settingsMock.Object, this.loggerMock.Object, this.filebotMock.Object, this.mediaInfoMock.Object, this.archiveMock.Object);
+            var mover = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
             var movedFsItems = mover.MoveVideoFile(videoSrcPath);
 
-            var videoDestPath = Path.Combine(this.settings.MediaLibraryPath, fallbackDir, Filename);
+            var videoDestPath = Path.Combine(settings.MediaLibraryPath, fallbackDir, Filename);
 
             Assert.IsTrue(File.Exists(videoDestPath), "Dest video file was not created");
             Assert.IsFalse(File.Exists(videoSrcPath), "Src video is still present");
@@ -115,7 +116,7 @@ namespace Netpips.Tests.Media.Service
                 { ".fra.srt", ".fr.srt" },
                 { ".fr.srt", ".fr.srt" },
             };
-            var videoSrcPath = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid(), srcFilename);
+            var videoSrcPath = Path.Combine(settings.DownloadsPath, TestHelper.Uid(), srcFilename);
 
             TestHelper.CreateFile(videoSrcPath);
             handledSubs.ToList().ForEach(subExt =>
@@ -123,10 +124,10 @@ namespace Netpips.Tests.Media.Service
                 TestHelper.CreateFile(videoSrcPath.GetPathWithoutExtension() + subExt.Key);
             });
 
-            var videoDestPath = Path.Combine(this.settings.MediaLibraryPath, "TV Shows", "The Big Bang Theory", "Season 10", "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mp4");
+            var videoDestPath = Path.Combine(settings.MediaLibraryPath, "TV Shows", "The Big Bang Theory", "Season 10", "The Big Bang Theory - S10E01 - The Conjugal Conjecture.mp4");
             TestHelper.CreateFile(videoDestPath);
 
-            var downloadCompletedHandler = new MediaLibraryMover(this.settingsMock.Object, this.loggerMock.Object, this.filebotMock.Object, this.mediaInfoMock.Object, this.archiveMock.Object);
+            var downloadCompletedHandler = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
             var movedSubs = downloadCompletedHandler.MoveMatchingSubtitlesOf(videoSrcPath, videoDestPath);
 
             handledSubs.ToList().ForEach(subExt =>
@@ -141,7 +142,7 @@ namespace Netpips.Tests.Media.Service
         {
             var filenameFormat = "Video {0}.mkv";
             int dirCount = 3;
-            var itemPath = Path.Combine(this.settings.DownloadsPath, TestHelper.Uid());
+            var itemPath = Path.Combine(settings.DownloadsPath, TestHelper.Uid());
             var tempPath = itemPath;
             for (int i = 1; i <= dirCount; i++)
             {
@@ -151,16 +152,16 @@ namespace Netpips.Tests.Media.Service
             }
             var _ = "";
             var duration = TimeSpan.FromMinutes(0);
-            this.filebotMock.Setup(x => x.TryRename(It.IsAny<string>(), It.IsAny<string>(), out _, null, It.IsAny<string>())).Returns(false);
-            this.filebotMock.Setup(x => x.GetSubtitles(It.IsAny<string>(), out _, It.IsAny<string>(), It.IsAny<bool>())).Returns(false);
-            this.mediaInfoMock.Setup(x => x.TryGetDuration(It.IsAny<string>(), out duration)).Returns(true);
+            filebotMock.Setup(x => x.Rename(It.IsAny<RenameRequest>())).Returns(new RenameResult {Succeeded = false});
+            filebotMock.Setup(x => x.GetSubtitles(It.IsAny<string>(), out _, It.IsAny<string>(), It.IsAny<bool>())).Returns(false);
+            mediaInfoMock.Setup(x => x.TryGetDuration(It.IsAny<string>(), out duration)).Returns(true);
 
-            var mediaLibraryMover = new MediaLibraryMover(this.settingsMock.Object, this.loggerMock.Object, this.filebotMock.Object, this.mediaInfoMock.Object, this.archiveMock.Object);
+            var mediaLibraryMover = new MediaLibraryMover(settingsMock.Object, loggerMock.Object, filebotMock.Object, mediaInfoMock.Object, archiveMock.Object);
 
             mediaLibraryMover.ProcessDir(itemPath);
             for (int i = 1; i <= dirCount; i++)
             {
-                Assert.IsTrue(File.Exists(Path.Combine(this.settings.MediaLibraryPath, "Others", string.Format(filenameFormat, i))));
+                Assert.IsTrue(File.Exists(Path.Combine(settings.MediaLibraryPath, "Others", string.Format(filenameFormat, i))));
             }
         }
     }

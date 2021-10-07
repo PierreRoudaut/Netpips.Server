@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using Netpips.Core;
 using Netpips.Core.Extensions;
 
-namespace Netpips.Media.Service
+namespace Netpips.Media.Filebot
 {
     public class FilebotService : IFilebotService
     {
@@ -20,6 +20,7 @@ namespace Netpips.Media.Service
 
         public bool GetSubtitles(string path, out string srtPath, string lang = "eng", bool nonStrict = false)
         {
+            // todo: wrap in requst/result object
             srtPath = "";
             var args = "-get-subtitles " + path.Quoted() + " --lang " + lang.Quoted();
             if (nonStrict)
@@ -27,7 +28,8 @@ namespace Netpips.Media.Service
                 args += " -non-strict ";
             }
 
-            var expectedSrtPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)) + $".{lang}.srt";
+            var expectedSrtPath = Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path)) +
+                                  $".{lang}.srt";
             logger.LogInformation("filebot " + args);
             Console.WriteLine("filebot " + args);
 
@@ -49,54 +51,60 @@ namespace Netpips.Media.Service
                 FilesystemHelper.MoveOrReplace(expectedSrtPath, twoLetterSrtPath);
                 srtPath = twoLetterSrtPath;
             }
+
             return true;
         }
 
-        /// <inheritdoc />
         /// <summary>
         /// Get the media location for the file
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="baseDestPath"></param>
-        /// <param name="destPath"></param>
-        /// <param name="db"></param>
-        /// <param name="action"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        public bool TryRename(string path, string baseDestPath, out string destPath, string db = null, string action = "test")
+        public RenameResult Rename(RenameRequest request)
         {
-            destPath = "";
-            var destFormat = baseDestPath + Path.DirectorySeparatorChar + "{plex}";
-            var args = "-rename " + path.Quoted() + " --format " + destFormat.Quoted() + " -non-strict --action " + action.Quoted();
-            if (db != null)
+            var result = new RenameResult();
+            var destFormat = request.BaseDestPath + Path.DirectorySeparatorChar + "{plex}";
+            var args = "-rename " + request.Path.Quoted() + " --format " + destFormat.Quoted() + " -non-strict --action " + request.Action.Quoted();
+            if (request.Db != null)
             {
-                args += " --db " + db.Quoted();
+                args += " --db " + request.Db.Quoted();
             }
 
             logger.LogInformation("filebot " + args);
-            var exitCode = OsHelper.ExecuteCommand("filebot", args, out var output, out var error);
-            logger.LogInformation($"code: {exitCode}, output: {output}, error: {error}");
+            result.RawExecutedCommand = $"filebot {args}";
+            result.ExitCode = OsHelper.ExecuteCommand("filebot", args, out var stdout, out var stderr);
+            result.StandardOutput = stdout;
+            result.StandardError = stderr;
+            
+            logger.LogInformation($"code: {result.ExitCode}, output: {result.StandardOutput}, error: {result.StandardError}");
 
-            if (exitCode != 0)
+            if (result.ExitCode != 0)
             {
-                var match = FileAlreadyExistsPattern.Match(output);
+                var match = FileAlreadyExistsPattern.Match(result.StandardOutput);
                 if (match.Success && match.Groups["dest"].Success)
                 {
-                    destPath = match.Groups["dest"].Value;
-                    logger.LogInformation($"Filebot.TryRename [SUCCESS] [FileAlreadyExists] [{destPath}]");
-                    return true;
+                    result.DestPath = match.Groups["dest"].Value;
+                    logger.LogInformation($"Filebot.TryRename [SUCCESS] [FileAlreadyExists] [{result.DestPath}]");
+                    result.Reason = "File already exists at dest location";
+                    result.Succeeded = true;
+                    return result;
                 }
-                logger.LogWarning("Filebot.TryRename [FAILED]", args, error);
-                return false;
             }
-            var p = new Regex(@"\[" + action.ToUpper() + @"\].*\[.*\] to \[(?<dest>.*)\]").Match(output);
+
+            var p = new Regex(@"\[" + request.Action.ToUpper() + @"\].*\[.*\] to \[(?<dest>.*)\]").Match(result.StandardOutput);
             if (p.Success && p.Groups["dest"].Success)
             {
-                destPath = p.Groups["dest"].Value;
-                logger.LogWarning($"Filebot.TryRename [SUCCESS] [{destPath}]");
-                return true;
+                result.DestPath = p.Groups["dest"].Value;
+                result.Succeeded = true;
+                result.Reason = "Found";
+                logger.LogWarning($"Filebot.TryRename [SUCCESS] [{result.DestPath}]");
+                return result;
             }
-            logger.LogWarning("Filebot.TryRename [FAILED] to capture destPath in output: ", output);
-            return false;
+
+            result.Succeeded = false;
+            result.Reason = "Failed to capture destPath in stdout";
+            logger.LogWarning("Filebot.TryRename [FAILED] to capture destPath in output: ", result.StandardOutput);
+            return result;
         }
     }
 }
