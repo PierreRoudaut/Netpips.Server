@@ -5,7 +5,6 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using Coravel.Events.Interfaces;
 using Humanizer;
-using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Netpips.Core;

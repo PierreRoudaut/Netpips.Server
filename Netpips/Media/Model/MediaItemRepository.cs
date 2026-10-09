@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Humanizer;
-using Humanizer.Bytes;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Netpips.Core.Extensions;

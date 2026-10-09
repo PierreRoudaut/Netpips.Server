@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
-using Humanizer.Bytes;
+using Humanizer;
 using Microsoft.Extensions.Logging;
 using Netpips.Core.Http;
 using Netpips.Search.Model;

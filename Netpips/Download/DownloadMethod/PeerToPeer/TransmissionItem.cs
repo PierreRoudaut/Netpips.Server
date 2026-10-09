@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Humanizer.Bytes;
+using Humanizer;
 
 namespace Netpips.Download.DownloadMethod.PeerToPeer
 {
