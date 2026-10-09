@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Netpips.Core;
@@ -40,7 +41,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Serilog;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -49,7 +50,6 @@ using System.Linq;
 using System.Text;
 using Netpips.Media.Filebot;
 using Netpips.Media.MediaInfo;
-using Python.Runtime;
 
 namespace Netpips
 {
@@ -81,7 +81,7 @@ namespace Netpips
                 };
         }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             Configuration = AppSettingsFactory.BuildConfiguration();
             var netpipsAppSettings = Configuration.GetSection("Netpips").Get<NetpipsSettings>();
@@ -127,9 +127,8 @@ namespace Netpips
 
             // Mvc
             services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddJsonOptions(
+                .AddControllers()
+                .AddNewtonsoftJson(
                 options =>
                     {
                         options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -174,7 +173,7 @@ namespace Netpips
             // swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Netpips",
                     Version = "v1"
@@ -244,7 +243,7 @@ namespace Netpips
         }
 
         // To configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider, IOptions<NetpipsSettings> settings)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider, IOptions<NetpipsSettings> settings)
         {
             // forward headers
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -268,7 +267,6 @@ namespace Netpips
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger(c =>
             {
-                c.PreSerializeFilters.Add((swaggerDoc, httpReq) => swaggerDoc.Host = httpReq.Host.Value);
                 c.RouteTemplate = "api/swagger/{documentName}/swagger.json";
             });
 
@@ -279,6 +277,8 @@ namespace Netpips
                 c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "Netpips API v1");
             });
 
+            app.UseRouting();
+
             // CORS
             app.UseCors(builder => builder
                 //.WithOrigins(Configuration.GetValue<string>("Netpips:Domain"))
@@ -288,8 +288,9 @@ namespace Netpips
             );
 
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseRequestLocalization(builder => { builder.DefaultRequestCulture = new RequestCulture(Program.EnUsCulture); });
-            app.UseMvc();
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
 
             // coravel scheduler
             var provider = app.ApplicationServices;

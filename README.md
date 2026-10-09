@@ -8,7 +8,7 @@ Netpips is a companion server app for Plex Media Server. It's main goal is to en
 
 ## Installing
 
-Netpips is Web API project running on ASP.NET Core 2.1.
+Netpips is Web API project running on ASP.NET Core (.NET 10).
 1. Clone the repo
 2. Execute the following commands
 ```bash

@@ -13,12 +13,12 @@ jobs:
           echo "netpips:netpips" | sudo chpasswd
 
       - name: checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: install .NET Core 2.1
-        uses: actions/setup-dotnet@v1
+      - name: install .NET 10
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '2.1.x'
+          dotnet-version: '10.0.x'
 
       - name: install aria2c
         run: |
@@ -84,7 +84,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.5

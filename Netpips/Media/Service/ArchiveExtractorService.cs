@@ -24,7 +24,7 @@ namespace Netpips.Media.Service
             this.settings = settings.Value;
         }
 
-        private bool ExtractArchive(RarArchive archive, string destinationDirectory)
+        private bool ExtractArchive(IRarArchive archive, string destinationDirectory)
         {
             var timer = Stopwatch.StartNew();
             var archiveName = Path.GetFileName(Path.GetDirectoryName(destinationDirectory));
@@ -78,11 +78,11 @@ namespace Netpips.Media.Service
             return extractionDirectory;
         }
 
-        private RarArchive GetFirstVolume(string movedPartArchivePath)
+        private IRarArchive GetFirstVolume(string movedPartArchivePath)
         {
             foreach (var entry in Directory.GetFiles(movedPartArchivePath).Where(RarArchive.IsRarFile))
             {
-                var archive = RarArchive.Open(entry);
+                var archive = RarArchive.OpenArchive(entry);
                 if (IsValidFirstVolume(archive))
                 {
                     return archive;
@@ -93,7 +93,7 @@ namespace Netpips.Media.Service
             return null;
         }
 
-        private bool IsValidFirstVolume(RarArchive archive) =>
+        private bool IsValidFirstVolume(IRarArchive archive) =>
             archive.IsFirstVolume() && archive.IsComplete && archive.IsMultipartVolume();
 
 
@@ -107,7 +107,7 @@ namespace Netpips.Media.Service
         /// <returns></returns>
         public bool HandleRarFile(string rarPath, out string destDir)
         {
-            var archive = RarArchive.Open(rarPath);
+            var archive = RarArchive.OpenArchive(rarPath);
 
             var isMultiPart = archive.IsMultipartVolume();
             var isComplete = archive.IsComplete;
