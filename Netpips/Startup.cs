@@ -50,7 +50,6 @@ using System.Linq;
 using System.Text;
 using Netpips.Media.Filebot;
 using Netpips.Media.MediaInfo;
-using Python.Runtime;
 
 namespace Netpips
 {

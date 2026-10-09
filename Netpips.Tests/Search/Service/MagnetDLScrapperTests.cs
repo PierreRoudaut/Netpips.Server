@@ -6,7 +6,6 @@ using Moq;
 using Netpips.Search.Service;
 using Netpips.Tests.Core;
 using NUnit.Framework;
-using Python.Runtime;
 
 namespace Netpips.Tests.Search.Service
 {

@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using Netpips.Core.CommandLine;
 using Newtonsoft.Json;
-using Python.Runtime;
 
 namespace Netpips.Core.Http
 {
@@ -54,40 +52,6 @@ namespace Netpips.Core.Http
             }
 
             return httpResult;
-        }
-
-        [Obsolete("Can't seem to locate dll when ran in a inux env")]
-        public static HttpResponseLite GetFromPythonNET(string url)
-        {
-            if (!PythonEngine.IsInitialized)
-                PythonEngine.Initialize();
-
-            var sw = Stopwatch.StartNew();
-            var result = new HttpResponseLite();
-
-            try
-            {
-                // https://github.com/pythonnet/pythonnet/wiki/Threading
-                var mThreadState = PythonEngine.BeginAllowThreads();
-                using (Py.GIL())
-                {
-                    dynamic cfscrape = Py.Import("cfscrape");
-                    dynamic scraper = cfscrape.create_scraper();
-                    PyObject response = scraper.get(url);
-                    result.StatusCode = (HttpStatusCode) response.GetAttr("status_code").As<int>();
-                    result.Html = response.GetAttr("text").As<string>();
-                    result.ElapsedMs = sw.ElapsedMilliseconds;
-                }
-
-                PythonEngine.EndAllowThreads(mThreadState);
-            }
-            catch (Exception e)
-            {
-                result.ElapsedMs = sw.ElapsedMilliseconds;
-                result.Exception = e;
-            }
-
-            return result;
         }
     }
 }

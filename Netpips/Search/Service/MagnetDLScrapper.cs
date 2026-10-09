@@ -11,7 +11,6 @@ using Humanizer;
 using Microsoft.Extensions.Logging;
 using Netpips.Core.Http;
 using Netpips.Search.Model;
-using Python.Runtime;
 
 namespace Netpips.Search.Service
 {
